@@ -287,43 +287,43 @@ public class RegSolEmpresa extends JDialog {
 
 		JLabel lblSexo = new JLabel("Sexo");
 		lblSexo.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblSexo.setBounds(192, 432, 80, 16);
+		lblSexo.setBounds(202, 432, 80, 16);
 		panel.add(lblSexo);
 		cbxSexo = new JComboBox(new String[] {"<Seleccione>", "M", "F"});
 		cbxSexo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		cbxSexo.setBounds(243, 429, 116, 22);
+		cbxSexo.setBounds(253, 429, 116, 22);
 		panel.add(cbxSexo);
 
 		JLabel lblEdad = new JLabel("Edad mínima");
 		lblEdad.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblEdad.setBounds(398, 431, 100, 16);
+		lblEdad.setBounds(408, 431, 100, 16);
 		panel.add(lblEdad);
 		spnEdad = new JSpinner(new SpinnerNumberModel(18, 16, 70, 1));
 		spnEdad.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		spnEdad.setBounds(498, 429, 50, 22);
+		spnEdad.setBounds(508, 429, 50, 22);
 		panel.add(spnEdad);
 
 		JLabel lblExp = new JLabel("Años de Experiencia");
 		lblExp.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblExp.setBounds(585, 432, 150, 16);
+		lblExp.setBounds(595, 432, 150, 16);
 		panel.add(lblExp);
 		spnExperiencia = new JSpinner(new SpinnerNumberModel(0, 0, 50, 1));
 		spnExperiencia.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		spnExperiencia.setBounds(743, 430, 50, 22);
+		spnExperiencia.setBounds(753, 430, 50, 22);
 		panel.add(spnExperiencia);
 
 		JLabel lblVehiculo = new JLabel("¿Requiere Vehículo?");
 		lblVehiculo.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblVehiculo.setBounds(209, 491, 150, 16);
+		lblVehiculo.setBounds(220, 488, 150, 16);
 		panel.add(lblVehiculo);
 		rdbtnVehSi = new JRadioButton("Sí");
 		rdbtnVehSi.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rdbtnVehSi.setBackground(Color.WHITE);
-		rdbtnVehSi.setBounds(219, 518, 50, 20);
+		rdbtnVehSi.setBounds(230, 515, 50, 20);
 		rdbtnVehNo = new JRadioButton("No");
 		rdbtnVehNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rdbtnVehNo.setBackground(Color.WHITE);
-		rdbtnVehNo.setBounds(279, 518, 50, 20);
+		rdbtnVehNo.setBounds(290, 515, 50, 20);
 		panel.add(rdbtnVehSi);
 		panel.add(rdbtnVehNo);
 
@@ -332,16 +332,16 @@ public class RegSolEmpresa extends JDialog {
 
 		JLabel lblMudarse = new JLabel("¿Dispuesto a mudarse?");
 		lblMudarse.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblMudarse.setBounds(569, 491, 182, 16);
+		lblMudarse.setBounds(580, 488, 182, 16);
 		panel.add(lblMudarse);
 		rdbtnMudarseSi = new JRadioButton("Sí");
 		rdbtnMudarseSi.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rdbtnMudarseSi.setBackground(Color.WHITE);
-		rdbtnMudarseSi.setBounds(599, 518, 50, 20);
+		rdbtnMudarseSi.setBounds(610, 515, 50, 20);
 		rdbtnMudarseNo = new JRadioButton("No");
 		rdbtnMudarseNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rdbtnMudarseNo.setBackground(Color.WHITE);
-		rdbtnMudarseNo.setBounds(659, 518, 50, 20);
+		rdbtnMudarseNo.setBounds(670, 515, 50, 20);
 		panel.add(rdbtnMudarseSi);
 		panel.add(rdbtnMudarseNo);
 
@@ -350,11 +350,11 @@ public class RegSolEmpresa extends JDialog {
 
 		JLabel lblPrioridad = new JLabel("Prioridad");
 		lblPrioridad.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblPrioridad.setBounds(428, 491, 100, 16);
+		lblPrioridad.setBounds(439, 488, 100, 16);
 		panel.add(lblPrioridad);
 		cbxPrioridad = new JComboBox(new String[] {"<Seleccione>", "Alta", "Media", "Baja"});
 		cbxPrioridad.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		cbxPrioridad.setBounds(398, 517, 130, 22);
+		cbxPrioridad.setBounds(409, 514, 130, 22);
 		panel.add(cbxPrioridad);
 
 		
