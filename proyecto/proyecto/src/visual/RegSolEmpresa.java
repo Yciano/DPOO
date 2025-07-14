@@ -154,23 +154,26 @@ public class RegSolEmpresa extends JDialog {
 
 		JLabel lblTipoTrabajo = new JLabel("Tipo de Trabajo");
 		lblTipoTrabajo.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblTipoTrabajo.setBounds(558, 200, 140, 20);
+		lblTipoTrabajo.setBounds(548, 200, 140, 20);
 		panel.add(lblTipoTrabajo);
 
 		cbxTipoTrabajo = new JComboBox();
+		cbxTipoTrabajo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		cbxTipoTrabajo.setBackground(Color.WHITE);
 		cbxTipoTrabajo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Tiempo Completo", "Parcial", "FreeLancer"}));
-		cbxTipoTrabajo.setBounds(558, 225, 203, 22);
+		cbxTipoTrabajo.setBounds(548, 225, 203, 22);
 		panel.add(cbxTipoTrabajo);
 
 		JLabel lblTipoEmpleado = new JLabel("Tipo de Empleado");
 		lblTipoEmpleado.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblTipoEmpleado.setBounds(400, 282, 150, 20);
+		lblTipoEmpleado.setBounds(194, 276, 150, 20);
 		panel.add(lblTipoEmpleado);
 
 		cbxTipoEmpleado = new JComboBox();
+		cbxTipoEmpleado.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		cbxTipoEmpleado.setBackground(Color.WHITE);
 		cbxTipoEmpleado.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Universitario", "Tecnico", "Obrero"}));
-		cbxTipoEmpleado.setBounds(400, 307, 203, 22);
+		cbxTipoEmpleado.setBounds(194, 301, 203, 22);
 		panel.add(cbxTipoEmpleado);
 
 		cardLayout = new CardLayout();
@@ -182,8 +185,10 @@ public class RegSolEmpresa extends JDialog {
 		JPanel panelUni = new JPanel(null);
 		panelUni.setBackground(Color.WHITE);
 		JLabel lblCarrera = new JLabel("Carrera:");
+		lblCarrera.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblCarrera.setBounds(0, 25, 100, 20);
 		txtCarrera = new JTextField("Ej: Ing. en Ciencias de Computación");
+		txtCarrera.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtCarrera.setForeground(Color.LIGHT_GRAY);
 		txtCarrera.setBounds(110, 25, 300, 22);
 		txtCarrera.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -208,10 +213,11 @@ public class RegSolEmpresa extends JDialog {
 		JPanel panelTec = new JPanel(null);
 		panelTec.setBackground(Color.WHITE);
 		JLabel lblTecnico = new JLabel("Área Técnica:");
+		lblTecnico.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblTecnico.setBounds(0, 24, 100, 20);
 		txtTecnico = new JTextField("Ej: Electricidad");
 		txtTecnico.setForeground(Color.LIGHT_GRAY);
-		txtTecnico.setBounds(110, 24, 200, 22);
+		txtTecnico.setBounds(89, 25, 200, 22);
 		txtTecnico.addFocusListener(new java.awt.event.FocusAdapter() {
 			@Override
 			public void focusGained(java.awt.event.FocusEvent e) {
@@ -231,6 +237,7 @@ public class RegSolEmpresa extends JDialog {
 		panelTec.add(lblTecnico);
 		panelTec.add(txtTecnico);
 		JLabel lblExpTec = new JLabel("Años de Experiencia:");
+		lblExpTec.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblExpTec.setBounds(320, 24, 130, 20);
 		spnExpTecnico = new JSpinner(new SpinnerNumberModel(0, 0, 50, 1));
 		spnExpTecnico.setBounds(460, 24, 50, 22);
@@ -240,7 +247,8 @@ public class RegSolEmpresa extends JDialog {
 		JPanel panelObr = new JPanel(null);
 		panelObr.setBackground(Color.WHITE);
 		JLabel lblHabilidades = new JLabel("Habilidades (hasta que el profe nos diga):");
-		lblHabilidades.setBounds(0, 11, 250, 20);
+		lblHabilidades.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblHabilidades.setBounds(0, 11, 277, 20);
 		txtHabilidades = new JTextField("Ej: Plomería, Jardinería, Electricidad");
 		txtHabilidades.setForeground(Color.LIGHT_GRAY);
 		txtHabilidades.setBounds(0, 36, 500, 22);
@@ -279,36 +287,43 @@ public class RegSolEmpresa extends JDialog {
 
 		JLabel lblSexo = new JLabel("Sexo");
 		lblSexo.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lblSexo.setBounds(194, 420, 80, 16);
+		lblSexo.setBounds(192, 432, 80, 16);
 		panel.add(lblSexo);
 		cbxSexo = new JComboBox(new String[] {"<Seleccione>", "M", "F"});
-		cbxSexo.setBackground(Color.WHITE);
-		cbxSexo.setBounds(260, 418, 100, 22);
+		cbxSexo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		cbxSexo.setBounds(243, 429, 116, 22);
 		panel.add(cbxSexo);
 
 		JLabel lblEdad = new JLabel("Edad mínima");
-		lblEdad.setBounds(400, 420, 100, 16);
+		lblEdad.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblEdad.setBounds(398, 431, 100, 16);
 		panel.add(lblEdad);
 		spnEdad = new JSpinner(new SpinnerNumberModel(18, 16, 70, 1));
-		spnEdad.setBounds(500, 418, 50, 22);
+		spnEdad.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		spnEdad.setBounds(498, 429, 50, 22);
 		panel.add(spnEdad);
 
 		JLabel lblExp = new JLabel("Años de Experiencia");
-		lblExp.setBounds(580, 420, 150, 16);
+		lblExp.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblExp.setBounds(585, 432, 150, 16);
 		panel.add(lblExp);
 		spnExperiencia = new JSpinner(new SpinnerNumberModel(0, 0, 50, 1));
-		spnExperiencia.setBounds(720, 418, 50, 22);
+		spnExperiencia.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		spnExperiencia.setBounds(743, 430, 50, 22);
 		panel.add(spnExperiencia);
 
 		JLabel lblVehiculo = new JLabel("¿Requiere Vehículo?");
-		lblVehiculo.setBounds(197, 484, 150, 16);
+		lblVehiculo.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblVehiculo.setBounds(209, 491, 150, 16);
 		panel.add(lblVehiculo);
 		rdbtnVehSi = new JRadioButton("Sí");
+		rdbtnVehSi.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rdbtnVehSi.setBackground(Color.WHITE);
-		rdbtnVehSi.setBounds(207, 517, 50, 20);
+		rdbtnVehSi.setBounds(219, 518, 50, 20);
 		rdbtnVehNo = new JRadioButton("No");
+		rdbtnVehNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rdbtnVehNo.setBackground(Color.WHITE);
-		rdbtnVehNo.setBounds(267, 517, 50, 20);
+		rdbtnVehNo.setBounds(279, 518, 50, 20);
 		panel.add(rdbtnVehSi);
 		panel.add(rdbtnVehNo);
 
@@ -316,14 +331,17 @@ public class RegSolEmpresa extends JDialog {
 		rdbtnVehNo.addActionListener(e -> rdbtnVehSi.setSelected(false));
 
 		JLabel lblMudarse = new JLabel("¿Dispuesto a mudarse?");
-		lblMudarse.setBounds(483, 484, 160, 16);
+		lblMudarse.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblMudarse.setBounds(569, 491, 182, 16);
 		panel.add(lblMudarse);
 		rdbtnMudarseSi = new JRadioButton("Sí");
+		rdbtnMudarseSi.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rdbtnMudarseSi.setBackground(Color.WHITE);
-		rdbtnMudarseSi.setBounds(493, 517, 50, 20);
+		rdbtnMudarseSi.setBounds(599, 518, 50, 20);
 		rdbtnMudarseNo = new JRadioButton("No");
+		rdbtnMudarseNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rdbtnMudarseNo.setBackground(Color.WHITE);
-		rdbtnMudarseNo.setBounds(553, 517, 50, 20);
+		rdbtnMudarseNo.setBounds(659, 518, 50, 20);
 		panel.add(rdbtnMudarseSi);
 		panel.add(rdbtnMudarseNo);
 
@@ -331,10 +349,12 @@ public class RegSolEmpresa extends JDialog {
 		rdbtnMudarseNo.addActionListener(e -> rdbtnMudarseSi.setSelected(false));
 
 		JLabel lblPrioridad = new JLabel("Prioridad");
-		lblPrioridad.setBounds(716, 484, 100, 16);
+		lblPrioridad.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblPrioridad.setBounds(428, 491, 100, 16);
 		panel.add(lblPrioridad);
 		cbxPrioridad = new JComboBox(new String[] {"<Seleccione>", "Alta", "Media", "Baja"});
-		cbxPrioridad.setBounds(686, 516, 130, 22);
+		cbxPrioridad.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		cbxPrioridad.setBounds(398, 517, 130, 22);
 		panel.add(cbxPrioridad);
 
 		
