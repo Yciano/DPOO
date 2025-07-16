@@ -16,9 +16,7 @@ public class Principal extends JFrame {
 
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -32,9 +30,7 @@ public class Principal extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+	
 	public Principal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1017, 688);
@@ -57,6 +53,13 @@ public class Principal extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Registrar Usuario");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegEmpleado rg = new RegEmpleado(null);
+				rg.setModal(true);
+				rg.setVisible(true);
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenu mnNewMenu_1 = new JMenu("Listados");
@@ -66,11 +69,21 @@ public class Principal extends JFrame {
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ListadoEmpresas list = new ListadoEmpresas(null, null); // Pendiente a explicación de Javier
-				list.setVisible(true);
 				list.setModal(true);
+				list.setVisible(true);
 			}
 		});
 		mnNewMenu_1.add(mntmNewMenuItem_2);
+		
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Listado de Usuarios");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListadoUsuario lsUsuario = new ListadoUsuario();
+				lsUsuario.setModal(true);
+				lsUsuario.setVisible(true);
+			}
+		});
+		mnNewMenu_1.add(mntmNewMenuItem_3);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));

@@ -6,15 +6,15 @@ public class Universitario extends Empleado {
 
     private String carrera;
 
-    public Universitario(String nombre, String apellido, int edad, String cedula, String sexo, float salarioDeseado,
-                        String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud,
-                        boolean licencia, boolean tieneVeh, String carrera) {
-        super(nombre, apellido, edad, cedula, sexo, salarioDeseado, provincia, tipoTrabajo, estado,
-              dispuestoMud, licencia, tieneVeh);
-        this.carrera = carrera;
-    }
+    public Universitario(String nombre, String apellido, int edad, String cedula, String contacto, String sexo,
+			float SalarioDeseado, String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud,
+			boolean licencia, boolean TieneVeh, String carrera) {
+		super(nombre, apellido, edad, cedula, contacto, sexo, SalarioDeseado, provincia, tipoTrabajo, estado,
+				dispuestoMud, licencia, TieneVeh);
+		this.carrera = carrera;
+	}
 
-    public String getCarrera() {
+	public String getCarrera() {
         return carrera;
     }
 

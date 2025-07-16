@@ -4,27 +4,28 @@ import java.util.ArrayList;
 
 public abstract class Empleado {
 	
-	private String nombre;
-	private String apellido;
-	private int edad;
-	private String cedula;
-	private String contacto;
-	private String sexo;
-	private float SalarioDeseado;
-	private String provincia;
-	private String tipoTrabajo;
-	private boolean estado;
-	private boolean dispuestoMud;
-	private boolean licencia;
-	private boolean TieneVeh;
-	private int match;
-	private ArrayList<Solicitud>solicitudes;
+	protected String nombre;
+	protected String apellido;
+	protected int edad;
+	protected String cedula;
+	protected String contacto;
+	protected String sexo;
+	protected float SalarioDeseado;
+	protected String provincia;
+	protected String tipoTrabajo;
+	protected boolean estado;
+	protected boolean dispuestoMud;
+	protected boolean licencia;
+	protected boolean TieneVeh;
+	protected int match;
+	protected ArrayList<Solicitud>solicitudes;
 	
-	public Empleado(String nombre, String apellido, int edad, String cedula, String sexo, float SalarioDeseado, String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud, boolean licencia, boolean TieneVeh) {
+	public Empleado(String nombre, String apellido, int edad, String cedula, String contacto, String sexo, float SalarioDeseado, String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud, boolean licencia, boolean TieneVeh) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.edad = edad;
 		this.cedula = cedula;
+		this.contacto = contacto;
 		this.sexo = sexo;
 		this.SalarioDeseado = SalarioDeseado;
 		this.provincia = provincia;
@@ -33,6 +34,7 @@ public abstract class Empleado {
 		this.dispuestoMud = dispuestoMud;
 		this.licencia = licencia;
 		this.TieneVeh = TieneVeh;
+		this.solicitudes = new ArrayList<Solicitud>();
 		
 	}
 
@@ -147,5 +149,9 @@ public abstract class Empleado {
 		public void setSolicitudes(ArrayList<Solicitud> solicitudes) {
 			this.solicitudes = solicitudes;
 		}
+		
+		 public void removeSolicitud(Solicitud aux) {
+		    	solicitudes.remove(aux);
+		    }
 
 }

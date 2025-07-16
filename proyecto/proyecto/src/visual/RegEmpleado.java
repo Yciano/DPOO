@@ -62,10 +62,12 @@ public class RegEmpleado extends JDialog {
 	private JComboBox cbxTecnico;
 	private JSpinner spnExpTec;
 	private JPanel panelBlanco;
+	private Empleado update = null;
+
 
 	public static void main(String[] args) {
 		try {
-			RegEmpleado dialog = new RegEmpleado();
+			RegEmpleado dialog = new RegEmpleado(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -75,9 +77,14 @@ public class RegEmpleado extends JDialog {
 	}
 
 	
-	public RegEmpleado() {
-		setTitle("Registro de Empleados");
-		setResizable(false);
+	public RegEmpleado(Empleado aux) {
+		this.update = aux;
+		if(update == null) {
+			setTitle("Registro de Usuarios");
+		}else
+		{
+			setTitle("Modificar Usuarios");
+		}		setResizable(false);
 		setBounds(100, 100, 900, 772);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -472,7 +479,7 @@ public class RegEmpleado extends JDialog {
 			});
 			cbxTipoTrabajador.setBackground(Color.WHITE);
 			cbxTipoTrabajador.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			cbxTipoTrabajador.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Estudiante", "Obrero", "T\u00E9cnico Superior"}));
+			cbxTipoTrabajador.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Universitario", "Obrero", "T\u00E9cnico Superior"}));
 			cbxTipoTrabajador.setBounds(632, 428, 135, 22);
 			panel.add(cbxTipoTrabajador);
 			{
@@ -601,9 +608,14 @@ public class RegEmpleado extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnRegistrar = new JButton("Registrar");
+				if(update != null) {
+					btnRegistrar.setText("Modificar");
+				}
+				
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(validarCampos()) {
+							if(update == null) {
 							Empleado aux = null;
 							int edad = new Integer(spnEdad.getValue().toString());
 							int aniosExp = 0;
@@ -612,17 +624,17 @@ public class RegEmpleado extends JDialog {
 								estado = true;
 							}
 							if(cbxTipoTrabajador.getSelectedIndex() == 1) {
-								aux = new Universitario(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(), cbxCarrera.getSelectedItem().toString());
+								aux = new Universitario(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), txtCorreo.getText() ,cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(), cbxCarrera.getSelectedItem().toString());
 							}
 							else if(cbxTipoTrabajador.getSelectedIndex() == 2)
 							{
 								aniosExp = new Integer(spnExpObre.getValue().toString());
-								aux = new Obrero(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),null, aniosExp);
+								aux = new Obrero(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(),txtCorreo.getText() , cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),null, aniosExp);
 							}
 							else if(cbxTipoTrabajador.getSelectedIndex() == 3)
 							{
 								aniosExp = new Integer(spnExpTec.getValue().toString());
-								aux = new TecnicoSuperior(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),cbxTecnico.getSelectedItem().toString(), aniosExp);
+								aux = new TecnicoSuperior(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(),txtCorreo.getText() , cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),cbxTecnico.getSelectedItem().toString(), aniosExp);
 							}
 							
 								boolean realizado = Bolsa.getInstance().registrarEmpleado(aux);
@@ -635,6 +647,46 @@ public class RegEmpleado extends JDialog {
 									JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error",
 											JOptionPane.ERROR_MESSAGE);
 								}
+						}else {
+							
+							update.setNombre(txtNombre.getText());
+							update.setApellido(txtApellidos.getText());
+							update.setContacto(txtCorreo.getText());
+							update.setSexo(cbxSexo.getSelectedItem().toString());
+							update.setEdad(new Integer(spnEdad.getValue().toString()));
+							update.setProvincia(cbxProvincia.getSelectedItem().toString());
+							update.setTipoTrabajo(cbxTrabajo.getSelectedItem().toString());
+							boolean estado = false;
+							if(cbxEstado.getSelectedIndex() == 1) {
+								estado = true;
+							}
+							update.setEstado(estado);
+							update.setLicencia(rdbtnSiLicencia.isSelected());
+							update.setTieneVeh(rdbtnSiVehiculo.isSelected());
+							update.setdispuestoMud(rdbtnSiMudarse.isSelected());
+							if(update instanceof Universitario) {
+								Universitario uni = (Universitario) update;
+								uni.setCarrera(cbxCarrera.getSelectedItem().toString());
+							}
+							else if(update instanceof TecnicoSuperior) {
+								TecnicoSuperior tc = (TecnicoSuperior) update;
+								tc.setTecnico(cbxTecnico.getSelectedItem().toString());
+								tc.setAniosExperiencia(new Integer(spnExpTec.getValue().toString()));
+							}
+							else if(update instanceof Obrero) {
+								Obrero ob = (Obrero) update;
+								//ob.setMisHabilidades(misHabilidades);
+								ob.setAniosExperiencia(new Integer(spnExpObre.getValue().toString()));
+							}
+							Bolsa.getInstance().modificarUsuario(update);
+							JOptionPane.showMessageDialog(null, "Modificación exitosa", "Información",
+									JOptionPane.INFORMATION_MESSAGE);
+							ListadoUsuario.loadUsuario();
+							dispose();
+							
+						}
+							
+							
 						}
 						
 					}
@@ -653,6 +705,8 @@ public class RegEmpleado extends JDialog {
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
+			loadUsers();
+
 		}
 		
 		
@@ -681,6 +735,61 @@ public class RegEmpleado extends JDialog {
 			aux = false;
 		}
 		return aux;
+	}
+	
+	
+	private void loadUsers() {
+		if(update != null) {
+			txtCedula.setForeground(Color.black);
+			txtNombre.setForeground(Color.black);
+			txtApellidos.setForeground(Color.black);
+			txtCorreo.setForeground(Color.black);
+			txtNombre.setText(update.getNombre());
+			txtApellidos.setText(update.getApellido());
+			txtCedula.setText(update.getCedula());
+			txtCorreo.setText(update.getContacto());
+			cbxSexo.setSelectedItem(update.getSexo());
+			spnEdad.setValue(update.getEdad());
+			cbxProvincia.setSelectedItem(update.getProvincia());
+			cbxTrabajo.setSelectedItem(update.getTipoTrabajo());
+			if(update.isEstado()) {
+				cbxEstado.setSelectedIndex(1);
+			}else {
+				cbxEstado.setSelectedIndex(2);
+			}
+			
+			if(update instanceof Universitario) {
+				cbxTipoTrabajador.setSelectedIndex(1);
+				cbxCarrera.setSelectedItem(((Universitario) update).getCarrera());
+			}
+			else if(update instanceof TecnicoSuperior) {
+				cbxTipoTrabajador.setSelectedIndex(3);
+				cbxTecnico.setSelectedItem(((TecnicoSuperior) update).getTecnico());
+				spnExpTec.setValue(((TecnicoSuperior) update).getAniosExperiencia());
+			}
+			else if(update instanceof Obrero) {
+				cbxTipoTrabajador.setSelectedIndex(2);
+				//ob.setMisHabilidades(misHabilidades);
+				spnExpObre.setValue(((Obrero) update).getAniosExperiencia());
+			}
+			
+			if(update.isLicencia())
+				rdbtnSiLicencia.setSelected(true);
+			else
+				rdbtnNoLicencia.setSelected(true);
+
+			if(update.isDispuestoMud())
+				rdbtnSiMudarse.setSelected(true);
+			else
+				rdbtnNoMudarse.setSelected(true);
+			
+			if(update.isTieneVeh())
+				rdbtnSiVehiculo.setSelected(true);
+			else
+				rdbtnNoVehiculo.setSelected(true);
+
+			
+		}
 	}
 	
 	private boolean ValidarPalabra(String text) {
@@ -737,5 +846,6 @@ public class RegEmpleado extends JDialog {
 		panelBlanco.setVisible(true);
 		panelEstudiante.setVisible(false);
 		panelObrero.setVisible(false);
-		panelTecnico.setVisible(false);	}
+		panelTecnico.setVisible(false);	
+		}
 }

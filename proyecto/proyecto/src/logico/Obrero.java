@@ -7,16 +7,18 @@ public class Obrero extends Empleado {
     private ArrayList<String> misHabilidades;
     private int aniosExperiencia;
 
-    public Obrero(String nombre, String apellido, int edad, String cedula, String sexo, float salarioDeseado,
-                  String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud,
-                  boolean licencia, boolean tieneVeh, ArrayList<String> misHabilidades, int aniosExperiencia) {
-        super(nombre, apellido, edad, cedula, sexo, salarioDeseado ,provincia, tipoTrabajo, estado,
-              dispuestoMud, licencia, tieneVeh);
-        this.misHabilidades = misHabilidades;
-        this.aniosExperiencia = aniosExperiencia;
-    }
+    
 
-    public ArrayList<String> getMisHabilidades() {
+    public Obrero(String nombre, String apellido, int edad, String cedula, String contacto, String sexo,
+			float SalarioDeseado, String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud,
+			boolean licencia, boolean TieneVeh, ArrayList<String> misHabilidades, int aniosExperiencia) {
+		super(nombre, apellido, edad, cedula, contacto, sexo, SalarioDeseado, provincia, tipoTrabajo, estado,
+				dispuestoMud, licencia, TieneVeh);
+		this.misHabilidades = misHabilidades;
+		this.aniosExperiencia = aniosExperiencia;
+	}
+
+	public ArrayList<String> getMisHabilidades() {
         return misHabilidades;
     }
 
@@ -31,4 +33,6 @@ public class Obrero extends Empleado {
     public void setAniosExperiencia(int aniosExperiencia) {
         this.aniosExperiencia = aniosExperiencia;
     }
+    
+   
 }

@@ -172,6 +172,35 @@ public class Bolsa {
 		    }
 		    return false;
 		}
+
+		public void removeUser(String cedula) {
+			Empleado aux = buscarEmpleadoByCedula(cedula);
+			for(int i = 0; i < aux.getSolicitudes().size(); i++) {
+				aux.removeSolicitud(aux.getSolicitudes().get(i));
+			}
+			misEmpleados.remove(aux);
+			
+			
+		}
+
+		public void modificarUsuario(Empleado update) {
+			int index = buscarUsuarioByIndex(update.getCedula());
+			misEmpleados.set(index, update);
+		}
+
+		private int buscarUsuarioByIndex(String cedula) {
+			int index = -1;
+			boolean encontrado = false;
+			int i = 0;
+			while(!encontrado && i < misEmpleados.size()) {
+				if(misEmpleados.get(i).getCedula().equalsIgnoreCase(cedula)) {
+					index = i;
+					encontrado = true;
+				}
+				i++;
+			}
+			return index;
+		}
 	
 }
 
