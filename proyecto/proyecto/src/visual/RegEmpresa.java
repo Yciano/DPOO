@@ -20,6 +20,18 @@ public class RegEmpresa extends JDialog {
 
     private Bolsa miBolsa;
     private Empresa empresaExistente;
+    
+    public static void main(String[] args) {
+    	try {
+    		Bolsa bolsaDummy = new Bolsa();
+    		RegEmpresa dialog = new RegEmpresa(bolsaDummy, null);
+    		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    		dialog.setVisible(true);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+
 
     public RegEmpresa(Bolsa bolsa, Empresa empresaEditar) {
         this.miBolsa = bolsa;
