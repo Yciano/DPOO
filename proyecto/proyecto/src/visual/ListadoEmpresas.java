@@ -1,7 +1,9 @@
 package visual;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import logico.Bolsa;
 import logico.Empresa;
@@ -12,103 +14,133 @@ import java.util.ArrayList;
 
 public class ListadoEmpresas extends JDialog {
 
-    private DefaultTableModel model;
-    private JTable table;
-    private Bolsa miBolsa;
+	private final JPanel contentPanel = new JPanel();
+	private static JTable table;
+	private static Object[] row;
+	private static DefaultTableModel modelo;
+	private Empresa selected = null;
+	private JButton btnModificar;
+	private JButton btnEliminar;
+	private JButton cancelButton;
 
-    public ListadoEmpresas(Frame parent, Bolsa bolsa) {
-        super(parent, "Listado de Empresas", true);
-        this.miBolsa = bolsa;
+	public ListadoEmpresas() {
+		setTitle("Listado de Empresas");
+		setResizable(false);
+		setBounds(100, 100, 900, 600);
+		setLocationRelativeTo(null);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new BorderLayout(0, 0));
 
-        setSize(800, 400);
-        setLocationRelativeTo(parent);
-        getContentPane().setLayout(new BorderLayout());
+		JPanel panel = new JPanel();
+		contentPanel.add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
 
-        String[] headers = { "Nombre", "RNC", "Área", "Contacto", "Provincia" };
-        model = new DefaultTableModel(headers, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;  
-            }
-        };
-        table = new JTable(model);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.getTableHeader().setResizingAllowed(false);
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(12, 207, 860, 300);
+		panel.add(panel_1);
+		panel_1.setLayout(new BorderLayout(0, 0));
 
-        JScrollPane scroll = new JScrollPane(table);
-        getContentPane().add(scroll, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane();
+		panel_1.add(scrollPane, BorderLayout.CENTER);
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int index = table.getSelectedRow();
+				if (index >= 0) {
+					selected = Bolsa.getInstance().buscarEmpresaByCode(table.getValueAt(index, 1).toString());
+					btnEliminar.setEnabled(true);
+					btnModificar.setEnabled(true);
+				}
+			}
+		});
+		modelo = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 
-        JButton btnModificar = new JButton("Modificar");
-        JButton btnEliminar = new JButton("Eliminar");
-        JButton btnCerrar = new JButton("Cerrar");
+		String[] header = { "Nombre", "RNC", "Área", "Contacto", "Provincia" };
+		modelo.setColumnIdentifiers(header);
+		table.setModel(modelo);
+		scrollPane.setViewportView(table);
 
-        panelBotones.add(btnModificar);
-        panelBotones.add(btnEliminar);
-        panelBotones.add(btnCerrar);
-        getContentPane().add(panelBotones, BorderLayout.SOUTH);
+		JPanel buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-        cargarEmpresas(miBolsa.getMisEmpresas());
+		btnModificar = new JButton("Modificar");
+		btnModificar.setEnabled(false);
+		btnModificar.addActionListener(e -> {
+			if (selected != null) {
+				RegEmpresa reg = new RegEmpresa(selected);
+				reg.setModal(true);
+				reg.setVisible(true);
+				loadEmpresas();
+				table.clearSelection();
+				selected = null;
+				btnModificar.setEnabled(false);
+				btnEliminar.setEnabled(false);
+			}
+		});
+		buttonPane.add(btnModificar);
 
-        btnModificar.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow >= 0) {
-                String rnc = (String) model.getValueAt(selectedRow, 1);
-                Empresa emp = miBolsa.buscarEmpresaByCode(rnc);
-                if (emp != null) {
-                    RegEmpresa reg = new RegEmpresa(miBolsa, emp);
-                    reg.setModal(true);
-                    reg.setVisible(true);
-                    cargarEmpresas(miBolsa.getMisEmpresas());
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar una empresa para modificar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            }
-        });
+		btnEliminar = new JButton("Eliminar");
+		btnEliminar.setEnabled(false);
+		btnEliminar.addActionListener(e -> {
+			if (selected != null) {
+				String[] options = { "Eliminar", "Cancelar" };
+				int confirm = JOptionPane.showOptionDialog(this,
+						"¿Está seguro que desea eliminar la empresa: " + selected.getNombre() + "?",
+						"Eliminar Empresa",
+						JOptionPane.DEFAULT_OPTION,
+						JOptionPane.WARNING_MESSAGE,
+						null,
+						options,
+						options[1]);
 
-        btnEliminar.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow >= 0) {
-                String rnc = (String) model.getValueAt(selectedRow, 1);
-                int confirm = JOptionPane.showOptionDialog(
-                    this,
-                    "¿Está seguro que desea eliminar esta empresa?",
-                    "Confirmar",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    new Object[]{"Sí", "No"},
-                    "No"
-                );
+				if (confirm == 0) {
+					Bolsa.getInstance().removeEmpresa(selected.getRNC());
+					JOptionPane.showMessageDialog(this, "Empresa eliminada exitosamente.");
+					loadEmpresas();
+					table.clearSelection();
+					btnModificar.setEnabled(false);
+					btnEliminar.setEnabled(false);
+					selected = null;
+				}
+			}
+		});
+		buttonPane.add(btnEliminar);
+		cancelButton = new JButton("Cancelar");
+		cancelButton.addActionListener(e -> dispose());
+		buttonPane.add(cancelButton);
 
-                if (confirm == JOptionPane.YES_OPTION) {
-                    Empresa emp = miBolsa.buscarEmpresaByCode(rnc);
-                    if (emp != null) {
-                        miBolsa.getMisEmpresas().remove(emp);
-                        cargarEmpresas(miBolsa.getMisEmpresas());
-                        JOptionPane.showMessageDialog(this, "Empresa eliminada correctamente.");
-                    }
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar una empresa para eliminar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            }
-        });
+		loadEmpresas();
+	}
 
-        btnCerrar.addActionListener(e -> dispose());
-    }
+	public static void loadEmpresas() {
+		modelo.setRowCount(0);
+		row = new Object[5];
+		ArrayList<Empresa> lista = Bolsa.getInstance().getMisEmpresas();
+		for (Empresa emp : lista) {
+			row[0] = emp.getNombre();
+			row[1] = emp.getRNC();
+			row[2] = emp.getArea();
+			row[3] = emp.getContacto();
+			row[4] = emp.getProvincia();
+			modelo.addRow(row);
+		}
 
-    private void cargarEmpresas(ArrayList<Empresa> empresas) {
-        model.setRowCount(0);
-        for (Empresa emp : empresas) {
-            Object[] row = new Object[5];
-            row[0] = emp.getNombre();
-            row[1] = emp.getRNC();
-            row[2] = emp.getArea();
-            row[3] = emp.getContacto();
-            row[4] = emp.getProvincia();
-            model.addRow(row);
-        }
-    }
+		table.setModel(modelo);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.getTableHeader().setReorderingAllowed(false);
+		TableColumnModel columnModel = table.getColumnModel();
+		columnModel.getColumn(0).setPreferredWidth(150);
+		columnModel.getColumn(1).setPreferredWidth(150);
+		columnModel.getColumn(2).setPreferredWidth(150);
+		columnModel.getColumn(3).setPreferredWidth(200);
+		columnModel.getColumn(4).setPreferredWidth(150);
+	}
 }

@@ -2,7 +2,7 @@ package logico;
 
 import java.util.ArrayList;
 
-public abstract class Empleado {
+public abstract class Usuario {
 	
 	protected String nombre;
 	protected String apellido;
@@ -18,9 +18,9 @@ public abstract class Empleado {
 	protected boolean licencia;
 	protected boolean TieneVeh;
 	protected int match;
-	protected ArrayList<Solicitud>solicitudes;
+	protected ArrayList<VacanteEmpresa>solicitudes;
 	
-	public Empleado(String nombre, String apellido, int edad, String cedula, String contacto, String sexo, float SalarioDeseado, String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud, boolean licencia, boolean TieneVeh) {
+	public Usuario(String nombre, String apellido, int edad, String cedula, String contacto, String sexo, float SalarioDeseado, String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud, boolean licencia, boolean TieneVeh) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.edad = edad;
@@ -34,7 +34,7 @@ public abstract class Empleado {
 		this.dispuestoMud = dispuestoMud;
 		this.licencia = licencia;
 		this.TieneVeh = TieneVeh;
-		this.solicitudes = new ArrayList<Solicitud>();
+		this.solicitudes = new ArrayList<VacanteEmpresa>();
 		
 	}
 
@@ -142,15 +142,15 @@ public abstract class Empleado {
 			this.match = match;
 		}
 
-		public ArrayList<Solicitud> getSolicitudes() {
+		public ArrayList<VacanteEmpresa> getSolicitudes() {
 			return solicitudes;
 		}
 
-		public void setSolicitudes(ArrayList<Solicitud> solicitudes) {
+		public void setSolicitudes(ArrayList<VacanteEmpresa> solicitudes) {
 			this.solicitudes = solicitudes;
 		}
 		
-		 public void removeSolicitud(Solicitud aux) {
+		 public void removeSolicitud(VacanteEmpresa aux) {
 		    	solicitudes.remove(aux);
 		    }
 

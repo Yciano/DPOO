@@ -5,15 +5,17 @@ import java.util.Date;
 
 public class Bolsa {
 	
-	private ArrayList<Empleado> misEmpleados;
+	private ArrayList<Usuario> misUsers;
 	private ArrayList<Empresa> misEmpresas;
-	private ArrayList<Solicitud> misSolicitudes;
+	private ArrayList<VacanteEmpresa> misSolicitudesEmp;
+	private ArrayList<SolicitudUsuario> misSolicitudesUsr;
 	private static Bolsa bolsa = null;
 
 	public Bolsa() {
-		this.misEmpleados =  new ArrayList<Empleado>();
+		this.misUsers =  new ArrayList<Usuario>();
 		this.misEmpresas = new ArrayList<Empresa>();
-		this.misSolicitudes = new ArrayList<Solicitud>();
+		this.misSolicitudesEmp = new ArrayList<VacanteEmpresa>();
+		this.misSolicitudesUsr = new ArrayList<SolicitudUsuario>();
 	}
 	
 	public static Bolsa getInstance(){
@@ -23,12 +25,12 @@ public class Bolsa {
 		return bolsa;
 	} 
 
-	public ArrayList<Empleado> getMisEmpleados() {
-		return misEmpleados;
+	public ArrayList<Usuario> getMisEmpleados() {
+		return misUsers;
 	}
 
-	public void setMisEmpleados(ArrayList<Empleado> misEmpleados) {
-		this.misEmpleados = misEmpleados;
+	public void setMisEmpleados(ArrayList<Usuario> misUsers) {
+		this.misUsers = misUsers;
 	}
 
 	public ArrayList<Empresa> getMisEmpresas() {
@@ -39,12 +41,20 @@ public class Bolsa {
 		this.misEmpresas = misEmpresas;
 	}
 
-	public ArrayList<Solicitud> getMisSolicitudes() {
-		return misSolicitudes;
+	public ArrayList<VacanteEmpresa> getMisSolicitudes() {
+		return misSolicitudesEmp;
 	}
 
-	public void setMisSolicitudes(ArrayList<Solicitud> misSolicitudes) {
-		this.misSolicitudes = misSolicitudes;
+	public void setMisSolicitudes(ArrayList<VacanteEmpresa> misSolicitudes) {
+		this.misSolicitudesEmp = misSolicitudes;
+	}
+	
+	public ArrayList<SolicitudUsuario> getMisSolicitudesUSR() {
+		return misSolicitudesUsr;
+	}
+
+	public void setMisSolicitudesUSR(ArrayList<SolicitudUsuario> misSolicitudes) {
+		this.misSolicitudesUsr = misSolicitudes;
 	}
 	
 	public boolean registrarSolictud(String identificador, String IDcompania, Date fecha, Requisito requisito, boolean estado)
@@ -52,17 +62,17 @@ public class Bolsa {
 		boolean realizado = false;
 		Empresa aux = buscarEmpresaByCode(IDcompania);
 		if(aux != null){
-			Solicitud sol = new Solicitud(identificador, IDcompania, fecha, requisito, estado);
-			misSolicitudes.add(sol);       
+			VacanteEmpresa sol = new VacanteEmpresa(identificador, IDcompania, fecha, requisito, estado);
+			misSolicitudesEmp.add(sol);       
 			aux.getSolicitudes().add(sol);
 			realizado = true;
 		} 
 		return realizado;
 	}
 
-	public ArrayList<Empleado> match(Solicitud sol){
-		ArrayList<Empleado> empleados = new ArrayList<Empleado>();
-		for(Empleado aux: misEmpleados){
+	public ArrayList<Usuario> match(VacanteEmpresa sol){
+		ArrayList<Usuario> empleados = new ArrayList<Usuario>();
+		for(Usuario aux: misUsers){
 			int cheq = 0;
 			if(aux.getTipoTrabajo().equalsIgnoreCase(sol.getRequisito().getTipoTrabajo())){
 				cheq++;
@@ -104,13 +114,13 @@ public class Bolsa {
 	}
 
 
-	public void OrdenarMatchBsort(ArrayList<Empleado> empleados) {
-		for (int i = 0; i < empleados.size() - 1; i++) {
-			for (int j = 0; j < empleados.size() - i - 1; j++) {
-				if (empleados.get(j).match() < empleados.get(j + 1).match()) {
-					Empleado temp = empleados.get(j);
-					empleados.set(j, empleados.get(j + 1));
-					empleados.set(j + 1, temp);
+	public void OrdenarMatchBsort(ArrayList<Usuario> users) {
+		for (int i = 0; i < users.size() - 1; i++) {
+			for (int j = 0; j < users.size() - i - 1; j++) {
+				if (users.get(j).match() < users.get(j + 1).match()) {
+					Usuario temp = users.get(j);
+					users.set(j, users.get(j + 1));
+					users.set(j + 1, temp);
 				}
 			}
 		}
@@ -129,14 +139,15 @@ public class Bolsa {
 		}
 		return aux;
 	}
+	
 
-	public Empleado buscarEmpleadoByCedula(String cedula){
-		Empleado aux = null;
+	public Usuario buscarEmpleadoByCedula(String cedula){
+		Usuario aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		while (!encontrado && i < misEmpleados.size()){
-			if(misEmpleados.get(i).getCedula().equalsIgnoreCase(cedula)){
-				aux = misEmpleados.get(i);
+		while (!encontrado && i < misUsers.size()){
+			if(misUsers.get(i).getCedula().equalsIgnoreCase(cedula)){
+				aux = misUsers.get(i);
 				encontrado = true;
 			}
 			i++;
@@ -144,56 +155,73 @@ public class Bolsa {
 		return aux;
 	}
 
-		public boolean registrarEmpleado(Empleado nuevoEmpleado){
+		public boolean registrarEmpleado(Usuario nuevoUsuario){
 		boolean aux = false;
-		if(buscarEmpleadoByCedula(nuevoEmpleado.getCedula()) == null) {
+		if(buscarEmpleadoByCedula(nuevoUsuario.getCedula()) == null) {
 			aux = true;
-			misEmpleados.add(nuevoEmpleado);	
+			misUsers.add(nuevoUsuario);	
 		}
 			return aux;
 
 	}
 	
 		public boolean registrarEmpresa(Empresa nuevaEmpresa){
-			boolean aux = false;
-			if(buscarEmpresaByCode(nuevaEmpresa.getRNC()) == null) {
-				aux = true;
-				misEmpresas.add(nuevaEmpresa);
-			}
-
-				return aux;
+		    boolean aux = false;
+		    if(buscarEmpresaByCode(nuevaEmpresa.getRNC()) == null) {
+		        aux = true;
+		        misEmpresas.add(nuevaEmpresa);
+		    }
+		    return aux;
 		}
+
 		
 		public boolean correoExiste(String correo) {
 		    for (Empresa emp : misEmpresas) {
-		        if (emp.getContacto().equalsIgnoreCase(correo)) {
+		        String contacto = emp.getContacto();
+		        if (contacto != null && contacto.equalsIgnoreCase(correo)) {
 		            return true;
 		        }
 		    }
 		    return false;
 		}
 
+
 		public void removeUser(String cedula) {
-			Empleado aux = buscarEmpleadoByCedula(cedula);
+			Usuario aux = buscarEmpleadoByCedula(cedula);
 			for(int i = 0; i < aux.getSolicitudes().size(); i++) {
 				aux.removeSolicitud(aux.getSolicitudes().get(i));
 			}
-			misEmpleados.remove(aux);
+			misUsers.remove(aux);
 			
 			
 		}
+		
+		public boolean removeEmpresa(String RNC) {
+		    Empresa aux = buscarEmpresaByCode(RNC);
+		    boolean eliminado = false; 
+		    if (aux != null) {
+		        if (aux.getSolicitudes() != null) {
+		            for (int i = aux.getSolicitudes().size() - 1; i >= 0; i--) {
+		                aux.removeSolicitud(aux.getSolicitudes().get(i));
+		            }
+		        }
+		        eliminado = misEmpresas.remove(aux); 
+		    }
 
-		public void modificarUsuario(Empleado update) {
+		    return eliminado;
+		}
+
+		public void modificarUsuario(Usuario update) {
 			int index = buscarUsuarioByIndex(update.getCedula());
-			misEmpleados.set(index, update);
+			misUsers.set(index, update);
 		}
 
 		private int buscarUsuarioByIndex(String cedula) {
 			int index = -1;
 			boolean encontrado = false;
 			int i = 0;
-			while(!encontrado && i < misEmpleados.size()) {
-				if(misEmpleados.get(i).getCedula().equalsIgnoreCase(cedula)) {
+			while(!encontrado && i < misUsers.size()) {
+				if(misUsers.get(i).getCedula().equalsIgnoreCase(cedula)) {
 					index = i;
 					encontrado = true;
 				}

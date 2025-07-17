@@ -2,10 +2,8 @@ package visual;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import logico.Bolsa;
 import logico.Empresa;
 
@@ -17,15 +15,18 @@ public class RegEmpresa extends JDialog {
     private JTextField txtCorreo;
     private JComboBox<String> cbxProvincia;
     private JComboBox<String> cbxArea;
-
-    private Bolsa miBolsa;
+    
     private Empresa empresaExistente;
 
-    public RegEmpresa(Bolsa bolsa, Empresa empresaEditar) {
-        this.miBolsa = bolsa;
+    public RegEmpresa(Empresa empresaEditar) {
         this.empresaExistente = empresaEditar;
 
-        setTitle("Registro de Empresas");
+        if (empresaExistente == null) {
+            setTitle("Registro de Empresas");
+        } else {
+            setTitle("Modificar Empresa");
+        }
+
         setBounds(100, 100, 900, 660);
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
@@ -70,6 +71,35 @@ public class RegEmpresa extends JDialog {
         txtRNC.setBorder(null);
         txtRNC.setBounds(548, 167, 203, 22);
         panel.add(txtRNC);
+
+        txtRNC.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                    return;
+                }
+
+                String digits = txtRNC.getText().replaceAll("[^\\d]", "");
+                if (digits.length() >= 9) {
+                    e.consume();
+                    return;
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    String raw = txtRNC.getText().replaceAll("[^\\d]", "");
+                    StringBuilder formatted = new StringBuilder();
+                    for (int i = 0; i < raw.length(); i++) {
+                        formatted.append(raw.charAt(i));
+                        if (i == 2 || i == 7) {
+                            formatted.append("-");
+                        }
+                    }
+                    txtRNC.setText(formatted.toString());
+                });
+            }
+        });
 
         JLabel lblArea = new JLabel("Área");
         lblArea.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -135,6 +165,36 @@ public class RegEmpresa extends JDialog {
         panel_1.setBackground(new Color(0, 102, 153));
         panel_1.setBounds(0, 0, 182, 592);
         panel.add(panel_1);
+
+        addFocusListeners();
+
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+
+        JButton okButton = new JButton(empresaExistente == null ? "Registrar" : "Guardar Cambios");
+        buttonPane.add(okButton);
+        getRootPane().setDefaultButton(okButton);
+
+        JButton cancelButton = new JButton("Cancelar");
+        cancelButton.addActionListener(e -> dispose());
+        buttonPane.add(cancelButton);
+
+        okButton.addActionListener(e -> registrarEmpresa());
+        if (empresaExistente != null) {
+            cargarDatosEmpresa();
+            txtRNC.setEnabled(false);
+        }
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                txtNombre.requestFocusInWindow();
+            }
+        });
+    }
+
+    private void addFocusListeners() {
         txtNombre.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -185,58 +245,6 @@ public class RegEmpresa extends JDialog {
                 }
             }
         });
-
-        txtRNC.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                if (!Character.isDigit(c)) {
-                    e.consume();
-                    return;
-                }
-                String digits = txtRNC.getText().replaceAll("[^\\d]", "");
-                if (digits.length() >= 9) {
-                    e.consume();
-                    return;
-                }
-                SwingUtilities.invokeLater(() -> {
-                    String raw = txtRNC.getText().replaceAll("[^\\d]", "");
-                    StringBuilder formatted = new StringBuilder();
-                    for (int i = 0; i < raw.length(); i++) {
-                        formatted.append(raw.charAt(i));
-                        if (i == 2 || i == 7) {
-                            formatted.append("-");
-                        }
-                    }
-                    txtRNC.setText(formatted.toString());
-                });
-            }
-        });
-
-        JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        getContentPane().add(buttonPane, BorderLayout.SOUTH);
-
-        JButton okButton = new JButton(empresaExistente == null ? "Registrar" : "Guardar Cambios");
-        buttonPane.add(okButton);
-        getRootPane().setDefaultButton(okButton);
-
-        JButton cancelButton = new JButton("Cancelar");
-        cancelButton.addActionListener(e -> dispose());
-        buttonPane.add(cancelButton);
-
-        okButton.addActionListener(e -> registrarEmpresa());
-        if (empresaExistente != null) {
-            cargarDatosEmpresa();
-            txtRNC.setEnabled(false);
-        }
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                txtNombre.requestFocusInWindow();
-            }
-        });
     }
 
     private void cargarDatosEmpresa() {
@@ -281,23 +289,27 @@ public class RegEmpresa extends JDialog {
                                           "Correo inválido", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         if (empresaExistente == null) {
-            if (miBolsa.correoExiste(correo)) {
+            if (Bolsa.getInstance().correoExiste(correo)) {
                 JOptionPane.showMessageDialog(this, "Este correo ya está registrado.",
                                               "Correo duplicado", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         } else {
-            if (!correo.equalsIgnoreCase(empresaExistente.getContacto()) && miBolsa.correoExiste(correo)) {
-                JOptionPane.showMessageDialog(this, "Este correo ya está registrado.",
-                                              "Correo duplicado", JOptionPane.ERROR_MESSAGE);
-                return;
+            String contactoExistente = empresaExistente.getContacto();
+            if (contactoExistente == null || !contactoExistente.equalsIgnoreCase(correo)) {
+                if (Bolsa.getInstance().correoExiste(correo)) {
+                    JOptionPane.showMessageDialog(this, "Este correo ya está registrado.",
+                                                  "Correo duplicado", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
         }
 
         if (empresaExistente == null) {
-            Empresa nuevaEmpresa = new Empresa(nombre, rnc, area, correo, provincia, new ArrayList<>());
-            boolean exito = miBolsa.registrarEmpresa(nuevaEmpresa);
+            Empresa nuevaEmpresa = new Empresa(nombre, rnc, area, correo, provincia, null);
+            boolean exito = Bolsa.getInstance().registrarEmpresa(nuevaEmpresa);
             if (exito) {
                 JOptionPane.showMessageDialog(this, "Empresa registrada exitosamente.",
                                               "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
@@ -307,7 +319,7 @@ public class RegEmpresa extends JDialog {
                                               "Error de Registro", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-           empresaExistente.setNombre(nombre);
+            empresaExistente.setNombre(nombre);
             empresaExistente.setArea(area);
             empresaExistente.setContacto(correo);
             empresaExistente.setProvincia(provincia);

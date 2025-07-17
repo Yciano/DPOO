@@ -2,7 +2,7 @@ package logico;
 
 import java.util.ArrayList;
 
-public class TecnicoSuperior extends Empleado {
+public class TecnicoSuperior extends Usuario {
 	
 	private String tecnico;
 	private int aniosExperiencia;

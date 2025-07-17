@@ -2,7 +2,7 @@ package logico;
 
 import java.util.Date;
 
-public class Solicitud {
+public class VacanteEmpresa {
 	
 	private String identificador;
 	private String IDcompania;
@@ -10,7 +10,7 @@ public class Solicitud {
 	private Requisito requisito;
 	private boolean estado;
 	 
-	public Solicitud(String identificador, String IDcompania, Date fecha, Requisito requisito,
+	public VacanteEmpresa(String identificador, String IDcompania, Date fecha, Requisito requisito,
 			boolean estado) {
 		this.identificador = identificador;
 		this.IDcompania = IDcompania;

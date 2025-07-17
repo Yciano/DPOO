@@ -9,9 +9,9 @@ public class Empresa {
 	private String area;
 	private String contacto;
 	private String provincia;
-	private ArrayList<Solicitud>solicitudes;
+	private ArrayList<VacanteEmpresa>solicitudes;
 	
-	public Empresa(String nombre, String RNC, String area, String contacto, String provincia, ArrayList<Solicitud> solicitudes) {
+	public Empresa(String nombre, String RNC, String area, String contacto, String provincia, ArrayList<VacanteEmpresa> solicitudes) {
 		this.nombre = nombre;
 		this.RNC =RNC;
 		this.area = area;
@@ -52,11 +52,11 @@ public class Empresa {
 		this.provincia = provincia;
 	}
 
-	public ArrayList<Solicitud> getSolicitudes() {
+	public ArrayList<VacanteEmpresa> getSolicitudes() {
 		return solicitudes;
 	}
 
-	public void setSolicitudes(ArrayList<Solicitud> solicitudes) {
+	public void setSolicitudes(ArrayList<VacanteEmpresa> solicitudes) {
 		this.solicitudes = solicitudes;
 	}
 
@@ -68,4 +68,9 @@ public class Empresa {
 		this.contacto = contacto;
 	}
 	
+	 public void removeSolicitud(VacanteEmpresa aux) {
+	    	solicitudes.remove(aux);
+	    }
+
+
 }

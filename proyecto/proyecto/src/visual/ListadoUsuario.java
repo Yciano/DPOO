@@ -12,8 +12,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import logico.Bolsa;
-import logico.Empleado;
 import logico.Empresa;
+import logico.Usuario;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,7 +28,7 @@ public class ListadoUsuario extends JDialog {
 	private static JTable table;
 	private static Object[] row;
 	private static DefaultTableModel modelo;
-	private Empleado selected = null;
+	private Usuario selected = null;
 	private JButton btnModificar;
 	private JButton btnEliminar;
 	private JButton cancelButton;
@@ -75,7 +75,7 @@ public class ListadoUsuario extends JDialog {
 						int index = table.getSelectedRow();
 						if (index >= 0) {
 							selected = Bolsa.getInstance()
-									.buscarEmpleadoByCedula(table.getValueAt(index, 0).toString());
+							.buscarEmpleadoByCedula(table.getValueAt(index, 0).toString());
 							btnEliminar.setEnabled(true);
 							btnModificar.setEnabled(true);
 						}
@@ -170,7 +170,7 @@ public class ListadoUsuario extends JDialog {
 	public static void loadUsuario() {
 		modelo.setRowCount(0);
 		row = new Object[table.getColumnCount()];
-		for (Empleado aux : Bolsa.getInstance().getMisEmpleados()) {
+		for (Usuario aux : Bolsa.getInstance().getMisEmpleados()) {
 			row[0] = aux.getCedula();
 			row[1] = aux.getNombre();
 			row[2] = aux.getApellido();
