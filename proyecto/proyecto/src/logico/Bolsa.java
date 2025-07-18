@@ -229,6 +229,30 @@ public class Bolsa {
 			}
 			return index;
 		}
+		
+		public VacanteEmpresa buscarVacanteByID(String idVacante) {
+		    for (VacanteEmpresa vac : misSolicitudesEmp) {
+		        if (vac.getIdentificador().equalsIgnoreCase(idVacante)) {
+		            return vac;
+		        }
+		    }
+		    return null;
+		}
+
+		
+		public boolean aplicarAVacante(String cedulaUsuario, String idVacante) {
+		    Usuario usuario = buscarEmpleadoByCedula(cedulaUsuario);
+		    VacanteEmpresa vacante = buscarVacanteByID(idVacante);
+
+		    if (usuario != null && vacante != null) {
+		        SolicitudUsuario nuevaSolicitud = new SolicitudUsuario(usuario, vacante);
+		        misSolicitudesUsr.add(nuevaSolicitud);
+		        usuario.getSolicitudes().add(vacante);
+		        return true;
+		    }
+		    return false;
+		}
+
 	
 }
 
