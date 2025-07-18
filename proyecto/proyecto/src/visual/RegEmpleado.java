@@ -33,6 +33,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import java.awt.CardLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class RegEmpleado extends JDialog {
 
@@ -268,6 +270,35 @@ public class RegEmpleado extends JDialog {
 			}
 			{
 				txtCedula = new JTextField();
+				txtCedula.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyTyped(KeyEvent e) {
+						
+						char c = e.getKeyChar();
+		                if (!Character.isDigit(c)) {
+		                    e.consume();
+		                    return;
+		                }
+
+		                String digits = txtCedula.getText().replaceAll("[^\\d]", "");
+		                if (digits.length() >= 11) {
+		                    e.consume();
+		                    return;
+		                }
+
+		                SwingUtilities.invokeLater(() -> {
+		                    String raw = txtCedula.getText().replaceAll("[^\\d]", "");
+		                    StringBuilder formatted = new StringBuilder();
+		                    for (int i = 0; i < raw.length(); i++) {
+		                        formatted.append(raw.charAt(i));
+		                        if (i == 2 || i == 9) {
+		                            formatted.append("-");
+		                        }
+		                    }
+		                    txtCedula.setText(formatted.toString());
+		                });
+					}
+				});
 				txtCedula.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(MouseEvent e) {

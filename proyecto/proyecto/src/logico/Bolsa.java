@@ -7,15 +7,15 @@ public class Bolsa {
 	
 	private ArrayList<Usuario> misUsers;
 	private ArrayList<Empresa> misEmpresas;
-	private ArrayList<VacanteEmpresa> misSolicitudesEmp;
-	private ArrayList<SolicitudUsuario> misSolicitudesUsr;
+	private ArrayList<Vacante> misVacantes;
+	private ArrayList<Solicitud> misSolicitudes;
 	private static Bolsa bolsa = null;
 
 	public Bolsa() {
 		this.misUsers =  new ArrayList<Usuario>();
 		this.misEmpresas = new ArrayList<Empresa>();
-		this.misSolicitudesEmp = new ArrayList<VacanteEmpresa>();
-		this.misSolicitudesUsr = new ArrayList<SolicitudUsuario>();
+		this.misVacantes = new ArrayList<Vacante>();
+		this.misSolicitudes = new ArrayList<Solicitud>();
 	}
 	
 	public static Bolsa getInstance(){
@@ -25,11 +25,11 @@ public class Bolsa {
 		return bolsa;
 	} 
 
-	public ArrayList<Usuario> getMisEmpleados() {
+	public ArrayList<Usuario> getMisUsers() {
 		return misUsers;
 	}
 
-	public void setMisEmpleados(ArrayList<Usuario> misUsers) {
+	public void setMisUsers(ArrayList<Usuario> misUsers) {
 		this.misUsers = misUsers;
 	}
 
@@ -41,20 +41,20 @@ public class Bolsa {
 		this.misEmpresas = misEmpresas;
 	}
 
-	public ArrayList<VacanteEmpresa> getMisSolicitudes() {
-		return misSolicitudesEmp;
+	public ArrayList<Vacante> getMisVacantes() {
+		return misVacantes;
 	}
 
-	public void setMisSolicitudes(ArrayList<VacanteEmpresa> misSolicitudes) {
-		this.misSolicitudesEmp = misSolicitudes;
+	public void setMisVacantes(ArrayList<Vacante> misVacantes) {
+		this.misVacantes = misVacantes;
 	}
 	
-	public ArrayList<SolicitudUsuario> getMisSolicitudesUSR() {
-		return misSolicitudesUsr;
+	public ArrayList<Solicitud> getMisSolicitudes() {
+		return misSolicitudes;
 	}
 
-	public void setMisSolicitudesUSR(ArrayList<SolicitudUsuario> misSolicitudes) {
-		this.misSolicitudesUsr = misSolicitudes;
+	public void setMisSolicitudes(ArrayList<Solicitud> misSolicitudes) {
+		this.misSolicitudes = misSolicitudes;
 	}
 	
 	public boolean registrarSolictud(String identificador, String IDcompania, Date fecha, Requisito requisito, boolean estado)
@@ -62,15 +62,15 @@ public class Bolsa {
 		boolean realizado = false;
 		Empresa aux = buscarEmpresaByCode(IDcompania);
 		if(aux != null){
-			VacanteEmpresa sol = new VacanteEmpresa(identificador, IDcompania, fecha, requisito, estado);
-			misSolicitudesEmp.add(sol);       
+			Vacante sol = new Vacante(identificador, IDcompania, fecha, requisito, estado);
+			misVacantes.add(sol);       
 			aux.getSolicitudes().add(sol);
 			realizado = true;
 		} 
 		return realizado;
 	}
 
-	public ArrayList<Usuario> match(VacanteEmpresa sol){
+	public ArrayList<Usuario> match(Vacante sol){
 		ArrayList<Usuario> empleados = new ArrayList<Usuario>();
 		for(Usuario aux: misUsers){
 			int cheq = 0;
@@ -109,6 +109,8 @@ public class Bolsa {
 
 
 		}
+		
+		OrdenarMatchBsort(empleados);
 
 		return empleados;
 	}
@@ -117,7 +119,7 @@ public class Bolsa {
 	public void OrdenarMatchBsort(ArrayList<Usuario> users) {
 		for (int i = 0; i < users.size() - 1; i++) {
 			for (int j = 0; j < users.size() - i - 1; j++) {
-				if (users.get(j).match() < users.get(j + 1).match()) {
+				if (users.get(j).getMatch() < users.get(j + 1).getMatch()) {
 					Usuario temp = users.get(j);
 					users.set(j, users.get(j + 1));
 					users.set(j + 1, temp);
@@ -188,12 +190,18 @@ public class Bolsa {
 
 		public void removeUser(String cedula) {
 			Usuario aux = buscarEmpleadoByCedula(cedula);
-			for(int i = 0; i < aux.getSolicitudes().size(); i++) {
+			for(int i = aux.getSolicitudes().size() - 1; i >= 0 ; i--) {
 				aux.removeSolicitud(aux.getSolicitudes().get(i));
 			}
 			misUsers.remove(aux);
-			
-			
+		}
+		
+		public void removeVacante(String identificador) {
+			Vacante aux = buscarVacanteByID(identificador);
+			for(int i = aux.getMisSolicitudes().size() - 1; i >= 0 ; i--) {
+				aux.removeSolicitud(aux.getMisSolicitudes().get(i));
+			}
+			misVacantes.remove(aux);
 		}
 		
 		public boolean removeEmpresa(String RNC) {
@@ -230,8 +238,8 @@ public class Bolsa {
 			return index;
 		}
 		
-		public VacanteEmpresa buscarVacanteByID(String idVacante) {
-		    for (VacanteEmpresa vac : misSolicitudesEmp) {
+		public Vacante buscarVacanteByID(String idVacante) {
+		    for (Vacante vac : misVacantes) {
 		        if (vac.getIdentificador().equalsIgnoreCase(idVacante)) {
 		            return vac;
 		        }
@@ -242,11 +250,11 @@ public class Bolsa {
 		
 		public boolean aplicarAVacante(String cedulaUsuario, String idVacante) {
 		    Usuario usuario = buscarEmpleadoByCedula(cedulaUsuario);
-		    VacanteEmpresa vacante = buscarVacanteByID(idVacante);
+		    Vacante vacante = buscarVacanteByID(idVacante);
 
 		    if (usuario != null && vacante != null) {
-		        SolicitudUsuario nuevaSolicitud = new SolicitudUsuario(usuario, vacante);
-		        misSolicitudesUsr.add(nuevaSolicitud);
+		        Solicitud nuevaSolicitud = new Solicitud(usuario, vacante);
+		        misSolicitudes.add(nuevaSolicitud);
 		        usuario.getSolicitudes().add(vacante);
 		        return true;
 		    }

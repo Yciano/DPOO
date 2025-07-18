@@ -1,22 +1,25 @@
 package logico;
 
+import java.util.ArrayList;
 import java.util.Date;
 
-public class VacanteEmpresa {
+public class Vacante {
 	
 	private String identificador;
 	private String IDcompania;
 	private Date fecha;
 	private Requisito requisito;
 	private boolean estado;
+	private ArrayList<Solicitud> misSolicitudes;
 	 
-	public VacanteEmpresa(String identificador, String IDcompania, Date fecha, Requisito requisito,
+	public Vacante(String identificador, String IDcompania, Date fecha, Requisito requisito,
 			boolean estado) {
 		this.identificador = identificador;
 		this.IDcompania = IDcompania;
 		this.fecha = fecha;
 		this.requisito = requisito;
 		this.estado = estado;
+		this.misSolicitudes = new ArrayList<Solicitud>();
 	}
 
 	public String getIdentificador() {
@@ -60,4 +63,17 @@ public class VacanteEmpresa {
 		this.requisito = requisito;
 	}
 
+
+	public ArrayList<Solicitud> getMisSolicitudes() {
+		return misSolicitudes;
+	}
+
+	public void setMisSolicitudes(ArrayList<Solicitud> misSolicitudes) {
+		this.misSolicitudes = misSolicitudes;
+	}
+
+	public void removeSolicitud(Solicitud solicitud) {
+		misSolicitudes.remove(solicitud);
+	}
+	
 }

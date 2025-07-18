@@ -29,7 +29,7 @@ import java.util.Date;
 
 import javax.swing.SwingUtilities;
 
-public class RegSolEmpresa extends JDialog {
+public class RegVacante extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtIdentificador;
@@ -50,7 +50,7 @@ public class RegSolEmpresa extends JDialog {
 
 	public static void main(String[] args) {
 		try {
-			RegSolEmpresa dialog = new RegSolEmpresa();
+			RegVacante dialog = new RegVacante();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -58,7 +58,7 @@ public class RegSolEmpresa extends JDialog {
 		}
 	}
 
-	public RegSolEmpresa() {
+	public RegVacante() {
 		setTitle("Registro de Solicitudes");
 		setResizable(false);
 		setBounds(100, 100, 900, 660);

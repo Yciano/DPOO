@@ -170,7 +170,7 @@ public class ListadoUsuario extends JDialog {
 	public static void loadUsuario() {
 		modelo.setRowCount(0);
 		row = new Object[table.getColumnCount()];
-		for (Usuario aux : Bolsa.getInstance().getMisEmpleados()) {
+		for (Usuario aux : Bolsa.getInstance().getMisUsers()) {
 			row[0] = aux.getCedula();
 			row[1] = aux.getNombre();
 			row[2] = aux.getApellido();

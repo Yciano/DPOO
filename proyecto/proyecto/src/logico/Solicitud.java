@@ -2,12 +2,12 @@ package logico;
 
 import java.util.Date;
 
-public class SolicitudUsuario {
+public class Solicitud {
 	Usuario user;
-	VacanteEmpresa vacante;
+	Vacante vacante;
 	
 	
-	public SolicitudUsuario(Usuario user, VacanteEmpresa vacante) {
+	public Solicitud(Usuario user, Vacante vacante) {
 		this.user = user;
 		this.vacante = vacante;
 	
@@ -19,10 +19,10 @@ public class SolicitudUsuario {
 	public void setUser(Usuario user) {
 		this.user = user;
 	}
-	public VacanteEmpresa getVacante() {
+	public Vacante getVacante() {
 		return vacante;
 	}
-	public void setVacante(VacanteEmpresa vacante) {
+	public void setVacante(Vacante vacante) {
 		this.vacante = vacante;
 	}
 	 

@@ -18,7 +18,7 @@ public abstract class Usuario {
 	protected boolean licencia;
 	protected boolean TieneVeh;
 	protected int match;
-	protected ArrayList<VacanteEmpresa>solicitudes;
+	protected ArrayList<Vacante>solicitudes;
 	
 	public Usuario(String nombre, String apellido, int edad, String cedula, String contacto, String sexo, float SalarioDeseado, String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud, boolean licencia, boolean TieneVeh) {
 		this.nombre = nombre;
@@ -34,7 +34,7 @@ public abstract class Usuario {
 		this.dispuestoMud = dispuestoMud;
 		this.licencia = licencia;
 		this.TieneVeh = TieneVeh;
-		this.solicitudes = new ArrayList<VacanteEmpresa>();
+		this.solicitudes = new ArrayList<Vacante>();
 		
 	}
 
@@ -134,7 +134,7 @@ public abstract class Usuario {
 			TieneVeh = tieneVeh;
 		}
 
-		public int match() {
+		public int getMatch() {
 			return match;
 		}
 
@@ -142,15 +142,15 @@ public abstract class Usuario {
 			this.match = match;
 		}
 
-		public ArrayList<VacanteEmpresa> getSolicitudes() {
+		public ArrayList<Vacante> getSolicitudes() {
 			return solicitudes;
 		}
 
-		public void setSolicitudes(ArrayList<VacanteEmpresa> solicitudes) {
+		public void setSolicitudes(ArrayList<Vacante> solicitudes) {
 			this.solicitudes = solicitudes;
 		}
 		
-		 public void removeSolicitud(VacanteEmpresa aux) {
+		 public void removeSolicitud(Vacante aux) {
 		    	solicitudes.remove(aux);
 		    }
 
