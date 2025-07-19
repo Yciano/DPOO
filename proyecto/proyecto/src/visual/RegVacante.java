@@ -5,23 +5,31 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Bolsa;
+import logico.Requisito;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 import javax.swing.SwingUtilities;
 
-public class RegSolEmpresa extends JDialog {
+public class RegVacante extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtIdentificador;
@@ -42,7 +50,7 @@ public class RegSolEmpresa extends JDialog {
 
 	public static void main(String[] args) {
 		try {
-			RegSolEmpresa dialog = new RegSolEmpresa();
+			RegVacante dialog = new RegVacante();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -50,7 +58,7 @@ public class RegSolEmpresa extends JDialog {
 		}
 	}
 
-	public RegSolEmpresa() {
+	public RegVacante() {
 		setTitle("Registro de Solicitudes");
 		setResizable(false);
 		setBounds(100, 100, 900, 660);
@@ -395,6 +403,92 @@ public class RegSolEmpresa extends JDialog {
 		JButton btnRegistrar = new JButton("Registrar");
 		btnRegistrar.setActionCommand("OK");
 		buttonPane.add(btnRegistrar);
+		
+		btnRegistrar.addActionListener(e -> {
+		    String id = txtIdentificador.getText().trim();
+		    String idCompania = txtIDCompania.getText().trim();
+		    String fechaStr = txtFecha.getText().trim();
+		    String tipoTrabajo = (String) cbxTipoTrabajo.getSelectedItem();
+		    String tipoEmpleado = (String) cbxTipoEmpleado.getSelectedItem();
+		    String sexo = (String) cbxSexo.getSelectedItem();
+		    int edad = (int) spnEdad.getValue();
+		    int experiencia = (int) spnExperiencia.getValue();
+		    String prioridad = (String) cbxPrioridad.getSelectedItem();
+		    boolean veh = rdbtnVehSi.isSelected();
+		    boolean mudarse = rdbtnMudarseSi.isSelected();
+
+		    if (id.isEmpty() || id.equals("Ingrese un ID para la solicitud") ||
+		        idCompania.isEmpty() || idCompania.equals("Ingrese ID de la compañía") ||
+		        fechaStr.isEmpty() || fechaStr.equals("dd/mm/yyyy") ||
+		        tipoTrabajo.equals("<Seleccione>") || tipoEmpleado.equals("<Seleccione>") ||
+		        sexo.equals("<Seleccione>") || prioridad.equals("<Seleccione>")) {
+		        JOptionPane.showMessageDialog(this, "Complete todos los campos obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return;
+		    }
+
+		    Date fecha;
+		    try {
+		        fecha = new SimpleDateFormat("dd/MM/yyyy").parse(fechaStr);
+		    } catch (ParseException ex) {
+		        JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Use dd/mm/yyyy", "Error", JOptionPane.ERROR_MESSAGE);
+		        return;
+		    }
+
+		    String carrera = "", tecnico = "";
+		    ArrayList<String> habilidades = new ArrayList<>();
+
+		    switch (tipoEmpleado) {
+		        case "Universitario":
+		            carrera = txtCarrera.getText().trim();
+		            if (carrera.isEmpty() || carrera.equals("Ej: Ing. en Ciencias de Computación")) {
+		                JOptionPane.showMessageDialog(this, "Ingrese una carrera válida.", "Error", JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
+		            break;
+		        case "Tecnico":
+		            tecnico = txtTecnico.getText().trim();
+		            experiencia = (int) spnExpTecnico.getValue();
+		            if (tecnico.isEmpty() || tecnico.equals("Ej: Electricidad")) {
+		                JOptionPane.showMessageDialog(this, "Ingrese un área técnica válida.", "Error", JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
+		            break;
+		        case "Obrero":
+		            String habText = txtHabilidades.getText().trim();
+		            if (habText.isEmpty() || habText.equals("Ej: Plomería, Jardinería, Electricidad")) {
+		                JOptionPane.showMessageDialog(this, "Ingrese al menos una habilidad.", "Error", JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
+		            for (String h : habText.split(",")) {
+		                habilidades.add(h.trim());
+		            }
+		            break;
+		    }
+
+		    Requisito requisito = new Requisito(
+		        tipoTrabajo,
+		        tipoEmpleado,
+		        carrera,
+		        tecnico,
+		        habilidades,
+		        sexo,
+		        experiencia,
+		        edad,
+		        veh,
+		        mudarse,
+		        prioridad
+		    );
+
+		    boolean exito = Bolsa.getInstance().registrarSolictud(id, idCompania, fecha, requisito, true);
+
+		    if (exito) {
+		        JOptionPane.showMessageDialog(this, "Solicitud registrada exitosamente.");
+		        dispose(); 
+		    } else {
+		        JOptionPane.showMessageDialog(this, "Error: no se pudo registrar. Verifique el ID de la compañía.", "Error", JOptionPane.ERROR_MESSAGE);
+		    }
+		});
+
 		getRootPane().setDefaultButton(btnRegistrar);
 
 		JButton btnCancelar = new JButton("Cancelar");
