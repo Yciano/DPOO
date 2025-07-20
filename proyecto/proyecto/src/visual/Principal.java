@@ -78,6 +78,20 @@ public class Principal extends JFrame {
             lsUsuario.setVisible(true);
         });
         mnNewMenu_1.add(mntmNewMenuItem_3);
+        
+        JMenu mnSolicitudes = new JMenu("Solicitudes");
+        menuBar.add(mnSolicitudes);
+        
+        JMenuItem mntmRegsolempleo = new JMenuItem("RegSolEmpleo");
+        mntmRegsolempleo.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		RegSolEmpleo RgSolEmp = new RegSolEmpleo(miBolsa);
+        		RgSolEmp.setModal(true);
+        		RgSolEmp.setVisible(true);
+        		
+        	}
+        });
+        mnSolicitudes.add(mntmRegsolempleo);
 
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

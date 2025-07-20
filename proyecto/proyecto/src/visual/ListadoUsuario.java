@@ -32,6 +32,7 @@ public class ListadoUsuario extends JDialog {
 	private JButton btnModificar;
 	private JButton btnEliminar;
 	private JButton cancelButton;
+	private JButton btnDetalles;
 	
 	
 	public static void main(String[] args) {
@@ -78,6 +79,7 @@ public class ListadoUsuario extends JDialog {
 							.buscarEmpleadoByCedula(table.getValueAt(index, 0).toString());
 							btnEliminar.setEnabled(true);
 							btnModificar.setEnabled(true);
+							btnDetalles.setEnabled(true);
 						}
 					}
 				});
@@ -111,6 +113,7 @@ public class ListadoUsuario extends JDialog {
 						table.clearSelection();
 						btnModificar.setEnabled(false);
 						btnEliminar.setEnabled(false);
+						btnDetalles.setEnabled(false);
 						selected = null;
 					}
 				});
@@ -137,9 +140,11 @@ public class ListadoUsuario extends JDialog {
 									loadUsuario();
 									table.clearSelection();
 									btnModificar.setEnabled(false);
+									btnDetalles.setEnabled(false);
 								} else {
 									table.clearSelection();
 									btnModificar.setEnabled(false);
+									btnDetalles.setEnabled(false);
 								}
 							
 						}
@@ -153,6 +158,19 @@ public class ListadoUsuario extends JDialog {
 				buttonPane.add(btnEliminar);
 				getRootPane().setDefaultButton(btnEliminar);
 			}
+			btnDetalles = new JButton("Detalles");
+			btnDetalles.setEnabled(false);
+			btnDetalles.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (selected != null) {
+						DetallesUsuario detalle = new DetallesUsuario(selected);
+						detalle.setModal(true);
+						detalle.setVisible(true);
+					}
+				}
+			});
+			buttonPane.add(btnDetalles);
+
 			{
 				cancelButton = new JButton("Cancelar");
 				cancelButton.addActionListener(new ActionListener() {

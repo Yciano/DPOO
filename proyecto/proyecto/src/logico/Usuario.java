@@ -122,6 +122,14 @@ public abstract class Usuario {
 			return licencia;
 		}
 
+		public float getSalarioDeseado() {
+			return SalarioDeseado;
+		}
+
+		public void setSalarioDeseado(float salarioDeseado) {
+			SalarioDeseado = salarioDeseado;
+		}
+
 		public void setLicencia(boolean licencia) {
 			this.licencia = licencia;
 		}
