@@ -2,7 +2,9 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import logico.Bolsa;  
+
+import logico.Bolsa;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,12 +14,10 @@ import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
- 
-
 public class Principal extends JFrame {
 
     private JPanel contentPane;
-    private Bolsa miBolsa;   
+    private Bolsa miBolsa;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -31,8 +31,8 @@ public class Principal extends JFrame {
     }
 
     public Principal() {
-         
-        miBolsa = new Bolsa();
+
+        miBolsa = Bolsa.getInstance();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1017, 688);
@@ -46,7 +46,7 @@ public class Principal extends JFrame {
 
         JMenuItem mntmNewMenuItem = new JMenuItem("Registrar Empresa");
         mntmNewMenuItem.addActionListener(e -> {
-            RegEmpresa rgEmp = new RegEmpresa(null);  
+            RegEmpresa rgEmp = new RegEmpresa(null);
             rgEmp.setModal(true);
             rgEmp.setVisible(true);
         });
@@ -54,7 +54,7 @@ public class Principal extends JFrame {
 
         JMenuItem mntmNewMenuItem_1 = new JMenuItem("Registrar Usuario", null);
         mntmNewMenuItem_1.addActionListener(e -> {
-            RegEmpleado rg = new RegEmpleado(null);   
+            RegEmpleado rg = new RegEmpleado(null);
             rg.setModal(true);
             rg.setVisible(true);
         });
@@ -65,7 +65,7 @@ public class Principal extends JFrame {
 
         JMenuItem mntmNewMenuItem_2 = new JMenuItem("Listado de Empresas");
         mntmNewMenuItem_2.addActionListener(e -> {
-            ListadoEmpresas list = new ListadoEmpresas();   
+            ListadoEmpresas list = new ListadoEmpresas();
             list.setModal(true);
             list.setVisible(true);
         });
@@ -78,18 +78,25 @@ public class Principal extends JFrame {
             lsUsuario.setVisible(true);
         });
         mnNewMenu_1.add(mntmNewMenuItem_3);
-        
+
+        JMenuItem mntmListadoSolicitudes = new JMenuItem("Listado de Solicitudes");
+        mntmListadoSolicitudes.addActionListener(e -> {
+            ListadoSolicitudes listSol = new ListadoSolicitudes();
+            listSol.setModal(true);
+            listSol.setVisible(true);
+        });
+        mnNewMenu_1.add(mntmListadoSolicitudes);
+
         JMenu mnSolicitudes = new JMenu("Solicitudes");
         menuBar.add(mnSolicitudes);
-        
-        JMenuItem mntmRegsolempleo = new JMenuItem("RegSolEmpleo");
+
+        JMenuItem mntmRegsolempleo = new JMenuItem("Solicitud De Empleo");
         mntmRegsolempleo.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		RegSolEmpleo RgSolEmp = new RegSolEmpleo(miBolsa);
-        		RgSolEmp.setModal(true);
-        		RgSolEmp.setVisible(true);
-        		
-        	}
+            public void actionPerformed(ActionEvent e) {
+                RegSolEmpleo RgSolEmp = new RegSolEmpleo(Bolsa.getInstance());
+                RgSolEmp.setModal(true);
+                RgSolEmp.setVisible(true);
+            }
         });
         mnSolicitudes.add(mntmRegsolempleo);
 

@@ -108,7 +108,7 @@ public class RegVacante extends JDialog {
 		});
 		panel.add(txtIdentificador);
 
-		JLabel lblIDCompania = new JLabel("ID Compañía");
+		JLabel lblIDCompania = new JLabel("RNC");
 		lblIDCompania.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblIDCompania.setBounds(548, 130, 120, 20);
 		panel.add(lblIDCompania);

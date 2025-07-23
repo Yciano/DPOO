@@ -17,7 +17,10 @@ public class Bolsa {
 		this.misVacantes = new ArrayList<Vacante>();
 		this.misSolicitudes = new ArrayList<Solicitud>();
 	}
-	
+
+    private static int genCodSolicitud = 0;
+    
+    
 	public static Bolsa getInstance(){
 		if(bolsa == null){
 			bolsa = new Bolsa();
@@ -106,15 +109,12 @@ public class Bolsa {
 				aux.setMatch(cheq);
 				empleados.add(aux);
 			}
-
-
 		}
 		
 		OrdenarMatchBsort(empleados);
 
 		return empleados;
 	}
-
 
 	public void OrdenarMatchBsort(ArrayList<Usuario> users) {
 		for (int i = 0; i < users.size() - 1; i++) {
@@ -144,126 +144,130 @@ public class Bolsa {
 	
 
 	public Usuario buscarEmpleadoByCedula(String cedula){
-		Usuario aux = null;
-		boolean encontrado = false;
-		int i = 0;
-		while (!encontrado && i < misUsers.size()){
-			if(misUsers.get(i).getCedula().equalsIgnoreCase(cedula)){
-				aux = misUsers.get(i);
-				encontrado = true;
-			}
-			i++;
-		}
-		return aux;
+	    Usuario aux = null;
+	    boolean encontrado = false;
+	    int i = 0;
+	    while (!encontrado && i < misUsers.size()){
+	        if(misUsers.get(i).getCedula().equalsIgnoreCase(cedula)){
+	            aux = misUsers.get(i);
+	            encontrado = true;
+	        }
+	        i++;
+	    }
+	    return aux;
 	}
 
-		public boolean registrarEmpleado(Usuario nuevoUsuario){
+	public boolean registrarEmpleado(Usuario nuevoUsuario){
 		boolean aux = false;
 		if(buscarEmpleadoByCedula(nuevoUsuario.getCedula()) == null) {
 			aux = true;
 			misUsers.add(nuevoUsuario);	
 		}
-			return aux;
-
+		return aux;
 	}
 	
-		public boolean registrarEmpresa(Empresa nuevaEmpresa){
-		    boolean aux = false;
-		    if(buscarEmpresaByCode(nuevaEmpresa.getRNC()) == null) {
-		        aux = true;
-		        misEmpresas.add(nuevaEmpresa);
-		    }
-		    return aux;
+	public boolean registrarEmpresa(Empresa nuevaEmpresa){
+	    boolean aux = false;
+	    if(buscarEmpresaByCode(nuevaEmpresa.getRNC()) == null) {
+	        aux = true;
+	        misEmpresas.add(nuevaEmpresa);
+	    }
+	    return aux;
+	}
+
+	public boolean correoExiste(String correo) {
+	    for (Empresa emp : misEmpresas) {
+	        String contacto = emp.getContacto();
+	        if (contacto != null && contacto.equalsIgnoreCase(correo)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
+	public void removeUser(String cedula) {
+		Usuario aux = buscarEmpleadoByCedula(cedula);
+		for(int i = aux.getSolicitudes().size() - 1; i >= 0 ; i--) {
+			aux.removeSolicitud(aux.getSolicitudes().get(i));
 		}
-
-		
-		public boolean correoExiste(String correo) {
-		    for (Empresa emp : misEmpresas) {
-		        String contacto = emp.getContacto();
-		        if (contacto != null && contacto.equalsIgnoreCase(correo)) {
-		            return true;
-		        }
-		    }
-		    return false;
+		misUsers.remove(aux);
+	}
+	
+	public void removeVacante(String identificador) {
+		Vacante aux = buscarVacanteByID(identificador);
+		for(int i = aux.getMisSolicitudes().size() - 1; i >= 0 ; i--) {
+			aux.removeSolicitud(aux.getMisSolicitudes().get(i));
 		}
+		misVacantes.remove(aux);
+	}
+	
+	public boolean removeEmpresa(String RNC) {
+	    Empresa aux = buscarEmpresaByCode(RNC);
+	    boolean eliminado = false; 
+	    if (aux != null) {
+	        if (aux.getSolicitudes() != null) {
+	            for (int i = aux.getSolicitudes().size() - 1; i >= 0; i--) {
+	                aux.removeSolicitud(aux.getSolicitudes().get(i));
+	            }
+	        }
+	        eliminado = misEmpresas.remove(aux); 
+	    }
+	    return eliminado;
+	}
 
+	public void modificarUsuario(Usuario update) {
+		int index = buscarUsuarioByIndex(update.getCedula());
+		misUsers.set(index, update);
+	}
 
-		public void removeUser(String cedula) {
-			Usuario aux = buscarEmpleadoByCedula(cedula);
-			for(int i = aux.getSolicitudes().size() - 1; i >= 0 ; i--) {
-				aux.removeSolicitud(aux.getSolicitudes().get(i));
+	private int buscarUsuarioByIndex(String cedula) {
+		int index = -1;
+		boolean encontrado = false;
+		int i = 0;
+		while(!encontrado && i < misUsers.size()) {
+			if(misUsers.get(i).getCedula().equalsIgnoreCase(cedula)) {
+				index = i;
+				encontrado = true;
 			}
-			misUsers.remove(aux);
+			i++;
 		}
-		
-		public void removeVacante(String identificador) {
-			Vacante aux = buscarVacanteByID(identificador);
-			for(int i = aux.getMisSolicitudes().size() - 1; i >= 0 ; i--) {
-				aux.removeSolicitud(aux.getMisSolicitudes().get(i));
-			}
-			misVacantes.remove(aux);
-		}
-		
-		public boolean removeEmpresa(String RNC) {
-		    Empresa aux = buscarEmpresaByCode(RNC);
-		    boolean eliminado = false; 
-		    if (aux != null) {
-		        if (aux.getSolicitudes() != null) {
-		            for (int i = aux.getSolicitudes().size() - 1; i >= 0; i--) {
-		                aux.removeSolicitud(aux.getSolicitudes().get(i));
-		            }
-		        }
-		        eliminado = misEmpresas.remove(aux); 
-		    }
-
-		    return eliminado;
-		}
-
-		public void modificarUsuario(Usuario update) {
-			int index = buscarUsuarioByIndex(update.getCedula());
-			misUsers.set(index, update);
-		}
-
-		private int buscarUsuarioByIndex(String cedula) {
-			int index = -1;
-			boolean encontrado = false;
-			int i = 0;
-			while(!encontrado && i < misUsers.size()) {
-				if(misUsers.get(i).getCedula().equalsIgnoreCase(cedula)) {
-					index = i;
-					encontrado = true;
-				}
-				i++;
-			}
-			return index;
-		}
-		
-		public Vacante buscarVacanteByID(String idVacante) {
-		    for (Vacante vac : misVacantes) {
-		        if (vac.getIdentificador().equalsIgnoreCase(idVacante)) {
-		            return vac;
-		        }
-		    }
-		    return null;
-		}
-
-		
-		public boolean aplicarAVacante(String cedulaUsuario, String idVacante) {
-		    Usuario usuario = buscarEmpleadoByCedula(cedulaUsuario);
-		    Vacante vacante = buscarVacanteByID(idVacante);
-
-		    if (usuario != null && vacante != null) {
-		        Solicitud nuevaSolicitud = new Solicitud(usuario, vacante);
-		        misSolicitudes.add(nuevaSolicitud);
-		        usuario.getSolicitudes().add(vacante);
-		        return true;
-		    }
-		    return false;
-		}
+		return index;
+	}
+	
+	public Vacante buscarVacanteByID(String idVacante) {
+	    for (Vacante vac : misVacantes) {
+	        if (vac.getIdentificador().equalsIgnoreCase(idVacante)) {
+	            return vac;
+	        }
+	    }
+	    return null;
+	}
 
 	
+	public Solicitud buscarSolicitudByID(String id) {
+	    for (Solicitud sol : misSolicitudes) {
+	        if (sol.getId().equalsIgnoreCase(id)) {
+	            return sol;
+	        }
+	    }
+	    return null;
+	}
+
+	public boolean aplicarAVacante(String cedulaUsuario, String idVacante, String idSolicitud, String fecha, int salarioEsperado) {
+	    Usuario usuario = buscarEmpleadoByCedula(cedulaUsuario);
+	    Vacante vacante = buscarVacanteByID(idVacante);
+
+	    if (usuario != null && vacante != null) {
+	        Solicitud nuevaSolicitud = new Solicitud(idSolicitud, fecha, salarioEsperado, fecha, usuario);
+	        misSolicitudes.add(nuevaSolicitud);
+	        usuario.getSolicitudes().add(vacante);
+	        
+	        return true;
+	    }
+	    return false;
+	}
+
+	
+
+
 }
-
-
-
-
