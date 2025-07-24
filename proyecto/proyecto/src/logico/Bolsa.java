@@ -18,7 +18,7 @@ public class Bolsa {
 		this.misSolicitudes = new ArrayList<Solicitud>();
 	}
 
-    private static int genCodSolicitud = 0;
+	private static int contadorSolicitudes = 0;
     
     
 	public static Bolsa getInstance(){
@@ -253,19 +253,28 @@ public class Bolsa {
 	    return null;
 	}
 
-	public boolean aplicarAVacante(String cedulaUsuario, String idVacante, String idSolicitud, String fecha, int salarioEsperado) {
+	public boolean aplicarAVacante(String cedulaUsuario, String idVacante, String fecha, int salarioEsperado, String tipoTrabajo) {
 	    Usuario usuario = buscarEmpleadoByCedula(cedulaUsuario);
 	    Vacante vacante = buscarVacanteByID(idVacante);
 
 	    if (usuario != null && vacante != null) {
-	        Solicitud nuevaSolicitud = new Solicitud(idSolicitud, fecha, salarioEsperado, fecha, usuario);
+	        String idSolicitud = generarCodigoSolicitudActual();
+	        Solicitud nuevaSolicitud = new Solicitud(idSolicitud, fecha, salarioEsperado, tipoTrabajo, usuario);
 	        misSolicitudes.add(nuevaSolicitud);
 	        usuario.getSolicitudes().add(vacante);
-	        
 	        return true;
 	    }
 	    return false;
 	}
+
+	public static String generarCodigoSolicitudActual() {
+	    return String.format("SOL-%02d", contadorSolicitudes + 1);
+	}
+
+	public static void incrementarContadorSolicitudes() {
+	    contadorSolicitudes++;
+	}
+
 
 	
 

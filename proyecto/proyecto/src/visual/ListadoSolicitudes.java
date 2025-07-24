@@ -44,7 +44,7 @@ public class ListadoSolicitudes extends JDialog {
         table = new JTable();
         modelo = new DefaultTableModel() {
             public boolean isCellEditable(int row, int column) {
-                return false; // no editable
+                return false;
             }
         };
 

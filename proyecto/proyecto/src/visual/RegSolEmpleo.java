@@ -33,8 +33,6 @@ public class RegSolEmpleo extends JDialog {
 
     private final int[] valoresFijos = {15000, 30000, 45000, 60000, 75000, 90000, 100000};
     private static final Pattern CEDULA_PATTERN = Pattern.compile("\\d{3}-\\d{7}-\\d{1}");
-    
-   
 
     public RegSolEmpleo(Bolsa bolsa) {
         this.bolsa = bolsa;
@@ -68,7 +66,7 @@ public class RegSolEmpleo extends JDialog {
         lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 20));
         lblTitulo.setBounds(150, 13, 450, 59);
         panelTitulo.add(lblTitulo);
-        
+
         JLabel lblIdentificador = new JLabel("Identificador");
         lblIdentificador.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblIdentificador.setBounds(194, 130, 120, 20);
@@ -77,6 +75,7 @@ public class RegSolEmpleo extends JDialog {
         txtIdentificador = new JTextField();
         txtIdentificador.setEditable(false);
         txtIdentificador.setBounds(194, 155, 140, 22);
+        txtIdentificador.setText(Bolsa.generarCodigoSolicitudActual());
         panel.add(txtIdentificador);
 
         JLabel lblCedula = new JLabel("Cédula");
@@ -92,7 +91,7 @@ public class RegSolEmpleo extends JDialog {
             @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
-            
+
                 if (!Character.isDigit(c)) {
                     e.consume();
                     return;
@@ -299,16 +298,11 @@ public class RegSolEmpleo extends JDialog {
         JButton btnRegistrar = new JButton("Registrar");
         btnRegistrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String identificador = txtIdentificador.getText().trim();
                 String cedula = txtCedula.getText().trim();
                 String fecha = txtFecha.getText().trim();
                 String tipoTrabajo = (String) cbxTipoTrabajo.getSelectedItem();
                 int salario = sliderSalario.getValue();
 
-                if (identificador.isEmpty()) {
-                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "Ingrese un identificador para la solicitud.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
                 if (!validarCedula(cedula)) {
                     JOptionPane.showMessageDialog(RegSolEmpleo.this, "Formato de cédula inválido. Use ###-#######-#.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -327,6 +321,10 @@ public class RegSolEmpleo extends JDialog {
                     JOptionPane.showMessageDialog(RegSolEmpleo.this, "Empleado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                Bolsa.incrementarContadorSolicitudes();
+                String identificador = Bolsa.generarCodigoSolicitudActual();
+                txtIdentificador.setText(identificador);
+
                 Solicitud nuevaSolicitud = new Solicitud(identificador, fecha, salario, tipoTrabajo, usuario);
                 nuevaSolicitud.setVacante(null);
                 bolsa.getMisSolicitudes().add(nuevaSolicitud);
@@ -340,6 +338,8 @@ public class RegSolEmpleo extends JDialog {
         JButton btnCancelar = new JButton("Cancelar");
         btnCancelar.addActionListener(e -> dispose());
         buttonPane.add(btnCancelar);
+        SwingUtilities.invokeLater(() -> txtCedula.requestFocusInWindow());
+
     }
 
     private boolean validarCedula(String cedula) {
@@ -414,4 +414,5 @@ public class RegSolEmpleo extends JDialog {
             txtHabilidades.setText("");
         }
     }
+
 }
