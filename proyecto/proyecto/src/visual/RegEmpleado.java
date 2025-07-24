@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JSpinner;
 import javax.swing.JRadioButton;
@@ -35,6 +36,13 @@ import javax.swing.SwingUtilities;
 import java.awt.CardLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.ImageIcon;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JFileChooser;
+import java.awt.Image;
+import java.io.File;
+import javax.swing.border.LineBorder;
+
 
 public class RegEmpleado extends JDialog {
 
@@ -64,6 +72,12 @@ public class RegEmpleado extends JDialog {
 	private JComboBox cbxTecnico;
 	private JSpinner spnExpTec;
 	private JPanel panelBlanco;
+	private JLabel lblFotoPreview;
+	private JButton btnSubirImagen;
+	private String rutaImagenSeleccionada = null;
+	private final String IMAGEN_DEFAULT = "src/Default.jpg";
+
+	
 	private static Usuario update = null;
 
 
@@ -99,12 +113,6 @@ public class RegEmpleado extends JDialog {
 			panel.setBounds(0, 0, 894, 702);
 			contentPanel.add(panel);
 			panel.setLayout(null);
-			{
-				JPanel panel_1 = new JPanel();
-				panel_1.setBackground(new Color(0, 102, 153));
-				panel_1.setBounds(0, 0, 182, 731);
-				panel.add(panel_1);
-			}
 			{
 				JPanel panel_1 = new JPanel();
 				panel_1.setBounds(181, 23, 713, 85);
@@ -229,6 +237,31 @@ public class RegEmpleado extends JDialog {
 				lblNewLabel_12.setBounds(194, 497, 125, 16);
 				panel.add(lblNewLabel_12);
 			}
+			lblFotoPreview = new JLabel();
+			lblFotoPreview.setBounds(20, 200, 140, 140); 
+			lblFotoPreview.setBorder(new LineBorder(new Color(128, 128, 128), 5, true));
+			lblFotoPreview.setIcon(escalarImagen(IMAGEN_DEFAULT));
+			panel.add(lblFotoPreview);
+
+			btnSubirImagen = new JButton("Subir imagen");
+			btnSubirImagen.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			btnSubirImagen.setBounds(30, 350, 120, 25);
+			panel.add(btnSubirImagen);
+
+			btnSubirImagen.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			        JFileChooser selector = new JFileChooser();
+			        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Imágenes JPG y PNG", "jpg", "png");
+			        selector.setFileFilter(filtro);
+			        int resultado = selector.showOpenDialog(null);
+			        if (resultado == JFileChooser.APPROVE_OPTION) {
+			            File archivoSeleccionado = selector.getSelectedFile();
+			            rutaImagenSeleccionada = archivoSeleccionado.getAbsolutePath();
+			            lblFotoPreview.setIcon(escalarImagen(rutaImagenSeleccionada));
+			        }
+			    }
+			});
+
 			{
 				txtApellidos = new JTextField();
 				txtApellidos.addMouseListener(new MouseAdapter() {
@@ -606,6 +639,12 @@ public class RegEmpleado extends JDialog {
 			separator.setBackground(new Color(0, 102, 153));
 			separator.setBounds(194, 557, 675, 2);
 			panel.add(separator);
+			{
+				JPanel panel_1 = new JPanel();
+				panel_1.setBackground(new Color(0, 102, 153));
+				panel_1.setBounds(0, 0, 182, 731);
+				panel.add(panel_1);
+			}
 
 			rdbtnSiVehiculo.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -656,6 +695,8 @@ public class RegEmpleado extends JDialog {
 							}
 							if(cbxTipoTrabajador.getSelectedIndex() == 1) {
 								usr = new Universitario(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), txtCorreo.getText() ,cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(), cbxCarrera.getSelectedItem().toString());
+								usr.setRutaImagen(rutaImagenSeleccionada != null ? rutaImagenSeleccionada : IMAGEN_DEFAULT);
+
 							}
 							else if(cbxTipoTrabajador.getSelectedIndex() == 2)
 							{
@@ -695,6 +736,8 @@ public class RegEmpleado extends JDialog {
 							update.setLicencia(rdbtnSiLicencia.isSelected());
 							update.setTieneVeh(rdbtnSiVehiculo.isSelected());
 							update.setdispuestoMud(rdbtnSiMudarse.isSelected());
+							update.setRutaImagen(rutaImagenSeleccionada != null ? rutaImagenSeleccionada : IMAGEN_DEFAULT);
+
 							if(update instanceof Universitario) {
 								Universitario uni = (Universitario) update;
 								uni.setCarrera(cbxCarrera.getSelectedItem().toString());
@@ -784,6 +827,7 @@ public class RegEmpleado extends JDialog {
 			spnEdad.setValue(update.getEdad());
 			cbxProvincia.setSelectedItem(update.getProvincia());
 			cbxTrabajo.setSelectedItem(update.getTipoTrabajo());
+
 			if(update.isEstado()) {
 				cbxEstado.setSelectedIndex(1);
 			}else {
@@ -804,6 +848,12 @@ public class RegEmpleado extends JDialog {
 				//ob.setMisHabilidades(misHabilidades);
 				spnExpObre.setValue(((Obrero) update).getAniosExperiencia());
 			}
+			
+			if (update.getRutaImagen() != null) {
+			    lblFotoPreview.setIcon(escalarImagen(update.getRutaImagen()));
+			    rutaImagenSeleccionada = update.getRutaImagen();
+			}
+
 			
 			if(update.isLicencia())
 				rdbtnSiLicencia.setSelected(true);
@@ -880,4 +930,12 @@ public class RegEmpleado extends JDialog {
 		panelObrero.setVisible(false);
 		panelTecnico.setVisible(false);	
 		}
+	
+	private ImageIcon escalarImagen(String ruta) {
+	    ImageIcon original = new ImageIcon(ruta);
+	    Image escalada = original.getImage().getScaledInstance(140, 140, Image.SCALE_SMOOTH);
+	    return new ImageIcon(escalada);
+	}
+
+	
 }

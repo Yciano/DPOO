@@ -42,13 +42,18 @@ public class DetallesUsuario extends JDialog {
         lblFoto.setOpaque(true);
         lblFoto.setBackground(Color.LIGHT_GRAY);
         lblFoto.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        try {
-            ImageIcon img = new ImageIcon(getClass().getResource("/ReusPic.jpeg"));
-            Image scaled = img.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-            lblFoto.setIcon(new ImageIcon(scaled));
-        } catch (Exception e) {
-            lblFoto.setText("Sin foto");
+  
+        String ruta = usuario.getRutaImagen();
+        ImageIcon icon;
+
+        if (ruta != null && !ruta.trim().isEmpty()) {
+            icon = new ImageIcon(ruta);
+        } else {
+            icon = new ImageIcon(getClass().getResource("/Defaultt.png")); 
         }
+        Image scaled = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+        lblFoto.setIcon(new ImageIcon(scaled));
+
         contentPanel.add(lblFoto);
 
         JLabel lblNombre = new JLabel(usuario.getNombre() + " " + usuario.getApellido());

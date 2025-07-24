@@ -19,6 +19,7 @@ public abstract class Usuario {
 	protected boolean TieneVeh;
 	protected int match;
 	protected ArrayList<Vacante>solicitudes;
+	private String rutaImagen;
 	
 	public Usuario(String nombre, String apellido, int edad, String cedula, String contacto, String sexo, float SalarioDeseado, String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud, boolean licencia, boolean TieneVeh) {
 		this.nombre = nombre;
@@ -35,6 +36,7 @@ public abstract class Usuario {
 		this.licencia = licencia;
 		this.TieneVeh = TieneVeh;
 		this.solicitudes = new ArrayList<Vacante>();
+		this.rutaImagen = null;
 		
 	}
 
@@ -158,8 +160,16 @@ public abstract class Usuario {
 			this.solicitudes = solicitudes;
 		}
 		
-		 public void removeSolicitud(Vacante aux) {
-		    	solicitudes.remove(aux);
-		    }
+		public void removeSolicitud(Vacante aux) {
+		    solicitudes.remove(aux);
+		}
+		public String getRutaImagen() {
+			return rutaImagen;
+		}
+
+		public void setRutaImagen(String rutaImagen) {
+			this.rutaImagen = rutaImagen;
+		}
+
 
 }
