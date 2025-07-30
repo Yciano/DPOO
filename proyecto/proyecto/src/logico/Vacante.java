@@ -1,10 +1,9 @@
 package logico;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Vacante implements Serializable{
+public class Vacante {
 	
 	private String identificador;
 	private String IDcompania;

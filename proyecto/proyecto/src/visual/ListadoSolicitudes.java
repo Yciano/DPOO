@@ -51,7 +51,7 @@ public class ListadoSolicitudes extends JDialog {
         String[] header = { "ID", "Fecha", "Salario Esperado", "Tipo Trabajo", "Empleado" };
         modelo.setColumnIdentifiers(header);
         table.setModel(modelo);
-        table.getTableHeader().setReorderingAllowed(false);
+
         scrollPane.setViewportView(table);
 
         JPanel buttonPane = new JPanel();

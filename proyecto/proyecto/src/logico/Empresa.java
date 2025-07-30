@@ -1,8 +1,7 @@
 package logico;
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Empresa implements Serializable{
+public class Empresa{
 	
 	private String nombre;
 	private String RNC;

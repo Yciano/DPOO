@@ -479,7 +479,7 @@ public class RegVacante extends JDialog {
 		        prioridad
 		    );
 
-		    boolean exito = Bolsa.getInstance().registrarSolicitud(id, idCompania, fecha, requisito, true);
+		    boolean exito = Bolsa.getInstance().registrarSolictud(id, idCompania, fecha, requisito, true);
 
 		    if (exito) {
 		        JOptionPane.showMessageDialog(this, "Solicitud registrada exitosamente.");
