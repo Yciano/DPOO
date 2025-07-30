@@ -31,7 +31,6 @@ public class Principal extends JFrame {
     }
 
     public Principal() {
-
         miBolsa = Bolsa.getInstance();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -99,6 +98,19 @@ public class Principal extends JFrame {
             }
         });
         mnSolicitudes.add(mntmRegsolempleo);
+
+        // Nuevo menú de Respaldo
+        JMenu mnRespaldo = new JMenu("Respaldo");
+        menuBar.add(mnRespaldo);
+
+        JMenuItem mntmRespaldo = new JMenuItem("Hacer Respaldo");
+        mntmRespaldo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Respaldo dialogo = new Respaldo();
+                dialogo.setVisible(true);
+            }
+        });
+        mnRespaldo.add(mntmRespaldo);
 
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

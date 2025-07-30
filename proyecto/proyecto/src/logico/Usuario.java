@@ -1,8 +1,9 @@
 package logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Usuario {
+public abstract class Usuario implements Serializable {
 	
 	protected String nombre;
 	protected String apellido;

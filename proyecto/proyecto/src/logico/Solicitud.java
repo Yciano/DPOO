@@ -1,6 +1,8 @@
 package logico;
 
-public class Solicitud {
+import java.io.Serializable;
+
+public class Solicitud implements Serializable {
 	private String id;
 	private String fecha;
 	private int salario;

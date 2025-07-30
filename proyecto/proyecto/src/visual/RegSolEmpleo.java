@@ -2,9 +2,11 @@ package visual;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.text.ParseException;
 
 import logico.Bolsa;
 import logico.Usuario;
@@ -125,6 +127,7 @@ public class RegSolEmpleo extends JDialog {
         panel.add(btnBuscar);
 
         btnBuscar.addActionListener(e -> {
+            limpiarCampos();
             String cedula = txtCedula.getText().trim();
             if (!validarCedula(cedula)) {
                 JOptionPane.showMessageDialog(this, "Formato de cédula inválido. Use ###-#######-#.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -188,6 +191,38 @@ public class RegSolEmpleo extends JDialog {
             }
         });
 
+        txtFecha.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                    return;
+                }
+
+                String raw = txtFecha.getText().replaceAll("[^\\d]", "");
+
+                if (raw.length() >= 8) {
+                    e.consume();
+                    return;
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    String input = txtFecha.getText().replaceAll("[^\\d]", "");
+                    StringBuilder formatted = new StringBuilder();
+
+                    for (int i = 0; i < input.length(); i++) {
+                        formatted.append(input.charAt(i));
+                        if ((i == 1 || i == 3) && i < input.length() - 1) {
+                            formatted.append("/");
+                        }
+                    }
+
+                    txtFecha.setText(formatted.toString());
+                });
+            }
+        });
+
         JLabel lblTipoTrabajo = new JLabel("Tipo de Trabajo");
         lblTipoTrabajo.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblTipoTrabajo.setBounds(194, 310, 140, 20);
@@ -206,10 +241,13 @@ public class RegSolEmpleo extends JDialog {
         panel.add(lblTipoUsuario);
 
         cbxTipoUsuario = new JComboBox<>();
+        cbxTipoUsuario.setForeground(Color.WHITE);
+        cbxTipoUsuario.setBackground(Color.WHITE);
         cbxTipoUsuario.setModel(new DefaultComboBoxModel<>(new String[] {
             "<Seleccione>", "Universitario", "Tecnico", "Obrero"
         }));
         cbxTipoUsuario.setBounds(548, 335, 203, 22);
+        cbxTipoUsuario.setEnabled(false);
         panel.add(cbxTipoUsuario);
 
         panelTipo = new JPanel();
@@ -270,7 +308,7 @@ public class RegSolEmpleo extends JDialog {
         lblSalario.setBounds(194, 460, 200, 20);
         panel.add(lblSalario);
 
-        sliderSalario = new JSlider(15000, 100000, 20000);
+        sliderSalario = new JSlider(15000, 100000, 15000);
         sliderSalario.setBackground(Color.WHITE);
         sliderSalario.setBounds(194, 490, 400, 63);
         sliderSalario.setMajorTickSpacing(15000);
@@ -307,10 +345,21 @@ public class RegSolEmpleo extends JDialog {
                     JOptionPane.showMessageDialog(RegSolEmpleo.this, "Formato de cédula inválido. Use ###-#######-#.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+
                 if (fecha.isEmpty() || fecha.equals("dd/mm/yyyy")) {
-                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "Ingrese una fecha válida.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "Ingrese una fecha válida con el formato dd/mm/yyyy.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                sdf.setLenient(false);
+                try {
+                    sdf.parse(fecha); 
+                } catch (ParseException ex) {
+                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "La fecha ingresada no es válida. Use el formato dd/mm/yyyy.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 if (tipoTrabajo == null || tipoTrabajo.equals("<Seleccione>")) {
                     JOptionPane.showMessageDialog(RegSolEmpleo.this, "Seleccione un tipo de trabajo.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -321,15 +370,21 @@ public class RegSolEmpleo extends JDialog {
                     JOptionPane.showMessageDialog(RegSolEmpleo.this, "Empleado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                Bolsa.incrementarContadorSolicitudes();
-                String identificador = Bolsa.generarCodigoSolicitudActual();
-                txtIdentificador.setText(identificador);
 
+                // Generar ID actual para la solicitud
+                String identificador = Bolsa.generarCodigoSolicitudActual();
                 Solicitud nuevaSolicitud = new Solicitud(identificador, fecha, salario, tipoTrabajo, usuario);
                 nuevaSolicitud.setVacante(null);
                 bolsa.getMisSolicitudes().add(nuevaSolicitud);
+
+                // Incrementar contador solo después de guardar
+                Bolsa.incrementarContadorSolicitudes();
+
+                // Actualizar txtIdentificador con el próximo ID
+                txtIdentificador.setText(Bolsa.generarCodigoSolicitudActual());
+
                 JOptionPane.showMessageDialog(RegSolEmpleo.this, "Solicitud registrada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                dispose();
+                limpiarCampos();
             }
         });
 
@@ -339,7 +394,6 @@ public class RegSolEmpleo extends JDialog {
         btnCancelar.addActionListener(e -> dispose());
         buttonPane.add(btnCancelar);
         SwingUtilities.invokeLater(() -> txtCedula.requestFocusInWindow());
-
     }
 
     private boolean validarCedula(String cedula) {
@@ -360,6 +414,7 @@ public class RegSolEmpleo extends JDialog {
     }
 
     private void cargarDatosPorCedula(String cedula) {
+        limpiarCampos();
         Usuario usuario = bolsa.buscarEmpleadoByCedula(cedula);
         if (usuario != null) {
             txtNombre.setText(usuario.getNombre());
@@ -415,4 +470,16 @@ public class RegSolEmpleo extends JDialog {
         }
     }
 
+    private void limpiarCampos() {
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtEdad.setText("");
+        cbxTipoUsuario.setSelectedIndex(0);
+        cbxTipoTrabajo.setSelectedIndex(0);
+        cardLayout.show(panelTipo, "Universitario");
+        txtCarrera.setText("");
+        txtTecnico.setText("");
+        spnExpTecnico.setValue(0);
+        txtHabilidades.setText("");
+    }
 }
