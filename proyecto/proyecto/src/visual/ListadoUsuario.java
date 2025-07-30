@@ -92,7 +92,6 @@ public class ListadoUsuario extends JDialog {
 				String[] header = { "Cédula", "Nombre", "Apellidos", "Contacto", "Sexo", "Tipo de trabajo" };
 				modelo.setColumnIdentifiers(header);
 				table.setModel(modelo);
-				scrollPane.setViewportView(table);
 			}
 			
 			

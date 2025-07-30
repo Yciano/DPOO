@@ -1,24 +1,28 @@
 package logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Vacante {
+public class Vacante implements Serializable{
 	
 	private String identificador;
 	private String IDcompania;
+	private String posicion;
+	private String descripcion;
 	private Date fecha;
 	private Requisito requisito;
 	private boolean estado;
 	private ArrayList<Solicitud> misSolicitudes;
 	 
-	public Vacante(String identificador, String IDcompania, Date fecha, Requisito requisito,
-			boolean estado) {
+	public Vacante(String identificador, String IDcompania, Requisito requisito, String posicion, String descripcion) {
 		this.identificador = identificador;
 		this.IDcompania = IDcompania;
-		this.fecha = fecha;
+		this.fecha = new Date();
 		this.requisito = requisito;
 		this.estado = estado;
+		this.posicion = posicion;
+		this.descripcion = descripcion;
 		this.misSolicitudes = new ArrayList<Solicitud>();
 	}
 
@@ -71,9 +75,32 @@ public class Vacante {
 	public void setMisSolicitudes(ArrayList<Solicitud> misSolicitudes) {
 		this.misSolicitudes = misSolicitudes;
 	}
+	
+
+	public String getPosicion() {
+		return posicion;
+	}
+
+	public void setPosicion(String posicion) {
+		this.posicion = posicion;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
 
 	public void removeSolicitud(Solicitud solicitud) {
 		misSolicitudes.remove(solicitud);
+	}
+
+	public void agregarSolicitudes(Solicitud solicitud) {
+		misSolicitudes.add(solicitud);
+
+		
 	}
 	
 }

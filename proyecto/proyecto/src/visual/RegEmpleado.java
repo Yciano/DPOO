@@ -929,6 +929,8 @@ public class RegEmpleado extends JDialog {
 		panelEstudiante.setVisible(false);
 		panelObrero.setVisible(false);
 		panelTecnico.setVisible(false);	
+		
+		
 		}
 	
 	private ImageIcon escalarImagen(String ruta) {

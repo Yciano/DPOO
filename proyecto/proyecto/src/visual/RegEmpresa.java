@@ -308,7 +308,7 @@ public class RegEmpresa extends JDialog {
         }
 
         if (empresaExistente == null) {
-            Empresa nuevaEmpresa = new Empresa(nombre, rnc, area, correo, provincia, null);
+            Empresa nuevaEmpresa = new Empresa(nombre, rnc, area, correo, provincia);
             boolean exito = Bolsa.getInstance().registrarEmpresa(nuevaEmpresa);
             if (exito) {
                 JOptionPane.showMessageDialog(this, "Empresa registrada exitosamente.",

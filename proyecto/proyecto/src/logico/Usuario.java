@@ -1,8 +1,9 @@
 package logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Usuario {
+public abstract class Usuario implements Serializable{
 	
 	protected String nombre;
 	protected String apellido;
@@ -10,7 +11,6 @@ public abstract class Usuario {
 	protected String cedula;
 	protected String contacto;
 	protected String sexo;
-	protected float SalarioDeseado;
 	protected String provincia;
 	protected String tipoTrabajo;
 	protected boolean estado;
@@ -18,7 +18,7 @@ public abstract class Usuario {
 	protected boolean licencia;
 	protected boolean TieneVeh;
 	protected int match;
-	protected ArrayList<Vacante>solicitudes;
+	protected ArrayList<Solicitud>solicitudes;
 	private String rutaImagen;
 	
 	public Usuario(String nombre, String apellido, int edad, String cedula, String contacto, String sexo, float SalarioDeseado, String provincia, String tipoTrabajo, boolean estado, boolean dispuestoMud, boolean licencia, boolean TieneVeh) {
@@ -28,14 +28,13 @@ public abstract class Usuario {
 		this.cedula = cedula;
 		this.contacto = contacto;
 		this.sexo = sexo;
-		this.SalarioDeseado = SalarioDeseado;
 		this.provincia = provincia;
 		this.tipoTrabajo = tipoTrabajo;
 		this.estado = estado;
 		this.dispuestoMud = dispuestoMud;
 		this.licencia = licencia;
 		this.TieneVeh = TieneVeh;
-		this.solicitudes = new ArrayList<Vacante>();
+		this.solicitudes = new ArrayList<Solicitud>();
 		this.rutaImagen = null;
 		
 	}
@@ -124,14 +123,7 @@ public abstract class Usuario {
 			return licencia;
 		}
 
-		public float getSalarioDeseado() {
-			return SalarioDeseado;
-		}
-
-		public void setSalarioDeseado(float salarioDeseado) {
-			SalarioDeseado = salarioDeseado;
-		}
-
+		
 		public void setLicencia(boolean licencia) {
 			this.licencia = licencia;
 		}
@@ -152,15 +144,15 @@ public abstract class Usuario {
 			this.match = match;
 		}
 
-		public ArrayList<Vacante> getSolicitudes() {
+		public ArrayList<Solicitud> getSolicitudes() {
 			return solicitudes;
 		}
 
-		public void setSolicitudes(ArrayList<Vacante> solicitudes) {
+		public void setSolicitudes(ArrayList<Solicitud> solicitudes) {
 			this.solicitudes = solicitudes;
 		}
 		
-		public void removeSolicitud(Vacante aux) {
+		public void removeSolicitud(Solicitud aux) {
 		    solicitudes.remove(aux);
 		}
 		public String getRutaImagen() {
