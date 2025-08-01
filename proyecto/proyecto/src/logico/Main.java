@@ -3,9 +3,21 @@ package logico;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import visual.Principal;
+
 public class Main implements Serializable {
 
 	public static void main(String[] args) {
+		
+		try {
+	        Bolsa.cargarDatosDesdeArchivo("respaldo.dat");
+	        System.out.println("Servidor conectado con éxito.");
+	    } catch (Exception e) {
+	        System.out.println("No se pudo conectar al servidor. Se iniciará vacío.");
+	    }
+
+	    Principal principal = new Principal();
+	    principal.setVisible(true);
 		
         Universitario u1 = new Universitario("Ana", "López", 24, "001", "809-111-1111", "Femenino",
                 25000f, "Santiago", "Remoto", true, false, false, false, "Ingeniería");

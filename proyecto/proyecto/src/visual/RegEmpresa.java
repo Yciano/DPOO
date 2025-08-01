@@ -2,6 +2,8 @@ package visual;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import logico.Bolsa;
@@ -311,6 +313,12 @@ public class RegEmpresa extends JDialog {
             Empresa nuevaEmpresa = new Empresa(nombre, rnc, area, correo, provincia);
             boolean exito = Bolsa.getInstance().registrarEmpresa(nuevaEmpresa);
             if (exito) {
+                try {
+                    Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
                 JOptionPane.showMessageDialog(this, "Empresa registrada exitosamente.",
                                               "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
                 limpiarFormulario();
@@ -324,10 +332,17 @@ public class RegEmpresa extends JDialog {
             empresaExistente.setContacto(correo);
             empresaExistente.setProvincia(provincia);
 
+            try {
+                Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
             JOptionPane.showMessageDialog(this, "Empresa actualizada exitosamente.",
                                           "Actualización Exitosa", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         }
+
     }
 
     private void limpiarFormulario() {

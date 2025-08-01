@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class ListadoSolicitudes extends JDialog {
@@ -68,6 +69,13 @@ public class ListadoSolicitudes extends JDialog {
                         "Eliminar", JOptionPane.WARNING_MESSAGE);
                     if (option == JOptionPane.OK_OPTION) {
                         Bolsa.getInstance().getMisSolicitudes().remove(selected);
+                        
+                        try {
+                    		Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+                    	} catch (IOException ex) {
+                    		ex.printStackTrace();
+                    	}
+                        
                         cargarSolicitudes();
                         JOptionPane.showMessageDialog(null, "Solicitud eliminada.", "Información", JOptionPane.INFORMATION_MESSAGE);
                         selected = null;

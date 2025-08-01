@@ -1,2 +1,4 @@
-/visual/
-/logico/
+*.class
+bin/
+/.project
+.classpath

@@ -2,6 +2,7 @@ package visual;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -326,8 +327,14 @@ public class RegSolEmpleo extends JDialog {
                 int salario = sliderSalario.getValue();
                 boolean aux = bolsa.getInstance().aplicarAVacante(txtCedula.getText(), txtVacante.getText(), salario);
                 if(aux)
-                	JOptionPane.showMessageDialog(RegSolEmpleo.this, "Solicitud registrada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                clean();
+                	try {
+                        Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "Solicitud registrada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    clean();
                 }
             }
         });

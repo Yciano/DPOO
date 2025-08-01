@@ -10,6 +10,7 @@ import logico.Empresa;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ListadoEmpresas extends JDialog {
@@ -78,11 +79,19 @@ public class ListadoEmpresas extends JDialog {
 				RegEmpresa reg = new RegEmpresa(selected);
 				reg.setModal(true);
 				reg.setVisible(true);
+
+				try {
+					Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+
 				loadEmpresas();
 				table.clearSelection();
 				selected = null;
 				btnModificar.setEnabled(false);
 				btnEliminar.setEnabled(false);
+
 			}
 		});
 		buttonPane.add(btnModificar);
@@ -103,6 +112,13 @@ public class ListadoEmpresas extends JDialog {
 
 				if (confirm == 0) {
 					Bolsa.getInstance().removeEmpresa(selected.getRNC());
+
+					try {
+						Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+
 					JOptionPane.showMessageDialog(this, "Empresa eliminada exitosamente.");
 					loadEmpresas();
 					table.clearSelection();
@@ -110,6 +126,7 @@ public class ListadoEmpresas extends JDialog {
 					btnEliminar.setEnabled(false);
 					selected = null;
 				}
+
 			}
 		});
 		buttonPane.add(btnEliminar);

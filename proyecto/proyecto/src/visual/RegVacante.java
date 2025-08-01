@@ -31,6 +31,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+
 import javax.swing.JTextPane;
 
 public class RegVacante extends JDialog {
@@ -433,9 +435,16 @@ public class RegVacante extends JDialog {
 				boolean exito = Bolsa.getInstance().registrarVacante(txtIdentificador.getText(), idCompania, requisito,txtPosicion.getText(),txtDescripcion.getText());
 
 				if (exito) {
+					try {
+						Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+
 					JOptionPane.showMessageDialog(this, "Solicitud registrada exitosamente.");
 					clean();
-				} else {
+				}
+				else {
 					JOptionPane.showMessageDialog(this,
 							"Error: no se pudo registrar. El RNC no se encuentra registrado.", "Error en registro",
 							JOptionPane.ERROR_MESSAGE);

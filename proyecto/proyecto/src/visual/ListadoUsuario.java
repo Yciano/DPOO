@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class ListadoUsuario extends JDialog {
@@ -108,6 +109,13 @@ public class ListadoUsuario extends JDialog {
 						RegEmpleado update = new RegEmpleado(selected);
 						update.setModal(true);
 						update.setVisible(true);
+
+						try {
+							Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+
 						loadUsuario();
 						table.clearSelection();
 						btnModificar.setEnabled(false);
@@ -133,14 +141,21 @@ public class ListadoUsuario extends JDialog {
 										"Eliminar", JOptionPane.WARNING_MESSAGE);
 								if (option == JOptionPane.OK_OPTION) {
 									Bolsa.getInstance().removeUser(selected.getCedula());
+
+									try {
+										Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+									} catch (IOException e1) {
+										e1.printStackTrace();
+									}
+
 									loadUsuario();
 									JOptionPane.showMessageDialog(null, "Publicación eliminada exitosamente.",
 											"Información", JOptionPane.INFORMATION_MESSAGE);
-									loadUsuario();
 									table.clearSelection();
 									btnModificar.setEnabled(false);
 									btnDetalles.setEnabled(false);
-								} else {
+								}
+								else {
 									table.clearSelection();
 									btnModificar.setEnabled(false);
 									btnDetalles.setEnabled(false);
