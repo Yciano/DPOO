@@ -2,12 +2,16 @@ package visual;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import logico.Bolsa;
 import logico.Usuario;
+import logico.Vacante;
 import logico.Universitario;
 import logico.TecnicoSuperior;
 import logico.Obrero;
@@ -33,14 +37,17 @@ public class RegSolEmpleo extends JDialog {
 
     private final int[] valoresFijos = {15000, 30000, 45000, 60000, 75000, 90000, 100000};
     private static final Pattern CEDULA_PATTERN = Pattern.compile("\\d{3}-\\d{7}-\\d{1}");
+    private JTextField txtVacante;
+    private JButton btnListado;
 
     public RegSolEmpleo(Bolsa bolsa) {
         this.bolsa = bolsa;
 
         setTitle("Registro de Solicitud de Empleo");
         setResizable(false);
-        setBounds(100, 100, 900, 700);
+        setBounds(100, 100, 902, 821);
         setLocationRelativeTo(null);
+        setModal(true);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -48,13 +55,13 @@ public class RegSolEmpleo extends JDialog {
 
         JPanel panel = new JPanel();
         panel.setBackground(Color.WHITE);
-        panel.setBounds(0, 0, 894, 660);
+        panel.setBounds(0, 0, 894, 738);
         contentPanel.add(panel);
         panel.setLayout(null);
 
         JPanel panelAzul = new JPanel();
         panelAzul.setBackground(new Color(0, 102, 153));
-        panelAzul.setBounds(0, 0, 182, 662);
+        panelAzul.setBounds(0, 0, 182, 738);
         panel.add(panelAzul);
 
         JPanel panelTitulo = new JPanel();
@@ -75,7 +82,8 @@ public class RegSolEmpleo extends JDialog {
         txtIdentificador = new JTextField();
         txtIdentificador.setEditable(false);
         txtIdentificador.setBounds(194, 155, 140, 22);
-        txtIdentificador.setText(Bolsa.generarCodigoSolicitudActual());
+        String identificador = Bolsa.generarCodigoSolicitudActual();
+        txtIdentificador.setText("SOL-01");
         panel.add(txtIdentificador);
 
         JLabel lblCedula = new JLabel("Cédula");
@@ -168,25 +176,12 @@ public class RegSolEmpleo extends JDialog {
         lblFecha.setBounds(548, 250, 160, 20);
         panel.add(lblFecha);
 
-        txtFecha = new JTextField("dd/mm/yyyy");
-        txtFecha.setForeground(Color.LIGHT_GRAY);
+        txtFecha = new JTextField("");
+        txtFecha.setEditable(false);
+        txtFecha.setForeground(Color.BLACK);
         txtFecha.setBounds(548, 275, 203, 22);
         panel.add(txtFecha);
-        txtFecha.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent e) {
-                if (txtFecha.getText().equals("dd/mm/yyyy")) {
-                    txtFecha.setText("");
-                    txtFecha.setForeground(Color.BLACK);
-                }
-            }
-
-            public void focusLost(FocusEvent e) {
-                if (txtFecha.getText().isEmpty()) {
-                    txtFecha.setText("dd/mm/yyyy");
-                    txtFecha.setForeground(Color.LIGHT_GRAY);
-                }
-            }
-        });
+        
 
         JLabel lblTipoTrabajo = new JLabel("Tipo de Trabajo");
         lblTipoTrabajo.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -194,6 +189,7 @@ public class RegSolEmpleo extends JDialog {
         panel.add(lblTipoTrabajo);
 
         cbxTipoTrabajo = new JComboBox<>();
+        cbxTipoTrabajo.setEnabled(false);
         cbxTipoTrabajo.setModel(new DefaultComboBoxModel<>(new String[] {
             "<Seleccione>", "Tiempo completo", "Medio tiempo", "Freelance"
         }));
@@ -206,6 +202,7 @@ public class RegSolEmpleo extends JDialog {
         panel.add(lblTipoUsuario);
 
         cbxTipoUsuario = new JComboBox<>();
+        cbxTipoUsuario.setEnabled(false);
         cbxTipoUsuario.setModel(new DefaultComboBoxModel<>(new String[] {
             "<Seleccione>", "Universitario", "Tecnico", "Obrero"
         }));
@@ -215,15 +212,15 @@ public class RegSolEmpleo extends JDialog {
         panelTipo = new JPanel();
         cardLayout = new CardLayout();
         panelTipo.setLayout(cardLayout);
-        panelTipo.setBounds(194, 370, 557, 80);
+        panelTipo.setBounds(194, 389, 557, 80);
         panel.add(panelTipo);
 
         JPanel panelUni = new JPanel(null);
         panelUni.setBackground(Color.WHITE);
         JLabel lblCarrera = new JLabel("Carrera:");
-        lblCarrera.setBounds(10, 10, 100, 20);
+        lblCarrera.setBounds(12, 29, 100, 20);
         txtCarrera = new JTextField();
-        txtCarrera.setBounds(110, 10, 300, 22);
+        txtCarrera.setBounds(108, 28, 300, 22);
         txtCarrera.setEditable(false);
         panelUni.add(lblCarrera);
         panelUni.add(txtCarrera);
@@ -267,20 +264,47 @@ public class RegSolEmpleo extends JDialog {
 
         JLabel lblSalario = new JLabel("Salario Esperado (RD$):");
         lblSalario.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        lblSalario.setBounds(194, 460, 200, 20);
+        lblSalario.setBounds(194, 500, 200, 20);
         panel.add(lblSalario);
 
-        sliderSalario = new JSlider(15000, 100000, 20000);
+        sliderSalario = new JSlider(15000, 100000, 15000);
         sliderSalario.setBackground(Color.WHITE);
-        sliderSalario.setBounds(194, 490, 400, 63);
+        sliderSalario.setBounds(194, 530, 400, 63);
         sliderSalario.setMajorTickSpacing(15000);
         sliderSalario.setPaintTicks(true);
         sliderSalario.setPaintLabels(true);
         panel.add(sliderSalario);
 
         lblSalarioValor = new JLabel("RD$ 15,000");
-        lblSalarioValor.setBounds(610, 490, 100, 30);
+        lblSalarioValor.setBounds(610, 530, 100, 30);
         panel.add(lblSalarioValor);
+        
+        btnListado = new JButton("Ver listado");
+        btnListado.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ListadoVacantes list = new ListadoVacantes(1);
+        		list.setModal(true);
+        		list.setVisible(true);
+        		Vacante aux = list.selected;
+        		if(aux != null) {
+        			txtVacante.setText(aux.getIdentificador());
+        		}
+        	}
+        	
+        });
+        btnListado.setBounds(591, 684, 97, 25);
+        panel.add(btnListado);
+        
+        txtVacante = new JTextField();
+        txtVacante.setEditable(false);
+        txtVacante.setBounds(393, 685, 182, 22);
+        panel.add(txtVacante);
+        txtVacante.setColumns(10);
+        
+        JLabel lblNewLabel = new JLabel("Vacante a aplicar:");
+        lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblNewLabel.setBounds(258, 687, 140, 16);
+        panel.add(lblNewLabel);
 
         sliderSalario.addChangeListener(e -> {
             int val = sliderSalario.getValue();
@@ -298,38 +322,20 @@ public class RegSolEmpleo extends JDialog {
         JButton btnRegistrar = new JButton("Registrar");
         btnRegistrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String cedula = txtCedula.getText().trim();
-                String fecha = txtFecha.getText().trim();
-                String tipoTrabajo = (String) cbxTipoTrabajo.getSelectedItem();
-                int salario = sliderSalario.getValue();
-
-                if (!validarCedula(cedula)) {
-                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "Formato de cédula inválido. Use ###-#######-#.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (fecha.isEmpty() || fecha.equals("dd/mm/yyyy")) {
-                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "Ingrese una fecha válida.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (tipoTrabajo == null || tipoTrabajo.equals("<Seleccione>")) {
-                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "Seleccione un tipo de trabajo.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                Usuario usuario = bolsa.buscarEmpleadoByCedula(cedula);
-                if (usuario == null) {
-                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "Empleado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                Bolsa.incrementarContadorSolicitudes();
-                String identificador = Bolsa.generarCodigoSolicitudActual();
+                if(validarCampos()) {
                 txtIdentificador.setText(identificador);
+                int salario = sliderSalario.getValue();
+                boolean aux = bolsa.getInstance().aplicarAVacante(txtCedula.getText(), txtVacante.getText(), salario);
+                if(aux)
+                	try {
+                        Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
 
-                Solicitud nuevaSolicitud = new Solicitud(identificador, fecha, salario, tipoTrabajo, usuario);
-                nuevaSolicitud.setVacante(null);
-                bolsa.getMisSolicitudes().add(nuevaSolicitud);
-                JOptionPane.showMessageDialog(RegSolEmpleo.this, "Solicitud registrada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                dispose();
+                    JOptionPane.showMessageDialog(RegSolEmpleo.this, "Solicitud registrada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    clean();
+                }
             }
         });
 
@@ -341,7 +347,7 @@ public class RegSolEmpleo extends JDialog {
         SwingUtilities.invokeLater(() -> txtCedula.requestFocusInWindow());
 
     }
-
+   
     private boolean validarCedula(String cedula) {
         return CEDULA_PATTERN.matcher(cedula).matches();
     }
@@ -365,13 +371,12 @@ public class RegSolEmpleo extends JDialog {
             txtNombre.setText(usuario.getNombre());
             txtApellido.setText(usuario.getApellido());
             txtEdad.setText(String.valueOf(usuario.getEdad()));
-
-            if (usuario.getTipoTrabajo() != null) {
-                cbxTipoTrabajo.setSelectedItem(usuario.getTipoTrabajo());
-            } else {
-                cbxTipoTrabajo.setSelectedIndex(0);
-            }
-
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            String fechaFormateada = formato.format(new Date());
+            txtFecha.setText(fechaFormateada);
+            cbxTipoTrabajo.setSelectedItem(usuario.getTipoTrabajo());
+            
+          
             if (usuario instanceof Universitario) {
                 cbxTipoUsuario.setSelectedItem("Universitario");
                 cardLayout.show(panelTipo, "Universitario");
@@ -402,17 +407,49 @@ public class RegSolEmpleo extends JDialog {
             }
         } else {
             JOptionPane.showMessageDialog(this, "Empleado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
-            txtNombre.setText("");
-            txtApellido.setText("");
-            txtEdad.setText("");
-            cbxTipoUsuario.setSelectedIndex(0);
-            cbxTipoTrabajo.setSelectedIndex(0);
-            cardLayout.show(panelTipo, "Universitario");
-            txtCarrera.setText("");
-            txtTecnico.setText("");
-            spnExpTecnico.setValue(0);
-            txtHabilidades.setText("");
+            clean();
         }
+    }
+    
+    private boolean validarCampos() {
+    	boolean aux = true;
+    	String cedula = txtCedula.getText().trim();
+
+    
+    	if(txtNombre.getText().isEmpty() ||  txtVacante.getText().isEmpty() ) {
+            JOptionPane.showMessageDialog(null, "Debe de completar todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+            aux = false;
+    	}
+        if (!validarCedula(cedula)) {
+            JOptionPane.showMessageDialog(RegSolEmpleo.this, "Formato de cédula inválido. Use ###-#######-#.", "Error", JOptionPane.ERROR_MESSAGE);
+            aux = false;
+        }else {
+
+        Usuario usuario = bolsa.buscarEmpleadoByCedula(cedula);
+        if (usuario == null) {
+            JOptionPane.showMessageDialog(RegSolEmpleo.this, "Empleado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+            aux = false;
+        }
+        }
+    	
+    	return aux;
+    	
+    	
+    }
+    
+    private void clean() {
+    	txtCedula.setText("");
+    	txtNombre.setText("");
+        txtApellido.setText("");
+        txtEdad.setText("");
+        cbxTipoUsuario.setSelectedIndex(0);
+        cbxTipoTrabajo.setSelectedIndex(0);
+        cardLayout.show(panelTipo, "Universitario");
+        txtCarrera.setText("");
+        txtTecnico.setText("");
+        spnExpTecnico.setValue(0);
+        txtHabilidades.setText("");
+        txtVacante.setText("");
     }
 
 }

@@ -41,6 +41,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JFileChooser;
 import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
 import javax.swing.border.LineBorder;
 
 
@@ -686,40 +691,64 @@ public class RegEmpleado extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						if(validarCampos()) {
 							if(update == null) {
-							Usuario usr = null;
-							int edad = new Integer(spnEdad.getValue().toString());
-							int aniosExp = 0;
-							boolean estado = false;
-							if(cbxEstado.getSelectedIndex() == 1) {
-								estado = true;
-							}
-							if(cbxTipoTrabajador.getSelectedIndex() == 1) {
-								usr = new Universitario(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), txtCorreo.getText() ,cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(), cbxCarrera.getSelectedItem().toString());
-								usr.setRutaImagen(rutaImagenSeleccionada != null ? rutaImagenSeleccionada : IMAGEN_DEFAULT);
+							    Usuario usr = null;
+							    int edad = new Integer(spnEdad.getValue().toString());
+							    int aniosExp = 0;
+							    boolean estado = false;
+							    if(cbxEstado.getSelectedIndex() == 1) {
+							        estado = true;
+							    }
 
+							    if(cbxTipoTrabajador.getSelectedIndex() == 1) {
+							        usr = new Universitario(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), txtCorreo.getText() ,cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(), cbxCarrera.getSelectedItem().toString());
+							    }
+							    else if(cbxTipoTrabajador.getSelectedIndex() == 2) {
+							        aniosExp = new Integer(spnExpObre.getValue().toString());
+							        usr = new Obrero(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(),txtCorreo.getText() , cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),null, aniosExp);
+							    }
+							    else if(cbxTipoTrabajador.getSelectedIndex() == 3) {
+							        aniosExp = new Integer(spnExpTec.getValue().toString());
+							        usr = new TecnicoSuperior(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(),txtCorreo.getText() , cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),cbxTecnico.getSelectedItem().toString(), aniosExp);
+							    }
+
+							    if (rutaImagenSeleccionada != null && !rutaImagenSeleccionada.trim().isEmpty()) {
+							        try {
+							            File carpetaDestino = new File("imagenesUsuarios");
+							            if (!carpetaDestino.exists()) {
+							                carpetaDestino.mkdir();
+							            }
+
+							            String nombreArchivo = new File(rutaImagenSeleccionada).getName();
+							            String rutaDestino = "imagenesUsuarios" + File.separator + nombreArchivo;
+
+							            Files.copy(Paths.get(rutaImagenSeleccionada), Paths.get(rutaDestino), StandardCopyOption.REPLACE_EXISTING);
+
+							            usr.setRutaImagen(rutaDestino);
+							        } catch (IOException e1) {
+							            e1.printStackTrace();
+							            JOptionPane.showMessageDialog(null, "Error al guardar la imagen.", "Error", JOptionPane.ERROR_MESSAGE);
+							            usr.setRutaImagen(IMAGEN_DEFAULT);
+							        }
+							    } else {
+							        usr.setRutaImagen(IMAGEN_DEFAULT);
+							    }
+
+							    boolean realizado = Bolsa.getInstance().registrarEmpleado(usr);
+							    if(realizado) {
+							        try {
+							            Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+							        } catch (IOException e1) {										
+							            e1.printStackTrace();
+							        }
+							        JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información",
+							                JOptionPane.INFORMATION_MESSAGE);
+							        clean();
+							    } else {
+							        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error",
+							                JOptionPane.ERROR_MESSAGE);
+							    }
 							}
-							else if(cbxTipoTrabajador.getSelectedIndex() == 2)
-							{
-								aniosExp = new Integer(spnExpObre.getValue().toString());
-								usr = new Obrero(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(),txtCorreo.getText() , cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),null, aniosExp);
-							}
-							else if(cbxTipoTrabajador.getSelectedIndex() == 3)
-							{
-								aniosExp = new Integer(spnExpTec.getValue().toString());
-								usr = new TecnicoSuperior(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(),txtCorreo.getText() , cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),cbxTecnico.getSelectedItem().toString(), aniosExp);
-							}
-							
-								boolean realizado = Bolsa.getInstance().registrarEmpleado(usr);
-								if(realizado) {
-									JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información",
-											JOptionPane.INFORMATION_MESSAGE);
-									clean();
-								}
-								else {
-									JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error",
-											JOptionPane.ERROR_MESSAGE);
-								}
-						}else {
+							else {
 							
 							update.setNombre(txtNombre.getText());
 							update.setApellido(txtApellidos.getText());
@@ -752,7 +781,35 @@ public class RegEmpleado extends JDialog {
 								//ob.setMisHabilidades(misHabilidades);
 								ob.setAniosExperiencia(new Integer(spnExpObre.getValue().toString()));
 							}
+							if (rutaImagenSeleccionada != null && !rutaImagenSeleccionada.trim().isEmpty()) {
+							    try {
+							        File carpetaDestino = new File("imagenesUsuarios");
+							        if (!carpetaDestino.exists()) {
+							            carpetaDestino.mkdir();
+							        }
+
+							        String nombreArchivo = new File(rutaImagenSeleccionada).getName();
+							        String rutaDestino = "imagenesUsuarios" + File.separator + nombreArchivo;
+
+							        Files.copy(Paths.get(rutaImagenSeleccionada), Paths.get(rutaDestino), StandardCopyOption.REPLACE_EXISTING);
+
+							        update.setRutaImagen(rutaDestino);
+							    } catch (IOException e1) {
+							        e1.printStackTrace();
+							        JOptionPane.showMessageDialog(null, "Error al guardar la nueva imagen.", "Error", JOptionPane.ERROR_MESSAGE);
+							        update.setRutaImagen(IMAGEN_DEFAULT);
+							    }
+							} else {
+							    update.setRutaImagen(IMAGEN_DEFAULT);
+							}
+
 							Bolsa.getInstance().modificarUsuario(update);
+							
+							try {
+								Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
 							JOptionPane.showMessageDialog(null, "Modificación exitosa", "Información",
 									JOptionPane.INFORMATION_MESSAGE);
 							ListadoUsuario.loadUsuario();
@@ -929,6 +986,11 @@ public class RegEmpleado extends JDialog {
 		panelEstudiante.setVisible(false);
 		panelObrero.setVisible(false);
 		panelTecnico.setVisible(false);	
+		
+		lblFotoPreview.setIcon(escalarImagen(IMAGEN_DEFAULT));
+		rutaImagenSeleccionada = null;
+
+		
 		}
 	
 	private ImageIcon escalarImagen(String ruta) {

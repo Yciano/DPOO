@@ -36,12 +36,13 @@ public class ListadoVacantes extends JDialog {
 	private static JTable table;
 	private static Object[] row;
 	private static DefaultTableModel modelo;
-	private Vacante selected = null;
+	public  Vacante selected = null;
 	private JTextField txtRnc;
 	private JComboBox cbxArea;
 	private JButton btnModificar;
 	private JButton btnEliminar;
 	private JButton btnCancelar;
+	private int modo = 0;
 
 	//AUN NO ESTA TERMINADO
 	
@@ -53,7 +54,7 @@ public class ListadoVacantes extends JDialog {
 	
 	public static void main(String[] args) {
 		try {
-			ListadoVacantes dialog = new ListadoVacantes();
+			ListadoVacantes dialog = new ListadoVacantes(0);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -61,8 +62,10 @@ public class ListadoVacantes extends JDialog {
 		}
 	}
 
-	
-	public ListadoVacantes() {
+	//Mode = 0 (Mostrar listado normal)
+	//Mode = 1 (Mostrar listado para seleccionar)
+	public ListadoVacantes(int mode) {
+		modo = mode;
 		setTitle("Listado de Vacantes");
 		setResizable(false);
 		setBounds(100, 100, 900, 600);
@@ -135,14 +138,24 @@ public class ListadoVacantes extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			
 			btnModificar = new JButton("Modificar");
+			if(modo == 1) {
+				btnModificar.setVisible(false);
+			}
+			btnModificar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				}
+			});
 			buttonPane.add(btnModificar);
 			{
 				btnEliminar = new JButton("Eliminar");
+				if(modo == 1) {
+					btnEliminar.setText("Seleccionar");
+				}
 				btnEliminar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (selected != null) {
 							btnEliminar.setEnabled(true);
-
+							if(modo == 0) {
 							int option = JOptionPane.showConfirmDialog(null,
 									"¿Esta seguro que desea eliminar la vacante con identificador: "
 											+ selected.getIdentificador() + "?",
@@ -158,7 +171,11 @@ public class ListadoVacantes extends JDialog {
 								table.clearSelection();
 								btnModificar.setEnabled(false);
 							}
-						
+							}
+							else {
+								dispose();
+								
+							}
 					}
 					
 					btnEliminar.setEnabled(false);
@@ -170,6 +187,11 @@ public class ListadoVacantes extends JDialog {
 			}
 			{
 				btnCancelar = new JButton("Cancelar");
+				btnCancelar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
@@ -198,9 +220,9 @@ public class ListadoVacantes extends JDialog {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getTableHeader().setReorderingAllowed(false);
 		TableColumnModel columnModel = table.getColumnModel();
-		columnModel.getColumn(0).setPreferredWidth(100);
-		columnModel.getColumn(1).setPreferredWidth(150);
-		columnModel.getColumn(2).setPreferredWidth(150);
+		columnModel.getColumn(0).setPreferredWidth(200);
+		columnModel.getColumn(1).setPreferredWidth(200);
+		columnModel.getColumn(2).setPreferredWidth(200);
 		columnModel.getColumn(3).setPreferredWidth(180);
 		
 

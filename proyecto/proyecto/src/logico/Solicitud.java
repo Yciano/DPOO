@@ -1,38 +1,47 @@
 package logico;
 
-public class Solicitud {
-	private String id;
-	private String fecha;
-	private int salario;
-	private String tipoTrabajo;
+import java.io.Serializable;
+import java.util.Date;
 
+public class Solicitud implements Serializable {
+	private String id;
+	private Date fecha;
+	private int salario;
 	private Usuario user;
 	private Vacante vacante;
+	private int match;
 
-	public Solicitud(String id, String fecha, int salario, String tipoTrabajo, Usuario user) {
+	public Solicitud(String id, int salario, Usuario user, Vacante vacante) {
 		this.id = id;
-		this.fecha = fecha;
+		this.fecha = new Date();
 		this.salario = salario;
-		this.tipoTrabajo = tipoTrabajo;
 		this.user = user;
-		this.vacante = null;
+		this.vacante = vacante;
 	}
 
 	public String getId() { return id; }
 	public void setId(String id) { this.id = id; }
 
-	public String getFecha() { return fecha; }
-	public void setFecha(String fecha) { this.fecha = fecha; }
+	public Date getFecha() { return fecha; }
+	public void setFecha(Date fecha) { this.fecha = fecha; }
 
 	public int getSalario() { return salario; }
 	public void setSalario(int salario) { this.salario = salario; }
 
-	public String getTipoTrabajo() { return tipoTrabajo; }
-	public void setTipoTrabajo(String tipoTrabajo) { this.tipoTrabajo = tipoTrabajo; }
 
 	public Usuario getUser() { return user; }
-	public void setUser(Usuario user) { this.user = user; }
+	public void setUser(String IdUser) { this.user = user; }
 
 	public Vacante getVacante() { return vacante; }
 	public void setVacante(Vacante vacante) { this.vacante = vacante; }
+
+	public int getMatch() {
+		return match;
+	}
+
+	public void setMatch(int match) {
+		this.match = match;
+	}
+	
+	
 }

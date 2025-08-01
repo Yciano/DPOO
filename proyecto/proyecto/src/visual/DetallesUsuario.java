@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -46,11 +47,12 @@ public class DetallesUsuario extends JDialog {
         String ruta = usuario.getRutaImagen();
         ImageIcon icon;
 
-        if (ruta != null && !ruta.trim().isEmpty()) {
+        if (ruta != null && !ruta.trim().isEmpty() && new File(ruta).exists()) {
             icon = new ImageIcon(ruta);
         } else {
-            icon = new ImageIcon(getClass().getResource("/Defaultt.png")); 
+            icon = new ImageIcon("src/Defaultt.png");
         }
+
         Image scaled = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
         lblFoto.setIcon(new ImageIcon(scaled));
 

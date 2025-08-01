@@ -1,15 +1,24 @@
 package logico;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Bolsa {
-	
+public class Bolsa implements Serializable{
+
 	private ArrayList<Usuario> misUsers;
 	private ArrayList<Empresa> misEmpresas;
 	private ArrayList<Vacante> misVacantes;
 	private ArrayList<Solicitud> misSolicitudes;
 	private static Bolsa bolsa = null;
+	private static int contadorSolicitudes = 0;
+	private static int contadorVacantes = 0;
 
 	public Bolsa() {
 		this.misUsers =  new ArrayList<Usuario>();
@@ -18,9 +27,8 @@ public class Bolsa {
 		this.misSolicitudes = new ArrayList<Solicitud>();
 	}
 
-	private static int contadorSolicitudes = 0;
-    
-    
+	
+
 	public static Bolsa getInstance(){
 		if(bolsa == null){
 			bolsa = new Bolsa();
@@ -51,7 +59,7 @@ public class Bolsa {
 	public void setMisVacantes(ArrayList<Vacante> misVacantes) {
 		this.misVacantes = misVacantes;
 	}
-	
+
 	public ArrayList<Solicitud> getMisSolicitudes() {
 		return misSolicitudes;
 	}
@@ -59,61 +67,101 @@ public class Bolsa {
 	public void setMisSolicitudes(ArrayList<Solicitud> misSolicitudes) {
 		this.misSolicitudes = misSolicitudes;
 	}
-	
-	public boolean registrarSolictud(String identificador, String IDcompania, Date fecha, Requisito requisito, boolean estado)
+
+	public boolean registrarVacante(String identificador, String IDcompania, Requisito requisito, String posicion, String descripcion)
 	{
 		boolean realizado = false;
 		Empresa aux = buscarEmpresaByCode(IDcompania);
 		if(aux != null){
-			Vacante sol = new Vacante(identificador, IDcompania, fecha, requisito, estado);
-			misVacantes.add(sol);       
-			aux.getSolicitudes().add(sol);
+			Vacante vac = new Vacante(identificador, IDcompania,requisito,posicion,descripcion);
+			misVacantes.add(vac);       
+			aux.getVacantes().add(vac);
 			realizado = true;
 		} 
 		return realizado;
 	}
 
-	public ArrayList<Usuario> match(Vacante sol){
-		ArrayList<Usuario> empleados = new ArrayList<Usuario>();
-		for(Usuario aux: misUsers){
-			int cheq = 0;
-			if(aux.getTipoTrabajo().equalsIgnoreCase(sol.getRequisito().getTipoTrabajo())){
-				cheq++;
-			}
-			if(sol.getRequisito().getTipoEmpleado().equalsIgnoreCase("Tecnico superior") && aux instanceof TecnicoSuperior){
-				cheq++;
-			}
-			else if(sol.getRequisito().getTipoEmpleado().equalsIgnoreCase("Obrero") && aux instanceof Obrero){
-				cheq++;
-			}
-			else if(sol.getRequisito().getTipoEmpleado().equalsIgnoreCase("Universitario") && aux instanceof Universitario){
-				cheq++;
-			}
-			if(aux.getSexo().equalsIgnoreCase(sol.getRequisito().getSexo())){
-				cheq++;
-			}
-			if(aux.isTieneVeh() && sol.getRequisito().isVeh()){
-				cheq++;
-			}
-			if(aux.isDispuestoMud() && sol.getRequisito().isFueraCity()){
-				cheq++;
-			}
-			if( aux instanceof Obrero && ((Obrero)aux).getAniosExperiencia() > sol.getRequisito().getAniosExperiencia()){
-				cheq++;
-			}
-			else if( aux instanceof TecnicoSuperior && ((TecnicoSuperior)aux).getAniosExperiencia() > sol.getRequisito().getAniosExperiencia()){
-				cheq++;
-			}
+	public void match(){
+		ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+		
+		for(Vacante vacante: misVacantes) {
+			int contSoli = 0;
+			if(vacante.getMisSolicitudes() != null) {
+				for(int i = 0; i < vacante.getMisSolicitudes().size();i++){
+					
+					Usuario user = vacante.getMisSolicitudes().get(contSoli).getUser();
+						int cheq = 0;
+						if(vacante.getRequisito().getTipoTrabajo().equalsIgnoreCase(user.getTipoTrabajo())){
+							cheq++;
+						}
+						if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Tecnico superior") && user instanceof TecnicoSuperior){
+							cheq++;
+							
+							if(vacante.getRequisito().getTecnico().equalsIgnoreCase(((TecnicoSuperior) user).getTecnico())) {
+								cheq++;
+							}
+							
+						}
+						else if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Obrero") && user instanceof Obrero){
+							cheq++;
+						}
+						else if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Universitario") && user instanceof Universitario){
+							cheq++;
+							
+							if(vacante.getRequisito().getCarrera().equalsIgnoreCase(((Universitario) user).getCarrera())) {
+								cheq++;
+							}
+							
+						}
+						if(vacante.getRequisito().getSexo().equalsIgnoreCase(user.getSexo())){
+							cheq++;
+						}
+						if(vacante.getRequisito().isVeh() && user.isTieneVeh()){
+							cheq++;
+						}
+						if(vacante.getRequisito().isFueraCity() && user.isDispuestoMud()){
+							cheq++;
+						}
+						if( user instanceof Obrero && ((Obrero)user).getAniosExperiencia() >= vacante.getRequisito().getAniosExperiencia()){
+							cheq++;
+						}
+						else if( user instanceof TecnicoSuperior && ((TecnicoSuperior)user).getAniosExperiencia() > vacante.getRequisito().getAniosExperiencia()){
+							cheq++;
+						}
+						
+						if(vacante.getRequisito().getEdad() >= user.getEdad()) {
+							cheq++;
+						}
 
-			if (cheq > 0){
-				aux.setMatch(cheq);
-				empleados.add(aux);
+						if (cheq > 0){
+							user.setMatch(cheq);
+							usuarios.add(user);
+						}
+					
+					
+					contSoli++;
+
+				}
+				OrdenarMatchBsort(usuarios);
+				ArrayList<Solicitud> solis = new ArrayList<Solicitud>();
+				for(int i = 0; i < usuarios.size(); i++) {
+					Usuario auxUser = usuarios.get(i);
+					for(int k = 0; k < auxUser.getSolicitudes().size(); k++ ) {
+						Solicitud aux = auxUser.getSolicitudes().get(k);
+						if(aux.getVacante().equals(vacante)) {
+							aux.setMatch(usuarios.get(i).getMatch());
+							solis.add(aux);
+						}
+					}
+
+				usuarios.get(i).setMatch(0);
+			}
+				
+				vacante.setMisSolicitudes(solis);
+				solis = null;
 			}
 		}
-		
-		OrdenarMatchBsort(empleados);
 
-		return empleados;
 	}
 
 	public void OrdenarMatchBsort(ArrayList<Usuario> users) {
@@ -127,7 +175,7 @@ public class Bolsa {
 			}
 		}
 	}
-	
+
 	public Empresa buscarEmpresaByCode(String IDcompania){
 		Empresa aux=null;
 		boolean encontrado = false;
@@ -141,20 +189,20 @@ public class Bolsa {
 		}
 		return aux;
 	}
-	
+
 
 	public Usuario buscarEmpleadoByCedula(String cedula){
-	    Usuario aux = null;
-	    boolean encontrado = false;
-	    int i = 0;
-	    while (!encontrado && i < misUsers.size()){
-	        if(misUsers.get(i).getCedula().equalsIgnoreCase(cedula)){
-	            aux = misUsers.get(i);
-	            encontrado = true;
-	        }
-	        i++;
-	    }
-	    return aux;
+		Usuario aux = null;
+		boolean encontrado = false;
+		int i = 0;
+		while (!encontrado && i < misUsers.size()){
+			if(misUsers.get(i).getCedula().equalsIgnoreCase(cedula)){
+				aux = misUsers.get(i);
+				encontrado = true;
+			}
+			i++;
+		}
+		return aux;
 	}
 
 	public boolean registrarEmpleado(Usuario nuevoUsuario){
@@ -165,34 +213,37 @@ public class Bolsa {
 		}
 		return aux;
 	}
-	
+
 	public boolean registrarEmpresa(Empresa nuevaEmpresa){
-	    boolean aux = false;
-	    if(buscarEmpresaByCode(nuevaEmpresa.getRNC()) == null) {
-	        aux = true;
-	        misEmpresas.add(nuevaEmpresa);
-	    }
-	    return aux;
+		boolean aux = false;
+		if(buscarEmpresaByCode(nuevaEmpresa.getRNC()) == null) {
+			aux = true;
+			misEmpresas.add(nuevaEmpresa);
+		}
+		return aux;
 	}
 
 	public boolean correoExiste(String correo) {
-	    for (Empresa emp : misEmpresas) {
-	        String contacto = emp.getContacto();
-	        if (contacto != null && contacto.equalsIgnoreCase(correo)) {
-	            return true;
-	        }
-	    }
-	    return false;
+		for (Empresa emp : misEmpresas) {
+			String contacto = emp.getContacto();
+			if (contacto != null && contacto.equalsIgnoreCase(correo)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void removeUser(String cedula) {
 		Usuario aux = buscarEmpleadoByCedula(cedula);
+		Vacante vac = null;
 		for(int i = aux.getSolicitudes().size() - 1; i >= 0 ; i--) {
+			vac = aux.getSolicitudes().get(i).getVacante();
+			vac.removeSolicitud(aux.getSolicitudes().get(i));
 			aux.removeSolicitud(aux.getSolicitudes().get(i));
 		}
 		misUsers.remove(aux);
 	}
-	
+
 	public void removeVacante(String identificador) {
 		Vacante aux = buscarVacanteByID(identificador);
 		for(int i = aux.getMisSolicitudes().size() - 1; i >= 0 ; i--) {
@@ -200,19 +251,19 @@ public class Bolsa {
 		}
 		misVacantes.remove(aux);
 	}
-	
+
 	public boolean removeEmpresa(String RNC) {
-	    Empresa aux = buscarEmpresaByCode(RNC);
-	    boolean eliminado = false; 
-	    if (aux != null) {
-	        if (aux.getSolicitudes() != null) {
-	            for (int i = aux.getSolicitudes().size() - 1; i >= 0; i--) {
-	                aux.removeSolicitud(aux.getSolicitudes().get(i));
-	            }
-	        }
-	        eliminado = misEmpresas.remove(aux); 
-	    }
-	    return eliminado;
+		Empresa aux = buscarEmpresaByCode(RNC);
+		boolean eliminado = false; 
+		if (aux != null) {
+			if (aux.getVacantes() != null) {
+				for (int i = aux.getVacantes().size() - 1; i >= 0; i--) {
+					aux.removeVacantes(aux.getVacantes().get(i));
+				}
+			}
+			eliminado = misEmpresas.remove(aux); 
+		}
+		return eliminado;
 	}
 
 	public void modificarUsuario(Usuario update) {
@@ -233,50 +284,69 @@ public class Bolsa {
 		}
 		return index;
 	}
-	
+
 	public Vacante buscarVacanteByID(String idVacante) {
-	    for (Vacante vac : misVacantes) {
-	        if (vac.getIdentificador().equalsIgnoreCase(idVacante)) {
-	            return vac;
-	        }
-	    }
-	    return null;
+		for (Vacante vac : misVacantes) {
+			if (vac.getIdentificador().equalsIgnoreCase(idVacante)) {
+				return vac;
+			}
+		}
+		return null;
 	}
 
-	
+
 	public Solicitud buscarSolicitudByID(String id) {
-	    for (Solicitud sol : misSolicitudes) {
-	        if (sol.getId().equalsIgnoreCase(id)) {
-	            return sol;
-	        }
-	    }
-	    return null;
+		for (Solicitud sol : misSolicitudes) {
+			if (sol.getId().equalsIgnoreCase(id)) {
+				return sol;
+			}
+		}
+		return null;
 	}
 
-	public boolean aplicarAVacante(String cedulaUsuario, String idVacante, String fecha, int salarioEsperado, String tipoTrabajo) {
-	    Usuario usuario = buscarEmpleadoByCedula(cedulaUsuario);
-	    Vacante vacante = buscarVacanteByID(idVacante);
+	public boolean aplicarAVacante(String cedulaUsuario, String idVacante, int salarioEsperado) {
+		boolean aux = false;
+		Usuario usuario = buscarEmpleadoByCedula(cedulaUsuario);
+		Vacante vacante = buscarVacanteByID(idVacante);
 
-	    if (usuario != null && vacante != null) {
-	        String idSolicitud = generarCodigoSolicitudActual();
-	        Solicitud nuevaSolicitud = new Solicitud(idSolicitud, fecha, salarioEsperado, tipoTrabajo, usuario);
-	        misSolicitudes.add(nuevaSolicitud);
-	        usuario.getSolicitudes().add(vacante);
-	        return true;
-	    }
-	    return false;
+		if (usuario != null && vacante != null) {
+			String idSolicitud = generarCodigoSolicitudActual();
+			Solicitud nuevaSolicitud = new Solicitud(idSolicitud, salarioEsperado, usuario, vacante);
+			misSolicitudes.add(nuevaSolicitud);
+			usuario.getSolicitudes().add(nuevaSolicitud);
+			vacante.getMisSolicitudes().add(nuevaSolicitud);
+			aux = true;
+		}
+		return aux;
 	}
+	
+	
+	
+	public void guardarDatosEnArchivo(String archivo) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(archivo))) {
+            oos.writeObject(this);
+        }
+    }
+    
+    public static Bolsa cargarDatosDesdeArchivo(String archivo) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
+            Bolsa loadedBolsa = (Bolsa) ois.readObject();
+            bolsa = loadedBolsa;
+            contadorSolicitudes = loadedBolsa.getMisSolicitudes().size();
+            return loadedBolsa;
+        }
+    }
 
 	public static String generarCodigoSolicitudActual() {
-	    return String.format("SOL-%02d", contadorSolicitudes + 1);
+		String cod = String.format("SOL-%02d", contadorSolicitudes + 1);
+		contadorSolicitudes++;
+		return cod;
 	}
-
-	public static void incrementarContadorSolicitudes() {
-	    contadorSolicitudes++;
-	}
-
-
 	
-
+	public static String genCodVacante() {
+		String cod = String.format("VAC-%02d", contadorVacantes + 1);
+		contadorVacantes++;
+		return cod;
+	}
 
 }

@@ -35,7 +35,7 @@ public class Principal extends JFrame {
         miBolsa = Bolsa.getInstance();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1017, 688);
+        setBounds(100, 100, 1194, 761);
         setLocationRelativeTo(null);
 
         JMenuBar menuBar = new JMenuBar();
@@ -99,6 +99,42 @@ public class Principal extends JFrame {
             }
         });
         mnSolicitudes.add(mntmRegsolempleo);
+        
+        JMenuItem mntmNewMenuItem_5 = new JMenuItem("Registrar vacante");
+        mntmNewMenuItem_5.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		RegVacante aux = new RegVacante();
+        		aux.setModal(true);
+        		aux.setVisible(true);
+        	}
+        });
+        mnSolicitudes.add(mntmNewMenuItem_5);
+        
+        JMenu mnNewMenu_2 = new JMenu("Buscar");
+        menuBar.add(mnNewMenu_2);
+        
+        JMenuItem mntmNewMenuItem_4 = new JMenuItem("Contratar");
+        mntmNewMenuItem_4.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		Match aux = new Match();
+        		aux.setModal(true);
+        		aux.setVisible(true);
+        	}
+        });
+        mnNewMenu_2.add(mntmNewMenuItem_4);
+        
+        JMenu mnNewMenu_3 = new JMenu("Respaldo");
+        menuBar.add(mnNewMenu_3);
+        
+        JMenuItem mntmNewMenuItem_6 = new JMenuItem("Realizar respaldo");
+        mntmNewMenuItem_6.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		Respaldo dialogo = new Respaldo();
+                dialogo.setVisible(true);
+
+        	}
+        });
+        mnNewMenu_3.add(mntmNewMenuItem_6);
 
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

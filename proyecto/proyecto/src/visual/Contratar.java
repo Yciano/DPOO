@@ -7,58 +7,71 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import logico.Bolsa;
-import logico.Empresa;
 import logico.Usuario;
 import logico.Vacante;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
-import java.awt.Font;
-import java.awt.Color;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JTextField;
+import java.awt.Color;
+import javax.swing.border.TitledBorder;
 
 public class Contratar extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private static JTable tableEmp;
-	private static JTable tableVacantes;
-	private static JTable tableCandi;
-	private static Object[] rowEmp;
-	private static Object[] rowVac;
-	private static Object[] rowSol;
-	private static DefaultTableModel modeloEmp;
-	private static DefaultTableModel modeloVac;
-	private static DefaultTableModel modeloSol;
-	public Empresa selectedEmp;
-	public Vacante selectedVac;
-	public Usuario selectedUser;
-	private JButton btnContratar;
+	private JButton btnAtras;
 	private JButton btnCancelar;
-	private JTextField txtRnc;
-	private JButton btnBuscar;
-	private JButton btnDetalles;
-	private JButton btnCv;
-
+	private static Object[] row;
+	private static DefaultTableModel modelo;
+    private Usuario selected = null;
+    private Vacante buscar = null;
+    private JTextField txtCedula1;
+    private JTextField txtEdad1;
+    private JTextField txtSexo1;
+    private JTextField txtContacto1;
+    private JTextField txtTipoTrabajo1;
+    private JTextField txtProvincia1;
+    private JTextField txtLicencia1;
+    private JTextField txtVehiculo1;
+    private JTextField txtMudarse1;
+    private JTextField txtEmpleado1;
+    private JTextField txtCedula2;
+    private JTextField txtEdad2;
+    private JTextField txtSexo2;
+    private JTextField txtContacto2;
+    private JTextField txtTipoTrabajo2;
+    private JTextField txtProvincia2;
+    private JTextField txtLicencia2;
+    private JTextField txtVehiculo2;
+    private JTextField txtMudarse2;
+    private JTextField txtEmpleado2;
+    private JTextField txtCedula3;
+    private JTextField txtEdad3;
+    private JTextField txtSexo3;
+    private JTextField txtContacto3;
+    private JTextField txtTipoTrabajo3;
+    private JTextField txtProvincia3;
+    private JTextField txtLicencia3;
+    private JTextField txtVehiculo3;
+    private JTextField txtMudarse3;
+    private JTextField txtEmpleado3;
+    private static Vacante aux = null;
 	
 	public static void main(String[] args) {
 		try {
-			Contratar dialog = new Contratar();
+			Contratar dialog = new Contratar(aux);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -66,8 +79,10 @@ public class Contratar extends JDialog {
 		}
 	}
 
-	public Contratar() {
-		setBounds(100, 100, 1223, 1000);
+	
+	public Contratar(Vacante vac) {
+		aux = vac;
+		setBounds(100, 100, 1279, 800);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -78,336 +93,573 @@ public class Contratar extends JDialog {
 			contentPanel.add(panel, BorderLayout.CENTER);
 			panel.setLayout(null);
 			
-			JPanel panelEmp = new JPanel();
-			panelEmp.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panelEmp.setBounds(12, 24, 1171, 352);
-			panel.add(panelEmp);
-			panelEmp.setLayout(null);
-			{
-				JPanel panel_1 = new JPanel();
-				panel_1.setBounds(12, 73, 1124, 266);
-				panelEmp.add(panel_1);
-				panel_1.setLayout(new BorderLayout(0, 0));
-				
-					JScrollPane scrollPane = new JScrollPane();
-					panel_1.add(scrollPane, BorderLayout.CENTER);{
-					tableEmp = new JTable();
-					tableEmp.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							int index = tableEmp.getSelectedRow();
-							if (index >= 0) {
-								selectedEmp = Bolsa.getInstance()
-										.buscarEmpresaByCode(tableEmp.getValueAt(index, 0).toString());
-								if(selectedEmp != null)	
-									loadVacante(selectedEmp);
-							}
-						}
-					});
-					modeloEmp = new DefaultTableModel() {
-						public boolean isCellEditable(int row, int column) {
-							return false;
-						}
-					};
-					String[] header = { "Nombre", "RNC", "Área", "Contacto", "Provincia" };
-					modeloEmp.setColumnIdentifiers(header);
-					tableEmp.setModel(modeloEmp);
-					scrollPane.setViewportView(tableEmp);
-					}				
+			JPanel panelCand1 = new JPanel();
+			panelCand1.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panelCand1.setBounds(12, 13, 397, 682);
+			panel.add(panelCand1);
+			panelCand1.setLayout(null);
+			
+			JLabel lblNewLabel = new JLabel("Candidato 1");
+			lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+			lblNewLabel.setBounds(133, 13, 106, 29);
+			panelCand1.add(lblNewLabel);
+			
+			JLabel lblNewLabel_1 = new JLabel("Ced\u00FAla:");
+			lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_1.setBounds(12, 246, 56, 16);
+			panelCand1.add(lblNewLabel_1);
+			
+			JLabel lblNewLabel_2 = new JLabel("");
+			lblNewLabel_2.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			lblNewLabel_2.setBackground(Color.WHITE);
+			lblNewLabel_2.setBounds(133, 76, 106, 103);
+			panelCand1.add(lblNewLabel_2);
+			
+			ArrayList<Usuario> users = listaDeUsers(aux);
+			if(users.size() > 1) {
+			JLabel NombreYApellido1 = new JLabel(users.get(0).getNombre() + " " + users.get(0).getApellido());
 			}
-			
-			JLabel lblNewLabel = new JLabel("Buscar por RNC: ");
-			lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel.setBounds(12, 29, 118, 16);
-			panelEmp.add(lblNewLabel);
-			
-			txtRnc = new JTextField();
-			txtRnc.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyTyped(KeyEvent e) {
-					
-					char c = e.getKeyChar();
-	                if (!Character.isDigit(c)) {
-	                    e.consume();
-	                    return;
-	                }
+			JLabel NombreYApellido1 = new JLabel("No existe candidato");
 
-	                String digits = txtRnc.getText().replaceAll("[^\\d]", "");
-	                if (digits.length() >= 9) {
-	                    e.consume();
-	                    return;
-	                }
+			NombreYApellido1.setFont(new Font("Tahoma", Font.BOLD, 18));
+			NombreYApellido1.setBounds(83, 192, 243, 22);
+			panelCand1.add(NombreYApellido1);
+			
+			txtCedula1 = new JTextField();
+			txtCedula1.setEditable(false);
+			txtCedula1.setBounds(12, 275, 88, 22);
+			panelCand1.add(txtCedula1);
+			txtCedula1.setColumns(10);
+			
+			JLabel lblNewLabel_3 = new JLabel("Edad:");
+			lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_3.setBounds(133, 246, 56, 16);
+			panelCand1.add(lblNewLabel_3);
+			
+			txtEdad1 = new JTextField();
+			txtEdad1.setEditable(false);
+			txtEdad1.setBounds(133, 275, 73, 22);
+			panelCand1.add(txtEdad1);
+			txtEdad1.setColumns(10);
+			
+			JLabel lblNewLabel_4 = new JLabel("Sexo:");
+			lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_4.setBounds(255, 246, 47, 16);
+			panelCand1.add(lblNewLabel_4);
+			
+			txtSexo1 = new JTextField();
+			txtSexo1.setEditable(false);
+			txtSexo1.setBounds(256, 275, 73, 22);
+			panelCand1.add(txtSexo1);
+			txtSexo1.setColumns(10);
+			
+			JLabel lblNewLabel_5 = new JLabel("Contacto:");
+			lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_5.setBounds(20, 340, 80, 15);
+			panelCand1.add(lblNewLabel_5);
+			
+			txtContacto1 = new JTextField();
+			txtContacto1.setEditable(false);
+			txtContacto1.setBounds(98, 337, 228, 22);
+			panelCand1.add(txtContacto1);
+			txtContacto1.setColumns(10);
+			
+			JLabel lblNewLabel_6 = new JLabel("Tipo de trabajo:");
+			lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_6.setBounds(12, 388, 123, 29);
+			panelCand1.add(lblNewLabel_6);
+			
+			txtTipoTrabajo1 = new JTextField();
+			txtTipoTrabajo1.setEditable(false);
+			txtTipoTrabajo1.setBounds(12, 431, 106, 22);
+			panelCand1.add(txtTipoTrabajo1);
+			txtTipoTrabajo1.setColumns(10);
+			
+			JLabel lblNewLabel_7 = new JLabel("Provinicia: ");
+			lblNewLabel_7.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_7.setBounds(228, 394, 67, 16);
+			panelCand1.add(lblNewLabel_7);
+			
+			txtProvincia1 = new JTextField();
+			txtProvincia1.setEditable(false);
+			txtProvincia1.setBounds(228, 431, 116, 22);
+			panelCand1.add(txtProvincia1);
+			txtProvincia1.setColumns(10);
+			
+			JLabel lblNewLabel_8 = new JLabel("\u00BFTiene licencia?");
+			lblNewLabel_8.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_8.setBounds(12, 484, 106, 16);
+			panelCand1.add(lblNewLabel_8);
+			
+			JLabel lblNewLabel_9 = new JLabel("\u00BFTiene vehiculo?");
+			lblNewLabel_9.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_9.setBounds(228, 484, 106, 16);
+			panelCand1.add(lblNewLabel_9);
+			
+			JLabel lblNewLabel_10 = new JLabel("\u00BFDispuesto a mudarse?");
+			lblNewLabel_10.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_10.setBounds(12, 572, 151, 16);
+			panelCand1.add(lblNewLabel_10);
+			
+			JLabel lblNewLabel_11 = new JLabel("\u00BFEmpleado?");
+			lblNewLabel_11.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblNewLabel_11.setBounds(228, 573, 106, 15);
+			panelCand1.add(lblNewLabel_11);
+			
+			txtLicencia1 = new JTextField();
+			txtLicencia1.setEditable(false);
+			txtLicencia1.setBounds(12, 513, 94, 22);
+			panelCand1.add(txtLicencia1);
+			txtLicencia1.setColumns(10);
+			
+			txtVehiculo1 = new JTextField();
+			txtVehiculo1.setEditable(false);
+			txtVehiculo1.setBounds(228, 513, 116, 22);
+			panelCand1.add(txtVehiculo1);
+			txtVehiculo1.setColumns(10);
+			
+			txtMudarse1 = new JTextField();
+			txtMudarse1.setEditable(false);
+			txtMudarse1.setBounds(12, 601, 116, 22);
+			panelCand1.add(txtMudarse1);
+			txtMudarse1.setColumns(10);
+			
+			txtEmpleado1 = new JTextField();
+			txtEmpleado1.setEditable(false);
+			txtEmpleado1.setColumns(10);
+			txtEmpleado1.setBounds(228, 601, 116, 22);
+			panelCand1.add(txtEmpleado1);
+			
+			JButton btnNewButton_1 = new JButton("Contratar");
+			btnNewButton_1.setBounds(288, 644, 97, 25);
+			panelCand1.add(btnNewButton_1);
+			
+			JPanel panelCand2 = new JPanel();
+			panelCand2.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panelCand2.setBounds(421, 13, 397, 682);
+			panel.add(panelCand2);
+			panelCand2.setLayout(null);
+			
+			JLabel lblCandidato = new JLabel("Candidato 2");
+			lblCandidato.setFont(new Font("Tahoma", Font.BOLD, 16));
+			lblCandidato.setBounds(144, 13, 106, 29);
+			panelCand2.add(lblCandidato);
+			
+			JLabel label = new JLabel("");
+			label.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			label.setBackground(Color.WHITE);
+			label.setBounds(150, 83, 106, 103);
+			panelCand2.add(label);
+			
+			if(users.size() > 2) {
+			JLabel NombreYApellido2 = new JLabel(users.get(1).getNombre() + " " + users.get(1).getApellido());
+			}
+			JLabel NombreYApellido2 = new JLabel("No existe candidato");
 
-	                SwingUtilities.invokeLater(() -> {
-	                    String raw = txtRnc.getText().replaceAll("[^\\d]", "");
-	                    StringBuilder formatted = new StringBuilder();
-	                    for (int i = 0; i < raw.length(); i++) {
-	                        formatted.append(raw.charAt(i));
-	                        if (i == 2 || i == 7) {
-	                            formatted.append("-");
-	                        }
-	                    }
-	                    txtRnc.setText(formatted.toString());
-	                });
+			NombreYApellido2.setFont(new Font("Tahoma", Font.BOLD, 18));
+			NombreYApellido2.setBounds(100, 199, 243, 22);
+			panelCand2.add(NombreYApellido2);
+			
+			JLabel label_2 = new JLabel("Ced\u00FAla:");
+			label_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_2.setBounds(29, 253, 56, 16);
+			panelCand2.add(label_2);
+			
+			txtCedula2 = new JTextField();
+			txtCedula2.setEditable(false);
+			txtCedula2.setColumns(10);
+			txtCedula2.setBounds(29, 282, 88, 22);
+			panelCand2.add(txtCedula2);
+			
+			JLabel label_3 = new JLabel("Edad:");
+			label_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_3.setBounds(150, 253, 56, 16);
+			panelCand2.add(label_3);
+			
+			txtEdad2 = new JTextField();
+			txtEdad2.setEditable(false);
+			txtEdad2.setColumns(10);
+			txtEdad2.setBounds(150, 282, 73, 22);
+			panelCand2.add(txtEdad2);
+			
+			JLabel label_4 = new JLabel("Sexo:");
+			label_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_4.setBounds(272, 253, 47, 16);
+			panelCand2.add(label_4);
+			
+			txtSexo2 = new JTextField();
+			txtSexo2.setEditable(false);
+			txtSexo2.setColumns(10);
+			txtSexo2.setBounds(282, 282, 73, 22);
+			panelCand2.add(txtSexo2);
+			
+			JLabel label_5 = new JLabel("Contacto:");
+			label_5.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_5.setBounds(37, 347, 80, 15);
+			panelCand2.add(label_5);
+			
+			txtContacto2 = new JTextField();
+			txtContacto2.setEditable(false);
+			txtContacto2.setColumns(10);
+			txtContacto2.setBounds(115, 344, 228, 22);
+			panelCand2.add(txtContacto2);
+			
+			JLabel label_6 = new JLabel("Tipo de trabajo:");
+			label_6.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_6.setBounds(29, 395, 123, 29);
+			panelCand2.add(label_6);
+			
+			txtTipoTrabajo2 = new JTextField();
+			txtTipoTrabajo2.setEditable(false);
+			txtTipoTrabajo2.setColumns(10);
+			txtTipoTrabajo2.setBounds(29, 438, 106, 22);
+			panelCand2.add(txtTipoTrabajo2);
+			
+			JLabel label_7 = new JLabel("Provinicia: ");
+			label_7.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_7.setBounds(245, 401, 67, 16);
+			panelCand2.add(label_7);
+			
+			txtProvincia2 = new JTextField();
+			txtProvincia2.setEditable(false);
+			txtProvincia2.setColumns(10);
+			txtProvincia2.setBounds(245, 438, 116, 22);
+			panelCand2.add(txtProvincia2);
+			
+			JLabel label_8 = new JLabel("\u00BFTiene licencia?");
+			label_8.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_8.setBounds(29, 491, 106, 16);
+			panelCand2.add(label_8);
+			
+			txtLicencia2 = new JTextField();
+			txtLicencia2.setEditable(false);
+			txtLicencia2.setColumns(10);
+			txtLicencia2.setBounds(29, 520, 94, 22);
+			panelCand2.add(txtLicencia2);
+			
+			JLabel label_9 = new JLabel("\u00BFTiene vehiculo?");
+			label_9.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_9.setBounds(245, 491, 106, 16);
+			panelCand2.add(label_9);
+			
+			txtVehiculo2 = new JTextField();
+			txtVehiculo2.setEditable(false);
+			txtVehiculo2.setColumns(10);
+			txtVehiculo2.setBounds(245, 520, 116, 22);
+			panelCand2.add(txtVehiculo2);
+			
+			JLabel label_10 = new JLabel("\u00BFDispuesto a mudarse?");
+			label_10.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_10.setBounds(29, 579, 151, 16);
+			panelCand2.add(label_10);
+			
+			txtMudarse2 = new JTextField();
+			txtMudarse2.setEditable(false);
+			txtMudarse2.setColumns(10);
+			txtMudarse2.setBounds(29, 608, 116, 22);
+			panelCand2.add(txtMudarse2);
+			
+			JLabel label_11 = new JLabel("\u00BFEmpleado?");
+			label_11.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_11.setBounds(245, 580, 106, 15);
+			panelCand2.add(label_11);
+			
+			txtEmpleado2 = new JTextField();
+			txtEmpleado2.setEditable(false);
+			txtEmpleado2.setColumns(10);
+			txtEmpleado2.setBounds(245, 608, 116, 22);
+			panelCand2.add(txtEmpleado2);
+			
+			JButton btnNewButton_2 = new JButton("Contratar");
+			btnNewButton_2.setBounds(288, 644, 97, 25);
+			panelCand2.add(btnNewButton_2);
+			
+			JPanel panelCand3 = new JPanel();
+			panelCand3.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panelCand3.setBounds(830, 13, 397, 682);
+			panel.add(panelCand3);
+			panelCand3.setLayout(null);
+			
+			JLabel lblCandidato_1 = new JLabel("Candidato 3");
+			lblCandidato_1.setFont(new Font("Tahoma", Font.BOLD, 16));
+			lblCandidato_1.setBounds(147, 13, 106, 29);
+			panelCand3.add(lblCandidato_1);
+			
+			JLabel label_12 = new JLabel("");
+			label_12.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			label_12.setBackground(Color.WHITE);
+			label_12.setBounds(148, 85, 106, 103);
+			panelCand3.add(label_12);
+			
+			if(users.size() > 3) {
+				JLabel NombreYApellido3 = new JLabel(users.get(2).getNombre() + " " + users.get(2).getApellido());
 				}
-			});
-			txtRnc.setBounds(140, 26, 166, 22);
-			panelEmp.add(txtRnc);
-			txtRnc.setColumns(10);
+				JLabel NombreYApellido3 = new JLabel("No existe candidato");
+			NombreYApellido3.setFont(new Font("Tahoma", Font.BOLD, 18));
+			NombreYApellido3.setBounds(98, 201, 243, 22);
+			panelCand3.add(NombreYApellido3);
 			
-			btnBuscar = new JButton("Buscar");
-			btnBuscar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if(validarCampos(txtRnc.getText())) {
-						loadEmpresas(txtRnc.getText());
-					}
-				}
-			});
-			btnBuscar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			btnBuscar.setBounds(327, 26, 97, 25);
-			panelEmp.add(btnBuscar);
+			JLabel label_14 = new JLabel("Ced\u00FAla:");
+			label_14.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_14.setBounds(27, 255, 56, 16);
+			panelCand3.add(label_14);
 			
-			JPanel panelVacante = new JPanel();
-			panelVacante.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panelVacante.setBounds(12, 441, 541, 439);
-			panel.add(panelVacante);
-			panelVacante.setLayout(null);
+			txtCedula3 = new JTextField();
+			txtCedula3.setEditable(false);
+			txtCedula3.setColumns(10);
+			txtCedula3.setBounds(27, 284, 88, 22);
+			panelCand3.add(txtCedula3);
 			
-			JPanel panel_1 = new JPanel();
-			panel_1.setBounds(12, 13, 517, 370);
-			panelVacante.add(panel_1);
-			panel_1.setLayout(new BorderLayout(0, 0));
+			JLabel label_15 = new JLabel("Edad:");
+			label_15.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_15.setBounds(148, 255, 56, 16);
+			panelCand3.add(label_15);
 			
-			JScrollPane scrollPane = new JScrollPane();
-			panel_1.add(scrollPane, BorderLayout.CENTER);
+			txtEdad3 = new JTextField();
+			txtEdad3.setEditable(false);
+			txtEdad3.setColumns(10);
+			txtEdad3.setBounds(148, 284, 73, 22);
+			panelCand3.add(txtEdad3);
 			
-			tableVacantes = new JTable();
-			tableVacantes.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					int index = tableVacantes.getSelectedRow();
-					if (index >= 0) {
-						selectedVac = Bolsa.getInstance()
-								.buscarVacanteByID(tableVacantes.getValueAt(index, 0).toString());
-						btnDetalles.setEnabled(true);
-						if(selectedUser!= null)	
-							loadUsuario(selectedVac);
-					}
-				}
-			});
+			JLabel label_16 = new JLabel("Sexo:");
+			label_16.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_16.setBounds(270, 255, 47, 16);
+			panelCand3.add(label_16);
 			
-			modeloVac = new DefaultTableModel() {
-				public boolean isCellEditable(int row, int column) {
-					return false;
-				}
-			};
-			String[] header = { "Identificador", "Tipo de trabajo", "Tipo de empleado"};
-			modeloVac.setColumnIdentifiers(header);
-			tableVacantes.setModel(modeloVac);
-			scrollPane.setViewportView(tableVacantes);
+			txtSexo3 = new JTextField();
+			txtSexo3.setEditable(false);
+			txtSexo3.setColumns(10);
+			txtSexo3.setBounds(271, 284, 73, 22);
+			panelCand3.add(txtSexo3);
 			
-			btnDetalles = new JButton("Detalles");
-			btnDetalles.setEnabled(false);
-			btnDetalles.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			btnDetalles.setBounds(386, 401, 143, 25);
-			panelVacante.add(btnDetalles);
+			JLabel label_17 = new JLabel("Contacto:");
+			label_17.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_17.setBounds(35, 349, 80, 15);
+			panelCand3.add(label_17);
 			
-			JPanel panelUser = new JPanel();
-			panelUser.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panelUser.setBounds(627, 441, 556, 439);
-			panel.add(panelUser);
-			panelUser.setLayout(null);
+			txtContacto3 = new JTextField();
+			txtContacto3.setEditable(false);
+			txtContacto3.setColumns(10);
+			txtContacto3.setBounds(113, 346, 228, 22);
+			panelCand3.add(txtContacto3);
 			
-			JPanel panel_2 = new JPanel();
-			panel_2.setBounds(12, 13, 532, 365);
-			panelUser.add(panel_2);
-			panel_2.setLayout(new BorderLayout(0, 0));
+			JLabel label_18 = new JLabel("Tipo de trabajo:");
+			label_18.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_18.setBounds(27, 397, 123, 29);
+			panelCand3.add(label_18);
 			
-			JScrollPane scrollPane_1 = new JScrollPane();
-			panel_2.add(scrollPane_1, BorderLayout.CENTER);
+			txtTipoTrabajo3 = new JTextField();
+			txtTipoTrabajo3.setEditable(false);
+			txtTipoTrabajo3.setColumns(10);
+			txtTipoTrabajo3.setBounds(27, 440, 106, 22);
+			panelCand3.add(txtTipoTrabajo3);
 			
-			tableCandi = new JTable();
-			tableCandi.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					int index = tableCandi.getSelectedRow();
-					if (index >= 0) {
-						selectedUser = Bolsa.getInstance()
-								.buscarEmpleadoByCedula(tableCandi.getValueAt(index, 0).toString());
-						btnContratar.setEnabled(true);
-						btnCv.setEnabled(true);
-					}
-					
-				}
-			});
+			JLabel label_19 = new JLabel("Provinicia: ");
+			label_19.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_19.setBounds(243, 403, 67, 16);
+			panelCand3.add(label_19);
 			
-			modeloSol = new DefaultTableModel() {
-				public boolean isCellEditable(int row, int column) {
-					return false;
-				}
-			};
+			txtProvincia3 = new JTextField();
+			txtProvincia3.setEditable(false);
+			txtProvincia3.setColumns(10);
+			txtProvincia3.setBounds(243, 440, 116, 22);
+			panelCand3.add(txtProvincia3);
 			
-			String[] header3 = { "Cédula","Nombre", "Tipo de empleado", "Match"};
-			modeloSol.setColumnIdentifiers(header3);
-			tableCandi.setModel(modeloSol);
-			scrollPane_1.setViewportView(tableCandi);
+			JLabel label_20 = new JLabel("\u00BFTiene licencia?");
+			label_20.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_20.setBounds(27, 493, 106, 16);
+			panelCand3.add(label_20);
 			
-			btnCv = new JButton("Ver CV");
-			btnCv.setEnabled(false);
-			btnCv.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			btnCv.setBounds(401, 401, 143, 25);
-			panelUser.add(btnCv);
+			txtLicencia3 = new JTextField();
+			txtLicencia3.setEditable(false);
+			txtLicencia3.setColumns(10);
+			txtLicencia3.setBounds(27, 522, 94, 22);
+			panelCand3.add(txtLicencia3);
 			
-			JLabel lblNewLabel_1 = new JLabel("VACANTES");
-			lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 18));
-			lblNewLabel_1.setBounds(211, 405, 113, 16);
-			panel.add(lblNewLabel_1);
+			JLabel label_21 = new JLabel("\u00BFTiene vehiculo?");
+			label_21.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_21.setBounds(243, 493, 106, 16);
+			panelCand3.add(label_21);
 			
-			JLabel lblNewLabel_2 = new JLabel("CANDIDATOS");
-			lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 18));
-			lblNewLabel_2.setBounds(826, 407, 151, 16);
-			panel.add(lblNewLabel_2);
+			txtVehiculo3 = new JTextField();
+			txtVehiculo3.setEditable(false);
+			txtVehiculo3.setColumns(10);
+			txtVehiculo3.setBounds(243, 522, 116, 22);
+			panelCand3.add(txtVehiculo3);
+			
+			JLabel label_22 = new JLabel("\u00BFDispuesto a mudarse?");
+			label_22.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_22.setBounds(27, 581, 151, 16);
+			panelCand3.add(label_22);
+			
+			txtMudarse3 = new JTextField();
+			txtMudarse3.setEditable(false);
+			txtMudarse3.setColumns(10);
+			txtMudarse3.setBounds(27, 610, 116, 22);
+			panelCand3.add(txtMudarse3);
+			
+			JLabel label_23 = new JLabel("\u00BFEmpleado?");
+			label_23.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			label_23.setBounds(243, 582, 106, 15);
+			panelCand3.add(label_23);
+			
+			txtEmpleado3 = new JTextField();
+			txtEmpleado3.setEditable(false);
+			txtEmpleado3.setColumns(10);
+			txtEmpleado3.setBounds(243, 610, 116, 22);
+			panelCand3.add(txtEmpleado3);
+			
+			JButton btnNewButton_3 = new JButton("Contratar");
+			btnNewButton_3.setBounds(288, 644, 97, 25);
+			panelCand3.add(btnNewButton_3);
+			{
+			
+			}
 		}
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				btnContratar = new JButton("Contratar");
-				btnContratar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						
-					}
-				});
-				btnContratar.setEnabled(false);
-				btnContratar.setActionCommand("OK");
-				buttonPane.add(btnContratar);
-				getRootPane().setDefaultButton(btnContratar);
-			}
+			
+			btnAtras = new JButton("Atr\u00E1s");
+			btnAtras.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+					Match aux = new Match();
+					aux.setModal(true);
+					aux.setVisible(true);
+					
+				}
+			});
+			buttonPane.add(btnAtras);
 			{
 				btnCancelar = new JButton("Cancelar");
-				btnCancelar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						dispose();
-					}
-				});
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
-			loadEmpresas(null);
 		}
 	}
 	
 	
 	
-	public static void loadEmpresas(String rnc) {
-		modeloEmp.setRowCount(0);
-		rowEmp = new Object[tableEmp.getColumnCount()];
-		
-		if(rnc != null) {
-			Empresa aux =  Bolsa.getInstance().buscarEmpresaByCode(rnc);
-			rowEmp[0] = aux.getNombre();
-			rowEmp[1] = aux.getRNC();
-			rowEmp[2] = aux.getArea();
-			rowEmp[3] = aux.getContacto();
-			rowEmp[4] = aux.getProvincia();
-		}
-		ArrayList<Empresa> lista = Bolsa.getInstance().getMisEmpresas();
-		for (Empresa emp : lista) {
-			rowEmp[0] = emp.getNombre();
-			rowEmp[1] = emp.getRNC();
-			rowEmp[2] = emp.getArea();
-			rowEmp[3] = emp.getContacto();
-			rowEmp[4] = emp.getProvincia();
-			modeloEmp.addRow(rowEmp);
-		}
-
-		tableEmp.setModel(modeloEmp);
-		tableEmp.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		tableEmp.getTableHeader().setReorderingAllowed(false);
-		TableColumnModel columnModel = tableEmp.getColumnModel();
-		columnModel.getColumn(0).setPreferredWidth(200);
-		columnModel.getColumn(1).setPreferredWidth(200);
-		columnModel.getColumn(2).setPreferredWidth(200);
-		columnModel.getColumn(3).setPreferredWidth(200);
-		columnModel.getColumn(4).setPreferredWidth(200);
-	}
-	
-	
-	public static void loadUsuario(Vacante seleccionado) {
-		modeloSol.setRowCount(0);
-		rowSol = new Object[tableCandi.getColumnCount()];
-		ArrayList<Usuario> candidatos = Bolsa.getInstance().match(seleccionado);
-		for (int i = 0; i < candidatos.size();i++) {
-				rowSol[0] = candidatos.get(i).getCedula();
-				rowSol[1] = candidatos.get(i).getNombre();
-				rowSol[2] = candidatos.get(i).getTipoTrabajo();
-				rowSol[3] = candidatos.get(i).getMatch() + "%";
-				modeloSol.addRow(rowSol);	
+	private void loadUser(ArrayList<Usuario> user) {
+		if(user != null && user.size() > 0) {
+			txtCedula1.setText(user.get(0).getCedula());
+			txtContacto1.setText(user.get(0).getContacto());
+			txtEdad1.setText(String.valueOf(user.get(0).getEdad()));
+			txtTipoTrabajo1.setText(user.get(0).getTipoTrabajo());
+			txtProvincia1.setText(user.get(0).getProvincia());
+			if(user.get(0).isLicencia()) {
+				txtLicencia1.setText("Si");
+			}else
+				txtLicencia1.setText("No");
 			
-		}
-
-		tableCandi.setModel(modeloSol);
-		tableCandi.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		tableCandi.getTableHeader().setReorderingAllowed(false);
-		TableColumnModel columnModel = tableCandi.getColumnModel();
-		columnModel.getColumn(0).setPreferredWidth(100);
-		columnModel.getColumn(1).setPreferredWidth(150);
-		columnModel.getColumn(2).setPreferredWidth(150);
-		columnModel.getColumn(3).setPreferredWidth(180);
-		columnModel.getColumn(4).setPreferredWidth(150);
-		columnModel.getColumn(5).setPreferredWidth(150);
-
-	}
-	
-	public static void loadVacante(Empresa seleccionado) {
-		modeloVac.setRowCount(0);
-		rowVac = new Object[tableVacantes.getColumnCount()];
-		for (Vacante aux : Bolsa.getInstance().getMisVacantes()) {
-			if(aux.getIDCompania().equalsIgnoreCase(seleccionado.getRNC())) {
-				rowVac[0] = aux.getIdentificador();
-				rowVac[1] = aux.getRequisito().getTipoTrabajo();
-				rowVac[2] = aux.getRequisito().getTipoEmpleado();
-				if(aux.isEstado()) {
-					rowVac[3] = "Activa";
-				}else
-				{
-					rowVac[3] = "Pendiente";
-				}
-				modeloVac.addRow(rowVac);
+			if(user.get(0).isTieneVeh()) {
+				txtVehiculo1.setText("Si");
+			}else {
+				txtVehiculo1.setText("No");
 			}
 			
-		}
+			if(user.get(0).isDispuestoMud()) {
+				txtMudarse1.setText("Si");
+			}else {
+				txtMudarse1.setText("No");
+			}
+			
+			if(user.get(0).isEstado()) {
+				txtEmpleado1.setText("Si");
+			}else {
+				txtEmpleado1.setText("Desempleado");
 
-		tableVacantes.setModel(modeloVac);
-		tableVacantes.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		tableVacantes.getTableHeader().setReorderingAllowed(false);
-		TableColumnModel columnModel = tableVacantes.getColumnModel();
-		columnModel.getColumn(0).setPreferredWidth(100);
-		columnModel.getColumn(1).setPreferredWidth(150);
-		columnModel.getColumn(2).setPreferredWidth(150);
-		columnModel.getColumn(3).setPreferredWidth(180);
+			}
+			
+			
+			}
 		
+		if(user != null && user.size() > 1) {
+			txtCedula2.setText(user.get(1).getCedula());
+			txtContacto2.setText(user.get(1).getContacto());
+			txtEdad2.setText(String.valueOf(user.get(1).getEdad()));
+			txtTipoTrabajo2.setText(user.get(1).getTipoTrabajo());
+			txtProvincia2.setText(user.get(1).getProvincia());
+			if(user.get(1).isLicencia()) {
+				txtLicencia2.setText("Si");
+			}else
+				txtLicencia2.setText("No");
+			
+			if(user.get(1).isTieneVeh()) {
+				txtVehiculo2.setText("Si");
+			}else {
+				txtVehiculo2.setText("No");
+			}
+			
+			if(user.get(1).isDispuestoMud()) {
+				txtMudarse2.setText("Si");
+			}else {
+				txtMudarse2.setText("No");
+			}
+			
+			if(user.get(1).isEstado()) {
+				txtEmpleado2.setText("Si");
+			}else {
+				txtEmpleado2.setText("Desempleado");
 
+			}
+			
+			
+			}
+		
+		if(user != null && user.size() > 2) {
+			txtCedula3.setText(user.get(2).getCedula());
+			txtContacto3.setText(user.get(2).getContacto());
+			txtEdad2.setText(String.valueOf(user.get(2).getEdad()));
+			txtTipoTrabajo3.setText(user.get(2).getTipoTrabajo());
+			txtProvincia3.setText(user.get(2).getProvincia());
+			if(user.get(2).isLicencia()) {
+				txtLicencia3.setText("Si");
+			}else
+				txtLicencia3.setText("No");
+			
+			if(user.get(2).isTieneVeh()) {
+				txtVehiculo3.setText("Si");
+			}else {
+				txtVehiculo3.setText("No");
+			}
+			
+			if(user.get(2).isDispuestoMud()) {
+				txtMudarse3.setText("Si");
+			}else {
+				txtMudarse3.setText("No");
+			}
+			
+			if(user.get(2).isEstado()) {
+				txtEmpleado3.setText("Si");
+			}else {
+				txtEmpleado3.setText("Desempleado");
+
+			}
+			
+			
+			}
+		
+			
+		
 	}
 	
-	private boolean validarCampos(String Rnc) {
-		boolean aux = true;
-		if (txtRnc.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Por favor, completa todos los campos antes de continuar.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			aux = false;
+	private ArrayList<Usuario> listaDeUsers(Vacante aux){
+		ArrayList<Usuario> user = new ArrayList<Usuario>();
+		if(aux != null && aux.getMisSolicitudes() != null) {
+		if(aux.getMisSolicitudes().size() > 0) {
+			for(int i = 0; i < aux.getMisSolicitudes().size(); i++) {
+				user.add(aux.getMisSolicitudes().get(i).getUser());
+			}
 		}
-		else if (Bolsa.getInstance().buscarEmpresaByCode(Rnc) == null) {
-			JOptionPane.showMessageDialog(null, "Esta empresa no se encuentra registrada.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			aux = false;
+		}
 		
 		
+		return user;
+		
 	}
-		return aux;
-	}
+	
 	
 }
-	
-	

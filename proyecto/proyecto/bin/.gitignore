@@ -1,7 +1,4 @@
-/visual/
-/logico/
-/ReusPic.jpeg
-/Default.jpg
-/Default.png
-/Defaultt.png
-/wtf.jpg
+*.class
+bin/
+/.project
+.classpath
