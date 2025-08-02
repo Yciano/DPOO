@@ -10,7 +10,7 @@ public class Empresa implements Serializable{
 	private String contacto;
 	private String provincia;
 	private ArrayList<Vacante>vacantes;
-	private ArrayList<Usuario> misEmpleados;
+	private ArrayList<Contrato> misContratos;
 	
 	public Empresa(String nombre, String RNC, String area, String contacto, String provincia) {
 		this.nombre = nombre;
@@ -19,7 +19,7 @@ public class Empresa implements Serializable{
 		this.contacto  = contacto;
 		this.provincia = provincia;
 		this.vacantes = new ArrayList<Vacante>();
-		this.misEmpleados = new ArrayList<Usuario>();
+		this.misContratos = new ArrayList<Contrato	>();
 	}
 
 	public String getNombre() {
@@ -74,21 +74,22 @@ public class Empresa implements Serializable{
 		 	vacantes.remove(aux);
 	    }
 
-	public ArrayList<Usuario> getMisEmpleados() {
-		return misEmpleados;
+
+	public ArrayList<Contrato> getMisContratos() {
+		return misContratos;
 	}
 
-	public void setMisEmpleados(ArrayList<Usuario> misEmpleados) {
-		this.misEmpleados = misEmpleados;
+	public void setMisContratos(ArrayList<Contrato> misContratos) {
+		this.misContratos = misContratos;
 	}
 
-	public void registrarEmpleado(Usuario aux) {
-		misEmpleados.add(aux);
+	public void registrarContrato(Contrato aux) {
+		misContratos.add(aux);
 	}
-	public void removerEmpleado(Usuario aux) {
-		for(int i = misEmpleados.size() - 1; i > 0; i--) {
-			if(misEmpleados.get(i).equals(aux)) {
-				misEmpleados.remove(i);
+	public void removerContrato(Usuario aux) {
+		for(int i = misContratos.size() - 1; i > 0; i--) {
+			if(misContratos.get(i).equals(aux)) {
+				misContratos.remove(i);
 			}
 		}
 	}

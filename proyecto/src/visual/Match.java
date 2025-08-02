@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import logico.Bolsa;
+import logico.Empresa;
 import logico.Solicitud;
 import logico.Usuario;
 import logico.Vacante;
@@ -98,7 +99,7 @@ public class Match extends JDialog {
 				return false;
 			}
 		};
-		String[] header = { "Identiificador", "ID Compañia","Posicion", "Fecha", "Estado"};
+		String[] header = { "Identiificador", "ID Compañia","Posicion", "Fecha", "Provincia"};
 		modelo1.setColumnIdentifiers(header);
 		tableVac.setModel(modelo1);
 		scrollPane.setViewportView(tableVac);
@@ -208,17 +209,18 @@ public class Match extends JDialog {
 	public static void loadTableVacante() {
 		modelo1.setRowCount(0);
 		for (Vacante aux : Bolsa.getInstance().getMisVacantes()) {
-			row1 = new Object[tableVac.getColumnCount()];
-			row1[0] = aux.getIdentificador();
-			row1[1] = aux.getIDCompania();
-			row1[2] = aux.getPosicion();
-			row1[3] = aux.getFecha();
-			if(aux.isEstado())
-				row1[4] = "Disponible";
-			else
-				row1[4] = "No disponible";
+			if(aux.isEstado()) {
+				row1 = new Object[tableVac.getColumnCount()];
+				row1[0] = aux.getIdentificador();
+				row1[1] = aux.getIDCompania();
+				row1[2] = aux.getPosicion();
+				row1[3] = aux.getFecha();
+				Empresa emp = Bolsa.getInstance().buscarEmpresaByCode(aux.getIDCompania());
+				if(emp != null)
+					row1[4] = emp.getProvincia();
+				modelo1.addRow(row1);
+			}
 			
-			modelo1.addRow(row1);
 		}
 
 		tableVac.setModel(modelo1);

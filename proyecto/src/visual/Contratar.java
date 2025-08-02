@@ -3,6 +3,7 @@ package visual;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -20,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -27,6 +29,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
@@ -116,11 +120,11 @@ public class Contratar extends JDialog {
 			lblNewLabel_1.setBounds(12, 246, 56, 16);
 			panelCand1.add(lblNewLabel_1);
 			
-			JLabel lblNewLabel_2 = new JLabel("");
-			lblNewLabel_2.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			lblNewLabel_2.setBackground(Color.WHITE);
-			lblNewLabel_2.setBounds(133, 76, 106, 103);
-			panelCand1.add(lblNewLabel_2);
+			JLabel lblfoto1 = new JLabel("");
+			lblfoto1.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			lblfoto1.setBackground(Color.WHITE);
+			lblfoto1.setBounds(133, 76, 106, 103);
+			panelCand1.add(lblfoto1);
 			
 			
 			JLabel NombreYApellido1 = new JLabel("No existe candidato");

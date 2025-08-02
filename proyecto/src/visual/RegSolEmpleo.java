@@ -33,16 +33,26 @@ public class RegSolEmpleo extends JDialog {
     private JSlider sliderSalario;
     private JLabel lblSalarioValor;
 
-    private Bolsa bolsa;
 
     private final int[] valoresFijos = {15000, 30000, 45000, 60000, 75000, 90000, 100000};
     private static final Pattern CEDULA_PATTERN = Pattern.compile("\\d{3}-\\d{7}-\\d{1}");
     private JTextField txtVacante;
     private JButton btnListado;
+    
+    
+    public static void main(String[] args) {
+		try {
+			RegSolEmpleo dialog = new RegSolEmpleo();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+    
+    
 
-    public RegSolEmpleo(Bolsa bolsa) {
-        this.bolsa = bolsa;
-
+    public RegSolEmpleo() {
         setTitle("Registro de Solicitud de Empleo");
         setResizable(false);
         setBounds(100, 100, 902, 821);
@@ -325,7 +335,7 @@ public class RegSolEmpleo extends JDialog {
                 if(validarCampos()) {
                 txtIdentificador.setText(identificador);
                 int salario = sliderSalario.getValue();
-                boolean aux = bolsa.getInstance().aplicarAVacante(txtCedula.getText(), txtVacante.getText(), salario);
+                boolean aux = Bolsa.getInstance().aplicarAVacante(txtCedula.getText(), txtVacante.getText(), salario);
                 if(aux)
                 	try {
                         Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
@@ -366,7 +376,7 @@ public class RegSolEmpleo extends JDialog {
     }
 
     private void cargarDatosPorCedula(String cedula) {
-        Usuario usuario = bolsa.buscarEmpleadoByCedula(cedula);
+        Usuario usuario = Bolsa.getInstance().buscarEmpleadoByCedula(cedula);
         if (usuario != null) {
             txtNombre.setText(usuario.getNombre());
             txtApellido.setText(usuario.getApellido());
@@ -414,26 +424,37 @@ public class RegSolEmpleo extends JDialog {
     private boolean validarCampos() {
     	boolean aux = true;
     	String cedula = txtCedula.getText().trim();
-        Usuario usuario = bolsa.buscarEmpleadoByCedula(cedula);
+        Usuario usuario = Bolsa.getInstance().buscarEmpleadoByCedula(cedula);
+        Vacante vacante = Bolsa.getInstance().buscarVacanteByID(txtVacante.getText());
 
     
-    	if(txtNombre.getText().isEmpty() ||  txtVacante.getText().isEmpty() ) {
+    	if(txtCedula.getText().isEmpty() ||  txtVacante.getText().isEmpty() ) {
             JOptionPane.showMessageDialog(null, "Debe de completar todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
             aux = false;
     	}
-        if (!validarCedula(cedula)) {
+    	else if (!validarCedula(cedula)) {
             JOptionPane.showMessageDialog(RegSolEmpleo.this, "Formato de cédula inválido. Use ###-#######-#.", "Error", JOptionPane.ERROR_MESSAGE);
             aux = false;
-        }else {
+        }
 
         if (usuario == null) {
             JOptionPane.showMessageDialog(RegSolEmpleo.this, "Empleado no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
             aux = false;
         }
+        
+        
+        if(usuario.isEstado() == true && txtVacante.getText().isEmpty() == false) {
+            JOptionPane.showMessageDialog(RegSolEmpleo.this, "Este usuario se encuentra contratado.", "Error", JOptionPane.ERROR_MESSAGE);
+            aux = false;
         }
         
-        if(usuario.isEstado() == false && txtVacante.getText().isEmpty() == false) {
-            JOptionPane.showMessageDialog(RegSolEmpleo.this, "Este usuario se encuentra contratado.", "Error", JOptionPane.ERROR_MESSAGE);
+        if(usuario.isEstado() == false && vacante != null) {
+        	for (int i = 0; i < usuario.getSolicitudes().size(); i++) {
+				if(usuario.getSolicitudes().get(i).getVacante().equals(vacante)) {
+		            JOptionPane.showMessageDialog(RegSolEmpleo.this, "Este usuario ya aplicó a esta vacante.", "Error", JOptionPane.ERROR_MESSAGE);
+		            aux = false;
+				}
+			}
         }
     	
     	return aux;

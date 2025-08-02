@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import logico.Bolsa;
 import logico.Obrero;
+import logico.Session;
 import logico.TecnicoSuperior;
 import logico.Universitario;
 import logico.Usuario;
@@ -38,6 +39,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JFileChooser;
 import java.awt.Image;
 import java.io.File;
@@ -47,6 +49,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import javax.swing.border.LineBorder;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 
 public class RegEmpleado extends JDialog {
@@ -81,9 +85,14 @@ public class RegEmpleado extends JDialog {
 	private JButton btnSubirImagen;
 	private String rutaImagenSeleccionada = null;
 	private final String IMAGEN_DEFAULT = "src/Default.jpg";
+	private static Object[] row;
+	private static DefaultTableModel modelo;
+	private String selected = null;
 
 	
 	private static Usuario update = null;
+	private JComboBox cbxArea;
+	private JTable table;
 
 
 	public static void main(String[] args) {
@@ -106,7 +115,7 @@ public class RegEmpleado extends JDialog {
 		{
 			setTitle("Modificar Usuarios");
 		}		setResizable(false);
-		setBounds(100, 100, 900, 772);
+		setBounds(100, 100, 934, 850);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -115,12 +124,12 @@ public class RegEmpleado extends JDialog {
 		{
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.WHITE);
-			panel.setBounds(0, 0, 894, 702);
+			panel.setBounds(0, 0, 928, 780);
 			contentPanel.add(panel);
 			panel.setLayout(null);
 			{
 				JPanel panel_1 = new JPanel();
-				panel_1.setBounds(181, 23, 713, 85);
+				panel_1.setBounds(181, 23, 747, 85);
 				panel.add(panel_1);
 				panel_1.setLayout(null);
 				{
@@ -553,7 +562,7 @@ public class RegEmpleado extends JDialog {
 			panel.add(cbxTipoTrabajador);
 			{
 				panelSeleccion = new JPanel();
-				panelSeleccion.setBounds(181, 563, 713, 168);
+				panelSeleccion.setBounds(189, 563, 705, 217);
 				panel.add(panelSeleccion);
 				panelSeleccion.setLayout(new CardLayout(0, 0));
 				{
@@ -577,20 +586,66 @@ public class RegEmpleado extends JDialog {
 					{
 						JLabel lblNewLabel_14 = new JLabel("Habilidades");
 						lblNewLabel_14.setFont(new Font("Tahoma", Font.PLAIN, 16));
-						lblNewLabel_14.setBounds(32, 36, 91, 16);
+						lblNewLabel_14.setBounds(12, 36, 91, 16);
 						panelObrero.add(lblNewLabel_14);
 					}
 					{
 						JLabel lblNewLabel_15 = new JLabel("A\u00F1os de experiencia");
 						lblNewLabel_15.setFont(new Font("Tahoma", Font.PLAIN, 16));
-						lblNewLabel_15.setBounds(399, 36, 176, 16);
+						lblNewLabel_15.setBounds(12, 100, 176, 16);
 						panelObrero.add(lblNewLabel_15);
 					}
 					
 					spnExpObre = new JSpinner();
 					spnExpObre.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-					spnExpObre.setBounds(399, 65, 146, 22);
+					spnExpObre.setBounds(12, 129, 137, 22);
 					panelObrero.add(spnExpObre);
+					{
+						JComboBox comboBox = new JComboBox();
+						comboBox.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Construcci\u00F3n general", "Alba\u00F1iler\u00EDa", "Pintura y acabados", "Soldadura", "Instalaciones sanitarias", "Limpieza y desinfecci\u00F3n", "Manejo de herramientas", "Carga y descarga de materiales", "Jardiner\u00EDa"}));
+						comboBox.setBounds(12, 65, 169, 22);
+						panelObrero.add(comboBox);
+					}
+					
+					JPanel panelHabilidad = new JPanel();
+					panelHabilidad.setForeground(Color.WHITE);
+					panelHabilidad.setBackground(Color.WHITE);
+					panelHabilidad.setBounds(298, 36, 395, 152);
+					panelObrero.add(panelHabilidad);
+					panelHabilidad.setLayout(new BorderLayout(0, 0));
+					
+					JScrollPane scrollPane = new JScrollPane();
+					panelHabilidad.add(scrollPane, BorderLayout.CENTER);
+					
+					table = new JTable();
+					table.setBackground(Color.WHITE);
+					table.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							
+							
+						}
+					});
+					
+					modelo = new DefaultTableModel() {
+						public boolean isCellEditable(int row, int column) {
+							return false;
+						}
+					};
+
+					String[] header = { "Habilidad", "Años de experiencia"};
+					modelo.setColumnIdentifiers(header);
+					table.setModel(modelo);
+					scrollPane.setViewportView(table);
+					
+					JButton btnNewButton = new JButton("Agregar a la lista");
+					btnNewButton.setBounds(22, 182, 146, 25);
+					panelObrero.add(btnNewButton);
+					
+					JLabel lblNewLabel_21 = new JLabel("Lista de habilidades");
+					lblNewLabel_21.setFont(new Font("Tahoma", Font.BOLD, 14));
+					lblNewLabel_21.setBounds(430, 13, 137, 16);
+					panelObrero.add(lblNewLabel_21);
 				}
 				{
 					panelEstudiante = new JPanel();
@@ -600,14 +655,32 @@ public class RegEmpleado extends JDialog {
 					
 					JLabel lblNewLabel_16 = new JLabel("Carrera");
 					lblNewLabel_16.setFont(new Font("Tahoma", Font.PLAIN, 16));
-					lblNewLabel_16.setBounds(177, 46, 75, 16);
+					lblNewLabel_16.setBounds(356, 61, 75, 16);
 					panelEstudiante.add(lblNewLabel_16);
 					
 					cbxCarrera = new JComboBox();
+					cbxCarrera.setEnabled(false);
 					cbxCarrera.setFont(new Font("Tahoma", Font.PLAIN, 14));
 					cbxCarrera.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Administraci\u00F3n de Empresas", "Arquitectura", "Comunicaci\u00F3n Social", "Contabilidad", "Derecho", "Ingenier\u00EDa Agroindustrial", "Ingenier\u00EDa Ambiental", "Ingenier\u00EDa Civil", "Ingenier\u00EDa Electr\u00F3nica", "Ingenier\u00EDa en Computaci\u00F3n", "Ingenier\u00EDa en Telecomunicaciones", "Ingenier\u00EDa Industrial", "Ingenier\u00EDa Mec\u00E1nica", "Medicina", "Mercadeo", "Odontolog\u00EDa", "Psicolog\u00EDa Cl\u00EDnica ", "Relaciones Internacionales"}));
-					cbxCarrera.setBounds(264, 44, 238, 22);
+					cbxCarrera.setBounds(425, 58, 238, 22);
 					panelEstudiante.add(cbxCarrera);
+					
+					JLabel lblNewLabel_20 = new JLabel("\u00C1rea acad\u00E9mica: ");
+					lblNewLabel_20.setFont(new Font("Tahoma", Font.PLAIN, 16));
+					lblNewLabel_20.setBounds(12, 61, 128, 17);
+					panelEstudiante.add(lblNewLabel_20);
+					
+					cbxArea = new JComboBox();
+					cbxArea.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+						filtroPorArea(cbxArea.getSelectedIndex());
+						}
+						
+					});
+					cbxArea.setFont(new Font("Tahoma", Font.PLAIN, 14));
+					cbxArea.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Ciencias Agropecuarias", "Finanzas", "Salud", "Tecnolog\u00EDa", "Otros"}));
+					cbxArea.setBounds(141, 59, 167, 22);
+					panelEstudiante.add(cbxArea);
 				}
 				{
 					panelTecnico = new JPanel();
@@ -642,12 +715,12 @@ public class RegEmpleado extends JDialog {
 			
 			JSeparator separator = new JSeparator();
 			separator.setBackground(new Color(0, 102, 153));
-			separator.setBounds(194, 557, 675, 2);
+			separator.setBounds(194, 557, 722, 2);
 			panel.add(separator);
 			{
 				JPanel panel_1 = new JPanel();
 				panel_1.setBackground(new Color(0, 102, 153));
-				panel_1.setBounds(0, 0, 182, 731);
+				panel_1.setBounds(0, 0, 182, 780);
 				panel.add(panel_1);
 			}
 
@@ -697,10 +770,12 @@ public class RegEmpleado extends JDialog {
 							    boolean estado = false;
 							    if(cbxEstado.getSelectedIndex() == 1) {
 							        estado = true;
+							    }else {
+							    	estado = false;
 							    }
 
 							    if(cbxTipoTrabajador.getSelectedIndex() == 1) {
-							        usr = new Universitario(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), txtCorreo.getText() ,cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(), cbxCarrera.getSelectedItem().toString());
+							        usr = new Universitario(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), txtCorreo.getText() ,cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(), cbxCarrera.getSelectedItem().toString(),cbxArea.getSelectedItem().toString());
 							    }
 							    else if(cbxTipoTrabajador.getSelectedIndex() == 2) {
 							        aniosExp = new Integer(spnExpObre.getValue().toString());
@@ -993,11 +1068,68 @@ public class RegEmpleado extends JDialog {
 		
 		}
 	
+	
+	public void filtroPorArea(int num) {
+
+
+		switch (num) {
+		case 1:
+			String[] carerrasAgro= {"<Seleccione>", "Ingenier\u00EDa Agroindustrial", "Ingenier\u00EDa Ambiental",  "Veterinaria "};
+			cbxCarrera.setModel(new DefaultComboBoxModel<>(carerrasAgro));
+			cbxCarrera.setSelectedIndex(0);
+			cbxCarrera.setEnabled(true);
+
+			break;
+		
+		case 2:
+			String[] carerrasFinanzas= {"<Seleccione>",  "Administraci\u00F3n de Empresas", "Contabilidad",  "Mercadeo", "Relaciones Internacionales"};
+			cbxCarrera.setModel(new DefaultComboBoxModel<>(carerrasFinanzas));
+			cbxCarrera.setSelectedIndex(0);
+			cbxCarrera.setEnabled(true);
+
+			break;
+			
+		case 3:
+			String[] carerrasSalud= {"<Seleccione>", "Enfermeria",  "Medicina", "Odontolog\u00EDa", "Psicolog\u00EDa Cl\u00EDnica "};
+			cbxCarrera.setModel(new DefaultComboBoxModel<>(carerrasSalud));
+			cbxCarrera.setSelectedIndex(0);
+			cbxCarrera.setEnabled(true);
+
+			break;
+			
+		case 4:
+			String[] carerrasTecnologia= {"<Seleccione>", "Ingenier\u00EDa Electr\u00F3nica", "Ingenier\u00EDa en Computaci\u00F3n", "Ingenier\u00EDa en Telecomunicaciones",  "Ingenier\u00EDa Mec\u00E1nica"};
+			cbxCarrera.setModel(new DefaultComboBoxModel<>(carerrasTecnologia));
+			cbxCarrera.setSelectedIndex(0);
+			cbxCarrera.setEnabled(true);
+
+			
+			break;
+			
+		case 5:
+			String[] carerrasOtras= {"<Seleccione>", "Arquitectura", "Comunicaci\u00F3n Social", "Ingenier\u00EDa Industrial", "Derecho",  "Ingenier\u00EDa Civil"};
+			cbxCarrera.setModel(new DefaultComboBoxModel<>(carerrasOtras));
+			cbxCarrera.setSelectedIndex(0);
+			cbxCarrera.setEnabled(true);
+
+			
+			break;
+
+		default:
+			
+			cbxCarrera.setEnabled(false);
+			cbxCarrera.setSelectedIndex(0);
+
+			break;
+		}
+		
+		
+		
+	}
+	
 	private ImageIcon escalarImagen(String ruta) {
 	    ImageIcon original = new ImageIcon(ruta);
 	    Image escalada = original.getImage().getScaledInstance(140, 140, Image.SCALE_SMOOTH);
 	    return new ImageIcon(escalada);
 	}
-
-	
 }
