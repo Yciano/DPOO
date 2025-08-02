@@ -8,10 +8,10 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 import logico.Bolsa;
 import logico.Solicitud;
+import logico.Session;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -69,15 +69,16 @@ public class ListadoSolicitudes extends JDialog {
                         "Eliminar", JOptionPane.WARNING_MESSAGE);
                     if (option == JOptionPane.OK_OPTION) {
                         Bolsa.getInstance().getMisSolicitudes().remove(selected);
-                        
+
                         try {
-                    		Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
-                    	} catch (IOException ex) {
-                    		ex.printStackTrace();
-                    	}
-                        
+                            Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+
                         cargarSolicitudes();
-                        JOptionPane.showMessageDialog(null, "Solicitud eliminada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Solicitud eliminada.", "Información",
+                                JOptionPane.INFORMATION_MESSAGE);
                         selected = null;
                         btnEliminar.setEnabled(false);
                     }
@@ -95,7 +96,11 @@ public class ListadoSolicitudes extends JDialog {
             if (index >= 0) {
                 String id = (String) modelo.getValueAt(index, 0);
                 selected = Bolsa.getInstance().buscarSolicitudByID(id);
-                btnEliminar.setEnabled(selected != null);
+                if (Session.tipoUsuario.equals(Session.ADMIN)) {
+                    btnEliminar.setEnabled(selected != null);
+                } else {
+                    btnEliminar.setEnabled(false);
+                }
             }
         });
 
@@ -114,7 +119,6 @@ public class ListadoSolicitudes extends JDialog {
             modelo.addRow(fila);
         }
     }
-
 
     public static void main(String[] args) {
         try {

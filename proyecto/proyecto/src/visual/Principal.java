@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import logico.Bolsa;
+import logico.Session;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -31,7 +32,6 @@ public class Principal extends JFrame {
     }
 
     public Principal() {
-
         miBolsa = Bolsa.getInstance();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,101 +41,97 @@ public class Principal extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
-        JMenu mnNewMenu = new JMenu("Registro");
-        menuBar.add(mnNewMenu);
+        JMenu mnRegistro = new JMenu("Registro");
+        menuBar.add(mnRegistro);
 
-        JMenuItem mntmNewMenuItem = new JMenuItem("Registrar Empresa");
-        mntmNewMenuItem.addActionListener(e -> {
+        JMenuItem itemRegistrarEmpresa = new JMenuItem("Registrar Empresa");
+        itemRegistrarEmpresa.addActionListener(e -> {
             RegEmpresa rgEmp = new RegEmpresa(null);
             rgEmp.setModal(true);
             rgEmp.setVisible(true);
         });
-        mnNewMenu.add(mntmNewMenuItem);
+        mnRegistro.add(itemRegistrarEmpresa);
 
-        JMenuItem mntmNewMenuItem_1 = new JMenuItem("Registrar Usuario", null);
-        mntmNewMenuItem_1.addActionListener(e -> {
+        JMenuItem itemRegistrarUsuario = new JMenuItem("Registrar Usuario");
+        itemRegistrarUsuario.addActionListener(e -> {
             RegEmpleado rg = new RegEmpleado(null);
             rg.setModal(true);
             rg.setVisible(true);
         });
-        mnNewMenu.add(mntmNewMenuItem_1);
+        mnRegistro.add(itemRegistrarUsuario);
 
-        JMenu mnNewMenu_1 = new JMenu("Listados");
-        menuBar.add(mnNewMenu_1);
+        JMenu mnListados = new JMenu("Listados");
+        menuBar.add(mnListados);
 
-        JMenuItem mntmNewMenuItem_2 = new JMenuItem("Listado de Empresas");
-        mntmNewMenuItem_2.addActionListener(e -> {
+        JMenuItem itemListadoEmpresas = new JMenuItem("Listado de Empresas");
+        itemListadoEmpresas.addActionListener(e -> {
             ListadoEmpresas list = new ListadoEmpresas();
             list.setModal(true);
             list.setVisible(true);
         });
-        mnNewMenu_1.add(mntmNewMenuItem_2);
+        mnListados.add(itemListadoEmpresas);
 
-        JMenuItem mntmNewMenuItem_3 = new JMenuItem("Listado de Usuarios");
-        mntmNewMenuItem_3.addActionListener(e -> {
+        JMenuItem itemListadoUsuarios = new JMenuItem("Listado de Usuarios");
+        itemListadoUsuarios.addActionListener(e -> {
             ListadoUsuario lsUsuario = new ListadoUsuario();
             lsUsuario.setModal(true);
             lsUsuario.setVisible(true);
         });
-        mnNewMenu_1.add(mntmNewMenuItem_3);
+        mnListados.add(itemListadoUsuarios);
 
-        JMenuItem mntmListadoSolicitudes = new JMenuItem("Listado de Solicitudes");
-        mntmListadoSolicitudes.addActionListener(e -> {
+        JMenuItem itemListadoSolicitudes = new JMenuItem("Listado de Solicitudes");
+        itemListadoSolicitudes.addActionListener(e -> {
             ListadoSolicitudes listSol = new ListadoSolicitudes();
             listSol.setModal(true);
             listSol.setVisible(true);
         });
-        mnNewMenu_1.add(mntmListadoSolicitudes);
+        mnListados.add(itemListadoSolicitudes);
 
         JMenu mnSolicitudes = new JMenu("Solicitudes");
         menuBar.add(mnSolicitudes);
 
-        JMenuItem mntmRegsolempleo = new JMenuItem("Solicitud De Empleo");
-        mntmRegsolempleo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                RegSolEmpleo RgSolEmp = new RegSolEmpleo(Bolsa.getInstance());
-                RgSolEmp.setModal(true);
-                RgSolEmp.setVisible(true);
-            }
+        JMenuItem itemSolicitudEmpleo = new JMenuItem("Solicitud De Empleo");
+        itemSolicitudEmpleo.addActionListener(e -> {
+            RegSolEmpleo RgSolEmp = new RegSolEmpleo(Bolsa.getInstance());
+            RgSolEmp.setModal(true);
+            RgSolEmp.setVisible(true);
         });
-        mnSolicitudes.add(mntmRegsolempleo);
-        
-        JMenuItem mntmNewMenuItem_5 = new JMenuItem("Registrar vacante");
-        mntmNewMenuItem_5.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		RegVacante aux = new RegVacante();
-        		aux.setModal(true);
-        		aux.setVisible(true);
-        	}
-        });
-        mnSolicitudes.add(mntmNewMenuItem_5);
-        
-        JMenu mnNewMenu_2 = new JMenu("Buscar");
-        menuBar.add(mnNewMenu_2);
-        
-        JMenuItem mntmNewMenuItem_4 = new JMenuItem("Contratar");
-        mntmNewMenuItem_4.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		Match aux = new Match();
-        		aux.setModal(true);
-        		aux.setVisible(true);
-        	}
-        });
-        mnNewMenu_2.add(mntmNewMenuItem_4);
-        
-        JMenu mnNewMenu_3 = new JMenu("Respaldo");
-        menuBar.add(mnNewMenu_3);
-        
-        JMenuItem mntmNewMenuItem_6 = new JMenuItem("Realizar respaldo");
-        mntmNewMenuItem_6.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		Respaldo dialogo = new Respaldo();
-                dialogo.setVisible(true);
+        mnSolicitudes.add(itemSolicitudEmpleo);
 
-        	}
+        JMenuItem itemRegistrarVacante = new JMenuItem("Registrar vacante");
+        itemRegistrarVacante.addActionListener(e -> {
+            RegVacante aux = new RegVacante();
+            aux.setModal(true);
+            aux.setVisible(true);
         });
-        mnNewMenu_3.add(mntmNewMenuItem_6);
+        mnSolicitudes.add(itemRegistrarVacante);
 
+        JMenu menuBuscar = new JMenu("Buscar");
+        menuBar.add(menuBuscar);
+
+        JMenuItem itemContratar = new JMenuItem("Contratar");
+        itemContratar.addActionListener(e -> {
+            Match aux = new Match();
+            aux.setModal(true);
+            aux.setVisible(true);
+        });
+        menuBuscar.add(itemContratar);
+
+        JMenu menuRespaldo = new JMenu("Respaldo");
+        menuBar.add(menuRespaldo);
+
+        JMenuItem itemRespaldo = new JMenuItem("Realizar respaldo");
+        itemRespaldo.addActionListener(e -> {
+            Respaldo dialogo = new Respaldo();
+            dialogo.setVisible(true);
+        });
+        menuRespaldo.add(itemRespaldo);
+ 
+        if (Session.tipoUsuario.equals(Session.USER)) {
+            menuBuscar.setVisible(false);
+            menuRespaldo.setVisible(false);
+        } 
+        
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));

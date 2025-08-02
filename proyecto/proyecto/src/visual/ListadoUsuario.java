@@ -12,8 +12,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import logico.Bolsa;
-import logico.Empresa;
 import logico.Usuario;
+import logico.Session;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -34,8 +34,7 @@ public class ListadoUsuario extends JDialog {
 	private JButton btnEliminar;
 	private JButton cancelButton;
 	private JButton btnDetalles;
-	
-	
+
 	public static void main(String[] args) {
 		try {
 			ListadoUsuario dialog = new ListadoUsuario();
@@ -46,7 +45,6 @@ public class ListadoUsuario extends JDialog {
 		}
 	}
 
-	
 	public ListadoUsuario() {
 		setTitle("Listado de Usuarios");
 		setResizable(false);
@@ -56,149 +54,137 @@ public class ListadoUsuario extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
-		{
-			JPanel panel = new JPanel();
-			contentPanel.add(panel, BorderLayout.CENTER);
-			panel.setLayout(null);
-			
-			JPanel panel_1 = new JPanel();
-			panel_1.setBounds(12, 207, 893, 288);
-			panel.add(panel_1);
-			panel_1.setLayout(new BorderLayout(0, 0));
-			
-			JScrollPane scrollPane = new JScrollPane();
-			panel_1.add(scrollPane, BorderLayout.CENTER);
-			{
-				table = new JTable();
 
-				table.addMouseListener(new MouseAdapter() {
-					
-					public void mouseClicked(MouseEvent e) {
-						int index = table.getSelectedRow();
-						if (index >= 0) {
-							selected = Bolsa.getInstance()
-							.buscarEmpleadoByCedula(table.getValueAt(index, 0).toString());
-							btnEliminar.setEnabled(true);
-							btnModificar.setEnabled(true);
-							btnDetalles.setEnabled(true);
-						}
-					}
-				});
-				modelo = new DefaultTableModel() {
-					public boolean isCellEditable(int row, int column) {
-						return false;
-					}
-				};
+		JPanel panel = new JPanel();
+		contentPanel.add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
 
-				String[] header = { "Cédula", "Nombre", "Apellidos", "Contacto", "Sexo", "Tipo de trabajo" };
-				modelo.setColumnIdentifiers(header);
-				table.setModel(modelo);
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(12, 207, 893, 288);
+		panel.add(panel_1);
+		panel_1.setLayout(new BorderLayout(0, 0));
+
+		JScrollPane scrollPane = new JScrollPane();
+		panel_1.add(scrollPane, BorderLayout.CENTER);
+
+		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int index = table.getSelectedRow();
+				if (index >= 0) {
+					selected = Bolsa.getInstance().buscarEmpleadoByCedula(table.getValueAt(index, 0).toString());					
+					if (Session.tipoUsuario.equals(Session.ADMIN)) {
+						btnEliminar.setEnabled(true);
+						btnModificar.setEnabled(true);
+					} else {
+						btnEliminar.setEnabled(false);
+						btnModificar.setEnabled(false);
+					}
+					btnDetalles.setEnabled(true);
+				}
 			}
-			
-			
-			scrollPane.setViewportView(table);
-		}
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				btnModificar = new JButton("Modificar");
-				btnModificar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						RegEmpleado update = new RegEmpleado(selected);
-						update.setModal(true);
-						update.setVisible(true);
+		});
+
+		modelo = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
+		String[] header = { "Cédula", "Nombre", "Apellidos", "Contacto", "Sexo", "Tipo de trabajo" };
+		modelo.setColumnIdentifiers(header);
+		table.setModel(modelo);
+
+		scrollPane.setViewportView(table);
+
+		JPanel buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
+
+		btnModificar = new JButton("Modificar");
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (selected != null) {
+					RegEmpleado update = new RegEmpleado(selected);
+					update.setModal(true);
+					update.setVisible(true);
+
+					try {
+						Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+
+					loadUsuario();
+					table.clearSelection();
+					btnModificar.setEnabled(false);
+					btnEliminar.setEnabled(false);
+					btnDetalles.setEnabled(false);
+					selected = null;
+				}
+			}
+		});
+		btnModificar.setEnabled(false);
+		buttonPane.add(btnModificar);
+
+		btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (selected != null) {
+					int option = JOptionPane.showConfirmDialog(null,
+							"¿Está seguro que desea eliminar el usuario con cédula: " + selected.getCedula() + "?",
+							"Eliminar", JOptionPane.WARNING_MESSAGE);
+					if (option == JOptionPane.OK_OPTION) {
+						Bolsa.getInstance().removeUser(selected.getCedula());
 
 						try {
 							Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
-						} catch (IOException ex) {
-							ex.printStackTrace();
+						} catch (IOException e1) {
+							e1.printStackTrace();
 						}
 
 						loadUsuario();
+						JOptionPane.showMessageDialog(null, "Usuario eliminado exitosamente.", "Información",
+								JOptionPane.INFORMATION_MESSAGE);
 						table.clearSelection();
 						btnModificar.setEnabled(false);
-						btnEliminar.setEnabled(false);
 						btnDetalles.setEnabled(false);
-						selected = null;
-					}
-				});
-				btnModificar.setEnabled(false);
-				buttonPane.add(btnModificar);
-			}
-			{
-				btnEliminar = new JButton("Eliminar");
-				btnEliminar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						
-						if (selected != null) {
-								btnEliminar.setEnabled(true);
-
-								int option = JOptionPane.showConfirmDialog(null,
-										"¿Esta seguro que desea eliminar el usuario con cédula: "
-												+ selected.getCedula() + "?",
-										"Eliminar", JOptionPane.WARNING_MESSAGE);
-								if (option == JOptionPane.OK_OPTION) {
-									Bolsa.getInstance().removeUser(selected.getCedula());
-
-									try {
-										Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
-									} catch (IOException e1) {
-										e1.printStackTrace();
-									}
-
-									loadUsuario();
-									JOptionPane.showMessageDialog(null, "Publicación eliminada exitosamente.",
-											"Información", JOptionPane.INFORMATION_MESSAGE);
-									table.clearSelection();
-									btnModificar.setEnabled(false);
-									btnDetalles.setEnabled(false);
-								}
-								else {
-									table.clearSelection();
-									btnModificar.setEnabled(false);
-									btnDetalles.setEnabled(false);
-								}
-							
-						}
-						
-						btnEliminar.setEnabled(false);
-
-					}
-				});
-				btnEliminar.setEnabled(false);
-				btnEliminar.setActionCommand("OK");
-				buttonPane.add(btnEliminar);
-				getRootPane().setDefaultButton(btnEliminar);
-			}
-			btnDetalles = new JButton("Detalles");
-			btnDetalles.setEnabled(false);
-			btnDetalles.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (selected != null) {
-						DetallesUsuario detalle = new DetallesUsuario(selected);
-						detalle.setModal(true);
-						detalle.setVisible(true);
+					} else {
+						table.clearSelection();
+						btnModificar.setEnabled(false);
+						btnDetalles.setEnabled(false);
 					}
 				}
-			});
-			buttonPane.add(btnDetalles);
-
-			{
-				cancelButton = new JButton("Cancelar");
-				cancelButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						dispose();
-					}
-				});
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
+				btnEliminar.setEnabled(false);
 			}
-			loadUsuario();
+		});
+		btnEliminar.setEnabled(false);
+		buttonPane.add(btnEliminar);
+
+		btnDetalles = new JButton("Detalles");
+		btnDetalles.setEnabled(false);
+		btnDetalles.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (selected != null) {
+					DetallesUsuario detalle = new DetallesUsuario(selected);
+					detalle.setModal(true);
+					detalle.setVisible(true);
+				}
+			}
+		});
+		buttonPane.add(btnDetalles);
+
+		cancelButton = new JButton("Cancelar");
+		cancelButton.addActionListener(e -> dispose());
+		buttonPane.add(cancelButton);
+
+		loadUsuario();
+		if (Session.tipoUsuario.equals(Session.USER)) {
+			btnModificar.setEnabled(false);
+			btnEliminar.setEnabled(false);
 		}
 	}
-	
+
 	public static void loadUsuario() {
 		modelo.setRowCount(0);
 		row = new Object[table.getColumnCount()];
@@ -222,6 +208,5 @@ public class ListadoUsuario extends JDialog {
 		columnModel.getColumn(3).setPreferredWidth(180);
 		columnModel.getColumn(4).setPreferredWidth(150);
 		columnModel.getColumn(5).setPreferredWidth(150);
-
 	}
 }

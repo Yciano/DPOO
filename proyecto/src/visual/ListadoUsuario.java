@@ -17,6 +17,7 @@ import javax.swing.table.TableColumnModel;
 
 import logico.Bolsa;
 import logico.Empresa;
+import logico.Session;
 import logico.Usuario;
 
 import javax.swing.JScrollPane;
@@ -77,17 +78,19 @@ public class ListadoUsuario extends JDialog {
 				table = new JTable();
 
 				table.addMouseListener(new MouseAdapter() {
-					
-					public void mouseClicked(MouseEvent e) {
-						int index = table.getSelectedRow();
-						if (index >= 0) {
-							selected = Bolsa.getInstance()
-							.buscarEmpleadoByCedula(table.getValueAt(index, 0).toString());
-							btnEliminar.setEnabled(true);
-							btnModificar.setEnabled(true);
-							btnDetalles.setEnabled(true);
-						}
-					}
+				    public void mouseClicked(MouseEvent e) {
+				        int index = table.getSelectedRow();
+				        if (index >= 0) {
+				            selected = Bolsa.getInstance().buscarEmpleadoByCedula(table.getValueAt(index, 0).toString());
+
+				            if (!Session.tipoUsuario.equals(Session.USER)) {
+				                btnEliminar.setEnabled(true);
+				                btnModificar.setEnabled(true);
+				            }
+
+				            btnDetalles.setEnabled(true);
+				        }
+				    }
 				});
 				modelo = new DefaultTableModel() {
 					public boolean isCellEditable(int row, int column) {

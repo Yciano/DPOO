@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import logico.Bolsa;
+import logico.Session;
 import logico.Solicitud;
 
 import javax.swing.JScrollPane;
@@ -95,7 +96,9 @@ public class ListadoSolicitudes extends JDialog {
             if (index >= 0) {
                 String id = (String) modelo.getValueAt(index, 0);
                 selected = Bolsa.getInstance().buscarSolicitudByID(id);
-                btnEliminar.setEnabled(selected != null);
+                if (!Session.tipoUsuario.equals(Session.USER)) {
+	                btnEliminar.setEnabled(true); 
+	            }              
             }
         });
 

@@ -12,6 +12,7 @@ import javax.swing.table.TableColumnModel;
 
 import logico.Bolsa;
 import logico.Empresa;
+import logico.Session;
 import logico.Usuario;
 import logico.Vacante;
 
@@ -92,8 +93,10 @@ public class ListadoVacantes extends JDialog {
 							if (index >= 0) {
 								selected = Bolsa.getInstance()
 								.buscarVacanteByID(table.getValueAt(index, 0).toString());
-								btnEliminar.setEnabled(true);
-								btnModificar.setEnabled(true);
+								if (!Session.tipoUsuario.equals(Session.USER)) {
+					                btnEliminar.setEnabled(true);
+					                btnModificar.setEnabled(true);
+					            }
 							}
 						}
 					});
