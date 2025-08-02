@@ -35,7 +35,7 @@ public class Servidor {
             DataInputStream dis = new DataInputStream(cliente.getInputStream());
             FileOutputStream fos = new FileOutputStream(CARPETA_DESTINO)
         ) {
-            long tamanioArchivo = dis.readLong();  // Primero recibimos el tamaño del archivo
+            long tamanioArchivo = dis.readLong();  
 
             byte[] buffer = new byte[4096];
             int leido;
@@ -49,7 +49,7 @@ public class Servidor {
     }
 
     public static void main(String[] args) {
-        Servidor servidor = new Servidor(5000); // Puedes cambiar el puerto si deseas
+        Servidor servidor = new Servidor(5000);
         servidor.iniciar();
     }
 }

@@ -26,6 +26,7 @@ public class Login extends JDialog {
     }
 
     public Login() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Javier\\git\\DPOO1\\proyecto\\src\\jobbmatcheo.png"));
         setTitle("JOBMATCH");
         setSize(900, 600);
         setResizable(false);
