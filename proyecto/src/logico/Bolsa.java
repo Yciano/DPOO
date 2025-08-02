@@ -16,15 +16,19 @@ public class Bolsa implements Serializable{
 	private ArrayList<Empresa> misEmpresas;
 	private ArrayList<Vacante> misVacantes;
 	private ArrayList<Solicitud> misSolicitudes;
+	private ArrayList<Contrato> misContratos;
 	private static Bolsa bolsa = null;
 	private static int contadorSolicitudes = 0;
 	private static int contadorVacantes = 0;
+	private static int contadorContrato = 0;
+
 
 	public Bolsa() {
 		this.misUsers =  new ArrayList<Usuario>();
 		this.misEmpresas = new ArrayList<Empresa>();
 		this.misVacantes = new ArrayList<Vacante>();
 		this.misSolicitudes = new ArrayList<Solicitud>();
+		this.misContratos = new ArrayList<Contrato>();
 	}
 
 	
@@ -67,6 +71,16 @@ public class Bolsa implements Serializable{
 	public void setMisSolicitudes(ArrayList<Solicitud> misSolicitudes) {
 		this.misSolicitudes = misSolicitudes;
 	}
+	
+	public ArrayList<Contrato> getMisContratos() {
+		return misContratos;
+	}
+
+	public void setMisContratos(ArrayList<Contrato> misContratos) {
+		this.misContratos = misContratos;
+	}
+
+
 
 	public boolean registrarVacante(String identificador, String IDcompania, Requisito requisito, String posicion, String descripcion)
 	{
@@ -324,22 +338,91 @@ public class Bolsa implements Serializable{
 	public boolean registrarContrato(Usuario user, Vacante vacante, Date fecha) {
 		boolean aux = false;
 		if(misUsers.contains(user) && misVacantes.contains(vacante)) {
-			Contrato cont = new Contrato(user, vacante, fecha);
-			user.setEstado(false);
-			suspenderSolis(user);
-			vacante.setEstado(false);
-			Empresa emp = buscarEmpresaByCode(vacante.getIDCompania());
-			emp.registrarEmpleado(user);
-			aux = true;
+			Solicitud sol = buscarSolicitudByVacante(user, vacante);
+			if(sol != null) {
+				Contrato cont = new Contrato(genCodContrato(),user, vacante, sol,fecha);
+				user.setEstado(true);
+				Empresa emp = buscarEmpresaByCode(vacante.getIDCompania());
+				emp.registrarContrato(cont);
+				misContratos.add(cont);
+				removerSolicitud(user,vacante);
+				suspenderSolis(user);
+				vacante.setEstado(false);
+				aux = true;
+			}
+			
 		}
 		
 		return aux;
+	}
+	
+	private void removerSolicitud(Usuario user, Vacante vacante) {
+		Solicitud sol = buscarSolicitudByVacante(user,vacante);
+		if(sol != null) {
+			user.removeSolicitud(sol);
+			for(int i = 0; i < misSolicitudes.size(); i++) {
+				if(misSolicitudes.get(i).equals(sol)) {
+					misSolicitudes.remove(i);
+				}
+			}
+
+		}
+		
+	}
+
+	
+
+	private Solicitud buscarSolicitudByVacante(Usuario user, Vacante vacante) {
+		Solicitud aux=null;
+		boolean encontrado = false;
+		int i=0;
+		while (!encontrado && i < user.getSolicitudes().size()) {
+			if(user.getSolicitudes().get(i).getVacante().getIdentificador().equalsIgnoreCase(vacante.getIdentificador())){
+				aux = user.getSolicitudes().get(i);
+				encontrado = true;
+			}
+			i++;
+		}
+		return aux;
+		
+	}
+
+
+
+	public Contrato buscarContratoById(String id) {
+		Contrato aux=null;
+		boolean encontrado = false;
+		int i=0;
+		while (!encontrado && i < misContratos.size()) {
+			if(misContratos.get(i).getId().equalsIgnoreCase(id)){
+				aux = misContratos.get(i);
+				encontrado = true;
+			}
+			i++;
+		}
+		return aux;
+		
+	}
+	
+	public void finalizarContrato(String id) {
+		Contrato aux = buscarContratoById(id);
+		if(aux != null ) {
+			aux.setEstado(false);
+			aux.getUser().setEstado(false);
+			activarSolis(aux.getUser());
+		}
 	}
 	
 	
 	private void suspenderSolis(Usuario user) {
 		for(int i = user.getSolicitudes().size() - 1; i > 0; i--) {
 			user.getSolicitudes().get(i).setEstado(false);
+		}
+	}
+	
+	private void activarSolis(Usuario user) {
+		for(int i = user.getSolicitudes().size() - 1; i > 0; i--) {
+			user.getSolicitudes().get(i).setEstado(true);
 		}
 	}
 	
@@ -368,6 +451,12 @@ public class Bolsa implements Serializable{
 	public static String genCodVacante() {
 		String cod = String.format("VAC-%02d", contadorVacantes + 1);
 		contadorVacantes++;
+		return cod;
+	}
+	
+	public static String genCodContrato() {
+		String cod = String.format("CO-%02d", contadorContrato + 1);
+		contadorContrato++;
 		return cod;
 	}
 

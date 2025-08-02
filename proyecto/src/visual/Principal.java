@@ -3,11 +3,13 @@ package visual;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
-import logico.Bolsa;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logico.Bolsa;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -86,6 +88,16 @@ public class Principal extends JFrame {
             listSol.setVisible(true);
         });
         mnNewMenu_1.add(mntmListadoSolicitudes);
+        
+        JMenuItem mntmNewMenuItem_7 = new JMenuItem("Listado de contratos");
+        mntmNewMenuItem_7.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ListaContratos aux = new ListaContratos();
+        		aux.setModal(true);
+        		aux.setVisible(true);
+        	}
+        });
+        mnNewMenu_1.add(mntmNewMenuItem_7);
 
         JMenu mnSolicitudes = new JMenu("Solicitudes");
         menuBar.add(mnSolicitudes);
@@ -93,7 +105,7 @@ public class Principal extends JFrame {
         JMenuItem mntmRegsolempleo = new JMenuItem("Solicitud De Empleo");
         mntmRegsolempleo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                RegSolEmpleo RgSolEmp = new RegSolEmpleo(Bolsa.getInstance());
+                RegSolEmpleo RgSolEmp = new RegSolEmpleo();
                 RgSolEmp.setModal(true);
                 RgSolEmp.setVisible(true);
             }
