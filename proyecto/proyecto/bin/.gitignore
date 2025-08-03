@@ -1,8 +1,6 @@
-*.class
-bin/
-/.project
-.classpath
+/Default.png
+/Defaultt.png
+/ReusPic.jpeg
+/Servidor/
 /logico/
 /visual/
-/ReusPic2.jpeg
-/jobmatch.jpg

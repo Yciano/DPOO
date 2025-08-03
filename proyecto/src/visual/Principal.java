@@ -6,7 +6,10 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
+import com.formdev.flatlaf.FlatLightLaf;
 
 import logico.Bolsa;
 
@@ -24,6 +27,8 @@ public class Principal extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
+                UIManager.setLookAndFeel(new FlatLightLaf());
+
                 Principal frame = new Principal();
                 frame.setVisible(true);
             } catch (Exception e) {
