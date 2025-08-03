@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 
 import javax.swing.border.LineBorder;
 import javax.swing.JScrollPane;
@@ -88,6 +89,7 @@ public class RegEmpleado extends JDialog {
 	private static Object[] row;
 	private static DefaultTableModel modelo;
 	private String selected = null;
+	private ArrayList<String> misHabilidades;
 
 	
 	private static Usuario update = null;
@@ -115,7 +117,7 @@ public class RegEmpleado extends JDialog {
 		{
 			setTitle("Modificar Usuarios");
 		}		setResizable(false);
-		setBounds(100, 100, 934, 850);
+		setBounds(100, 100, 934, 870);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -124,7 +126,7 @@ public class RegEmpleado extends JDialog {
 		{
 			JPanel panel = new JPanel();
 			panel.setBackground(Color.WHITE);
-			panel.setBounds(0, 0, 928, 780);
+			panel.setBounds(0, 0, 928, 800);
 			contentPanel.add(panel);
 			panel.setLayout(null);
 			{
@@ -579,74 +581,181 @@ public class RegEmpleado extends JDialog {
 				}
 				
 				{
+					
+					final JButton btnModificar = new JButton("Modificar");
+					final JButton btnEliminar = new JButton("Eliminar");
+					final JButton btnAgregarGuardar = new JButton("Agregar a la lista");
+					
+					final int[] filaModificando = {-1}; 
+					final boolean[] modoModificar = {false};
+
 					panelObrero = new JPanel();
 					panelObrero.setBackground(Color.WHITE);
 					panelSeleccion.add(panelObrero, "name_214559917214100");
 					panelObrero.setLayout(null);
+
 					{
-						JLabel lblNewLabel_14 = new JLabel("Habilidades");
-						lblNewLabel_14.setFont(new Font("Tahoma", Font.PLAIN, 16));
-						lblNewLabel_14.setBounds(12, 36, 91, 16);
-						panelObrero.add(lblNewLabel_14);
+					    JLabel lblNewLabel_14 = new JLabel("Habilidades");
+					    lblNewLabel_14.setFont(new Font("Tahoma", Font.PLAIN, 16));
+					    lblNewLabel_14.setBounds(12, 36, 91, 16);
+					    panelObrero.add(lblNewLabel_14);
 					}
 					{
-						JLabel lblNewLabel_15 = new JLabel("A\u00F1os de experiencia");
-						lblNewLabel_15.setFont(new Font("Tahoma", Font.PLAIN, 16));
-						lblNewLabel_15.setBounds(12, 100, 176, 16);
-						panelObrero.add(lblNewLabel_15);
+					    JLabel lblNewLabel_15 = new JLabel("Años de experiencia");
+					    lblNewLabel_15.setFont(new Font("Tahoma", Font.PLAIN, 16));
+					    lblNewLabel_15.setBounds(12, 100, 176, 16);
+					    panelObrero.add(lblNewLabel_15);
 					}
-					
+
 					spnExpObre = new JSpinner();
-					spnExpObre.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+					spnExpObre.setModel(new SpinnerNumberModel(0, 0, null, 1));
 					spnExpObre.setBounds(12, 129, 137, 22);
 					panelObrero.add(spnExpObre);
-					{
-						JComboBox comboBox = new JComboBox();
-						comboBox.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Construcci\u00F3n general", "Alba\u00F1iler\u00EDa", "Pintura y acabados", "Soldadura", "Instalaciones sanitarias", "Limpieza y desinfecci\u00F3n", "Manejo de herramientas", "Carga y descarga de materiales", "Jardiner\u00EDa"}));
-						comboBox.setBounds(12, 65, 169, 22);
-						panelObrero.add(comboBox);
-					}
-					
+
+					JComboBox<String> comboBox = new JComboBox<>();
+					comboBox.setModel(new DefaultComboBoxModel<>(new String[] {
+					    "<Seleccione>", "Construcción general", "Albañilería", "Pintura y acabados", "Soldadura",
+					    "Instalaciones sanitarias", "Limpieza y desinfección", "Manejo de herramientas",
+					    "Carga y descarga de materiales", "Jardinería"
+					}));
+					comboBox.setBounds(12, 65, 169, 22);
+					panelObrero.add(comboBox);
+
 					JPanel panelHabilidad = new JPanel();
 					panelHabilidad.setForeground(Color.WHITE);
 					panelHabilidad.setBackground(Color.WHITE);
 					panelHabilidad.setBounds(298, 36, 395, 152);
 					panelObrero.add(panelHabilidad);
 					panelHabilidad.setLayout(new BorderLayout(0, 0));
-					
+
 					JScrollPane scrollPane = new JScrollPane();
 					panelHabilidad.add(scrollPane, BorderLayout.CENTER);
-					
+
 					table = new JTable();
+					table.getTableHeader().setReorderingAllowed(false);
 					table.setBackground(Color.WHITE);
-					table.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							
-							
-						}
-					});
-					
+
 					modelo = new DefaultTableModel() {
-						public boolean isCellEditable(int row, int column) {
-							return false;
-						}
+					    public boolean isCellEditable(int row, int column) {
+					        return false;  
+					    }
 					};
 
-					String[] header = { "Habilidad", "Años de experiencia"};
+					String[] header = { "Habilidad", "Años de experiencia" };
 					modelo.setColumnIdentifiers(header);
 					table.setModel(modelo);
 					scrollPane.setViewportView(table);
-					
-					JButton btnNewButton = new JButton("Agregar a la lista");
-					btnNewButton.setBounds(22, 182, 146, 25);
-					panelObrero.add(btnNewButton);
-					
+
+					btnAgregarGuardar.setBounds(22, 182, 146, 25);
+					panelObrero.add(btnAgregarGuardar);
+
 					JLabel lblNewLabel_21 = new JLabel("Lista de habilidades");
 					lblNewLabel_21.setFont(new Font("Tahoma", Font.BOLD, 14));
 					lblNewLabel_21.setBounds(430, 13, 137, 16);
 					panelObrero.add(lblNewLabel_21);
-				}
+
+					btnModificar.setBounds(512, 190, 90, 25);
+					btnEliminar.setBounds(605, 190, 90, 25);
+					panelObrero.add(btnModificar);
+					panelObrero.add(btnEliminar);
+
+					btnModificar.setEnabled(false);
+					btnEliminar.setEnabled(false);
+
+					table.getSelectionModel().addListSelectionListener(e -> {
+					    if (!e.getValueIsAdjusting()) {
+					        int fila = table.getSelectedRow();
+					        boolean filaSeleccionada = fila >= 0;
+					        btnModificar.setEnabled(filaSeleccionada);
+					        btnEliminar.setEnabled(filaSeleccionada);
+					        if (!filaSeleccionada) {
+					            modoModificar[0] = false;
+					            filaModificando[0] = -1;
+					            btnAgregarGuardar.setText("Agregar a la lista");
+					        }
+					    }
+					});
+
+					btnEliminar.addActionListener(e -> {
+					    int fila = table.getSelectedRow();
+					    if (fila >= 0) {
+					        modelo.removeRow(fila);
+
+					        if (modoModificar[0] && fila == filaModificando[0]) {
+					            modoModificar[0] = false;
+					            filaModificando[0] = -1;
+					            btnAgregarGuardar.setText("Agregar a la lista");
+					        }
+					        btnModificar.setEnabled(false);
+					        btnEliminar.setEnabled(false);
+					    }
+					});
+
+					btnModificar.addActionListener(e -> {
+					    int fila = table.getSelectedRow();
+					    if (fila >= 0) {
+					        String habilidad = (String) modelo.getValueAt(fila, 0);
+					        int anios = (int) modelo.getValueAt(fila, 1);
+
+					        comboBox.setSelectedItem(habilidad);
+					        spnExpObre.setValue(anios);
+					        modoModificar[0] = true;
+					        filaModificando[0] = fila;
+					        btnAgregarGuardar.setText("Guardar cambios");
+					    }
+					});
+
+					btnAgregarGuardar.addActionListener(new ActionListener() {
+					    public void actionPerformed(ActionEvent e) {
+					        String habilidad = (String) comboBox.getSelectedItem();
+					        int anios = (Integer) spnExpObre.getValue();
+
+					        if (habilidad == null || habilidad.equals("<Seleccione>")) {
+					            JOptionPane.showMessageDialog(panelObrero, "Por favor seleccione una habilidad válida.", "Error", JOptionPane.ERROR_MESSAGE);
+					            return;
+					        }
+
+					        if (anios <= 0) {
+					            JOptionPane.showMessageDialog(panelObrero, "Ingrese un número válido de años de experiencia.", "Error", JOptionPane.ERROR_MESSAGE);
+					            return;
+					        }
+
+					        boolean habilidadRepetida = false;
+					        for (int i = 0; i < modelo.getRowCount(); i++) {
+					            String habEnTabla = (String) modelo.getValueAt(i, 0);
+					            if (habEnTabla.equalsIgnoreCase(habilidad)) {
+					                if (modoModificar[0] && i == filaModificando[0]) {
+					                    continue;
+					                }
+					                habilidadRepetida = true;
+					                break;
+					            }
+					        }
+
+					        if (habilidadRepetida) {
+					            JOptionPane.showMessageDialog(panelObrero, "Ya ha incluido esa habilidad en su registro.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+					            return;
+					        }
+
+					        if (modoModificar[0]) {
+					            if (filaModificando[0] >= 0 && filaModificando[0] < modelo.getRowCount()) {
+					                modelo.setValueAt(habilidad, filaModificando[0], 0);
+					                modelo.setValueAt(anios, filaModificando[0], 1);
+					            }
+					            modoModificar[0] = false;
+					            filaModificando[0] = -1;
+					            btnModificar.setEnabled(false);
+					            btnEliminar.setEnabled(false);
+					            table.clearSelection();
+					            btnAgregarGuardar.setText("Agregar a la lista");
+					        } else {
+					            modelo.addRow(new Object[] { habilidad, anios });
+					        }
+					        comboBox.setSelectedIndex(0);
+					        spnExpObre.setValue(0);
+					    }
+					});
+
 				{
 					panelEstudiante = new JPanel();
 					panelEstudiante.setBackground(Color.WHITE);
@@ -761,143 +870,184 @@ public class RegEmpleado extends JDialog {
 				}
 				
 				btnRegistrar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(validarCampos()) {
-							if(update == null) {
-							    Usuario usr = null;
-							    int edad = new Integer(spnEdad.getValue().toString());
-							    int aniosExp = 0;
-							    boolean estado = false;
-							    if(cbxEstado.getSelectedIndex() == 1) {
-							        estado = true;
-							    }else {
-							    	estado = false;
-							    }
+				    public void actionPerformed(ActionEvent e) {
+				        if (validarCampos()) {
+				            if (update == null) {
+				                Usuario usr = null;
+				                int edad = new Integer(spnEdad.getValue().toString());
+				                int aniosExp = 0;
+				                boolean estado = false;
+				                if (cbxEstado.getSelectedIndex() == 1) {
+				                    estado = true;
+				                } else {
+				                    estado = false;
+				                }
 
-							    if(cbxTipoTrabajador.getSelectedIndex() == 1) {
-							        usr = new Universitario(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(), txtCorreo.getText() ,cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(), cbxCarrera.getSelectedItem().toString(),cbxArea.getSelectedItem().toString());
-							    }
-							    else if(cbxTipoTrabajador.getSelectedIndex() == 2) {
-							        aniosExp = new Integer(spnExpObre.getValue().toString());
-							        usr = new Obrero(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(),txtCorreo.getText() , cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),null, aniosExp);
-							    }
-							    else if(cbxTipoTrabajador.getSelectedIndex() == 3) {
-							        aniosExp = new Integer(spnExpTec.getValue().toString());
-							        usr = new TecnicoSuperior(txtNombre.getText(),txtApellidos.getText(), edad, txtCedula.getText(),txtCorreo.getText() , cbxSexo.getSelectedItem().toString(), (float)0, cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado, rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),cbxTecnico.getSelectedItem().toString(), aniosExp);
-							    }
+				                if (cbxTipoTrabajador.getSelectedIndex() == 1) {
+				                    usr = new Universitario(txtNombre.getText(), txtApellidos.getText(), edad, txtCedula.getText(),
+				                            txtCorreo.getText(), cbxSexo.getSelectedItem().toString(), (float) 0,
+				                            cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado,
+				                            rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),
+				                            cbxCarrera.getSelectedItem().toString(), cbxArea.getSelectedItem().toString());
+				                } else if (cbxTipoTrabajador.getSelectedIndex() == 2) {
+				                    aniosExp = 0;
+				                    for (int i = 0; i < modelo.getRowCount(); i++) {
+				                        Object valor = modelo.getValueAt(i, 1); 
+				                        if (valor instanceof Integer) {
+				                            aniosExp += (Integer) valor;
+				                        } else if (valor instanceof String) {
+				                            try {
+				                                aniosExp += Integer.parseInt((String) valor);
+				                            } catch (NumberFormatException ex) {
+				                         
+				                            }
+				                        }
+				                    }
+				                    
+				                 
+				                    misHabilidades = new ArrayList<>();
+				                    for (int i = 0; i < modelo.getRowCount(); i++) {
+				                        String habilidad = (String) modelo.getValueAt(i, 0); 
+				                        misHabilidades.add(habilidad);
+				                    }
+				                    usr = new Obrero(txtNombre.getText(), txtApellidos.getText(), edad, txtCedula.getText(),
+				                            txtCorreo.getText(), cbxSexo.getSelectedItem().toString(), (float) 0,
+				                            cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado,
+				                            rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),
+				                            misHabilidades, aniosExp);
+				                } else if (cbxTipoTrabajador.getSelectedIndex() == 3) {
+				                    aniosExp = new Integer(spnExpTec.getValue().toString());
+				                    usr = new TecnicoSuperior(txtNombre.getText(), txtApellidos.getText(), edad, txtCedula.getText(),
+				                            txtCorreo.getText(), cbxSexo.getSelectedItem().toString(), (float) 0,
+				                            cbxProvincia.getSelectedItem().toString(), cbxTrabajo.getSelectedItem().toString(), estado,
+				                            rdbtnSiMudarse.isSelected(), rdbtnSiLicencia.isSelected(), rdbtnSiVehiculo.isSelected(),
+				                            cbxTecnico.getSelectedItem().toString(), aniosExp);
+				                }
 
-							    if (rutaImagenSeleccionada != null && !rutaImagenSeleccionada.trim().isEmpty()) {
-							        try {
-							            File carpetaDestino = new File("imagenesUsuarios");
-							            if (!carpetaDestino.exists()) {
-							                carpetaDestino.mkdir();
-							            }
+				                if (rutaImagenSeleccionada != null && !rutaImagenSeleccionada.trim().isEmpty()) {
+				                    try {
+				                        File carpetaDestino = new File("imagenesUsuarios");
+				                        if (!carpetaDestino.exists()) {
+				                            carpetaDestino.mkdir();
+				                        }
 
-							            String nombreArchivo = new File(rutaImagenSeleccionada).getName();
-							            String rutaDestino = "imagenesUsuarios" + File.separator + nombreArchivo;
+				                        String nombreArchivo = new File(rutaImagenSeleccionada).getName();
+				                        String rutaDestino = "imagenesUsuarios" + File.separator + nombreArchivo;
 
-							            Files.copy(Paths.get(rutaImagenSeleccionada), Paths.get(rutaDestino), StandardCopyOption.REPLACE_EXISTING);
+				                        Files.copy(Paths.get(rutaImagenSeleccionada), Paths.get(rutaDestino),
+				                                StandardCopyOption.REPLACE_EXISTING);
 
-							            usr.setRutaImagen(rutaDestino);
-							        } catch (IOException e1) {
-							            e1.printStackTrace();
-							            JOptionPane.showMessageDialog(null, "Error al guardar la imagen.", "Error", JOptionPane.ERROR_MESSAGE);
-							            usr.setRutaImagen(IMAGEN_DEFAULT);
-							        }
-							    } else {
-							        usr.setRutaImagen(IMAGEN_DEFAULT);
-							    }
+				                        usr.setRutaImagen(rutaDestino);
+				                    } catch (IOException e1) {
+				                        e1.printStackTrace();
+				                        JOptionPane.showMessageDialog(null, "Error al guardar la imagen.", "Error",
+				                                JOptionPane.ERROR_MESSAGE);
+				                        usr.setRutaImagen(IMAGEN_DEFAULT);
+				                    }
+				                } else {
+				                    usr.setRutaImagen(IMAGEN_DEFAULT);
+				                }
 
-							    boolean realizado = Bolsa.getInstance().registrarEmpleado(usr);
-							    if(realizado) {
-							        try {
-							            Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
-							        } catch (IOException e1) {										
-							            e1.printStackTrace();
-							        }
-							        JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información",
-							                JOptionPane.INFORMATION_MESSAGE);
-							        clean();
-							    } else {
-							        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error",
-							                JOptionPane.ERROR_MESSAGE);
-							    }
-							}
-							else {
-							
-							update.setNombre(txtNombre.getText());
-							update.setApellido(txtApellidos.getText());
-							update.setContacto(txtCorreo.getText());
-							update.setSexo(cbxSexo.getSelectedItem().toString());
-							update.setEdad(new Integer(spnEdad.getValue().toString()));
-							update.setProvincia(cbxProvincia.getSelectedItem().toString());
-							update.setTipoTrabajo(cbxTrabajo.getSelectedItem().toString());
-							boolean estado = false;
-							if(cbxEstado.getSelectedIndex() == 1) {
-								estado = true;
-							}
-							update.setEstado(estado);
-							update.setLicencia(rdbtnSiLicencia.isSelected());
-							update.setTieneVeh(rdbtnSiVehiculo.isSelected());
-							update.setdispuestoMud(rdbtnSiMudarse.isSelected());
-							update.setRutaImagen(rutaImagenSeleccionada != null ? rutaImagenSeleccionada : IMAGEN_DEFAULT);
+				                boolean realizado = Bolsa.getInstance().registrarEmpleado(usr);
+				                if (realizado) {
+				                    try {
+				                        Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+				                    } catch (IOException e1) {
+				                        e1.printStackTrace();
+				                    }
+				                    JOptionPane.showMessageDialog(null, "Registro satisfactorio", "Información",
+				                            JOptionPane.INFORMATION_MESSAGE);
+				                    clean();
+				                } else {
+				                    JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error",
+				                            JOptionPane.ERROR_MESSAGE);
+				                }
+				            } else {
 
-							if(update instanceof Universitario) {
-								Universitario uni = (Universitario) update;
-								uni.setCarrera(cbxCarrera.getSelectedItem().toString());
-							}
-							else if(update instanceof TecnicoSuperior) {
-								TecnicoSuperior tc = (TecnicoSuperior) update;
-								tc.setTecnico(cbxTecnico.getSelectedItem().toString());
-								tc.setAniosExperiencia(new Integer(spnExpTec.getValue().toString()));
-							}
-							else if(update instanceof Obrero) {
-								Obrero ob = (Obrero) update;
-								//ob.setMisHabilidades(misHabilidades);
-								ob.setAniosExperiencia(new Integer(spnExpObre.getValue().toString()));
-							}
-							if (rutaImagenSeleccionada != null && !rutaImagenSeleccionada.trim().isEmpty()) {
-							    try {
-							        File carpetaDestino = new File("imagenesUsuarios");
-							        if (!carpetaDestino.exists()) {
-							            carpetaDestino.mkdir();
-							        }
+				                update.setNombre(txtNombre.getText());
+				                update.setApellido(txtApellidos.getText());
+				                update.setContacto(txtCorreo.getText());
+				                update.setSexo(cbxSexo.getSelectedItem().toString());
+				                update.setEdad(new Integer(spnEdad.getValue().toString()));
+				                update.setProvincia(cbxProvincia.getSelectedItem().toString());
+				                update.setTipoTrabajo(cbxTrabajo.getSelectedItem().toString());
+				                boolean estado = false;
+				                if (cbxEstado.getSelectedIndex() == 1) {
+				                    estado = true;
+				                }
+				                update.setEstado(estado);
+				                update.setLicencia(rdbtnSiLicencia.isSelected());
+				                update.setTieneVeh(rdbtnSiVehiculo.isSelected());
+				                update.setdispuestoMud(rdbtnSiMudarse.isSelected());
+				                update.setRutaImagen(rutaImagenSeleccionada != null ? rutaImagenSeleccionada : IMAGEN_DEFAULT);
 
-							        String nombreArchivo = new File(rutaImagenSeleccionada).getName();
-							        String rutaDestino = "imagenesUsuarios" + File.separator + nombreArchivo;
+				                if (update instanceof Universitario) {
+				                    Universitario uni = (Universitario) update;
+				                    uni.setCarrera(cbxCarrera.getSelectedItem().toString());
+				                } else if (update instanceof TecnicoSuperior) {
+				                    TecnicoSuperior tc = (TecnicoSuperior) update;
+				                    tc.setTecnico(cbxTecnico.getSelectedItem().toString());
+				                    tc.setAniosExperiencia(new Integer(spnExpTec.getValue().toString()));
+				                } else if (update instanceof Obrero) {
+				                    Obrero ob = (Obrero) update;
+				                    int aniosExp = 0;
+				                    for (int i = 0; i < modelo.getRowCount(); i++) {
+				                        Object valor = modelo.getValueAt(i, 1);
+				                        if (valor instanceof Integer) {
+				                            aniosExp += (Integer) valor;
+				                        } else if (valor instanceof String) {
+				                            try {
+				                                aniosExp += Integer.parseInt((String) valor);
+				                            } catch (NumberFormatException ex) {
+				                                
+				                            }
+				                        }
+				                    }
+				                    ob.setAniosExperiencia(aniosExp);
+				                }
+				                if (rutaImagenSeleccionada != null && !rutaImagenSeleccionada.trim().isEmpty()) {
+				                    try {
+				                        File carpetaDestino = new File("imagenesUsuarios");
+				                        if (!carpetaDestino.exists()) {
+				                            carpetaDestino.mkdir();
+				                        }
 
-							        Files.copy(Paths.get(rutaImagenSeleccionada), Paths.get(rutaDestino), StandardCopyOption.REPLACE_EXISTING);
+				                        String nombreArchivo = new File(rutaImagenSeleccionada).getName();
+				                        String rutaDestino = "imagenesUsuarios" + File.separator + nombreArchivo;
 
-							        update.setRutaImagen(rutaDestino);
-							    } catch (IOException e1) {
-							        e1.printStackTrace();
-							        JOptionPane.showMessageDialog(null, "Error al guardar la nueva imagen.", "Error", JOptionPane.ERROR_MESSAGE);
-							        update.setRutaImagen(IMAGEN_DEFAULT);
-							    }
-							} else {
-							    update.setRutaImagen(IMAGEN_DEFAULT);
-							}
+				                        Files.copy(Paths.get(rutaImagenSeleccionada), Paths.get(rutaDestino),
+				                                StandardCopyOption.REPLACE_EXISTING);
 
-							Bolsa.getInstance().modificarUsuario(update);
-							
-							try {
-								Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
-							} catch (IOException e1) {
-								e1.printStackTrace();
-							}
-							JOptionPane.showMessageDialog(null, "Modificación exitosa", "Información",
-									JOptionPane.INFORMATION_MESSAGE);
-							ListadoUsuario.loadUsuario(0);
-							dispose();
-							
-						}
-							
-							
-						}
-						
-						
-					}
+				                        update.setRutaImagen(rutaDestino);
+				                    } catch (IOException e1) {
+				                        e1.printStackTrace();
+				                        JOptionPane.showMessageDialog(null, "Error al guardar la nueva imagen.", "Error",
+				                                JOptionPane.ERROR_MESSAGE);
+				                        update.setRutaImagen(IMAGEN_DEFAULT);
+				                    }
+				                } else {
+				                    update.setRutaImagen(IMAGEN_DEFAULT);
+				                }
+
+				                Bolsa.getInstance().modificarUsuario(update);
+
+				                try {
+				                    Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+				                } catch (IOException e1) {
+				                    e1.printStackTrace();
+				                }
+				                JOptionPane.showMessageDialog(null, "Modificación exitosa", "Información",
+				                        JOptionPane.INFORMATION_MESSAGE);
+				                ListadoUsuario.loadUsuario(0);
+				                dispose();
+
+				            }
+
+				        }
+
+				    }
 				});
+
 				btnRegistrar.setActionCommand("OK");
 				buttonPane.add(btnRegistrar);
 				getRootPane().setDefaultButton(btnRegistrar);
@@ -916,7 +1066,7 @@ public class RegEmpleado extends JDialog {
 
 		}
 		
-		
+		}
 	}
 	
 	private boolean validarCampos() {
@@ -976,11 +1126,18 @@ public class RegEmpleado extends JDialog {
 				spnExpTec.setValue(((TecnicoSuperior) update).getAniosExperiencia());
 			}
 			else if(update instanceof Obrero) {
-				cbxTipoTrabajador.setSelectedIndex(2);
-				//ob.setMisHabilidades(misHabilidades);
-				spnExpObre.setValue(((Obrero) update).getAniosExperiencia());
+			    cbxTipoTrabajador.setSelectedIndex(2);
+			    Obrero ob = (Obrero) update; 
+			    misHabilidades = ob.getMisHabilidades(); 
+			    spnExpObre.setValue(ob.getAniosExperiencia());
+			    modelo.setRowCount(0);
+			    if (misHabilidades != null) {
+			        for (String h : misHabilidades) {
+			            modelo.addRow(new Object[] { h, 0 });
+			        }
+			    }
 			}
-			
+
 			if (update.getRutaImagen() != null) {
 			    lblFotoPreview.setIcon(escalarImagen(update.getRutaImagen()));
 			    rutaImagenSeleccionada = update.getRutaImagen();

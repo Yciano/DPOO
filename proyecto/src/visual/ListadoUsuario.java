@@ -173,7 +173,7 @@ public class ListadoUsuario extends JDialog {
 									}
 
 									loadUsuario(0);
-									JOptionPane.showMessageDialog(null, "Publicación eliminada exitosamente.",
+									JOptionPane.showMessageDialog(null, "Usuario eliminado exitosamente.",
 											"Información", JOptionPane.INFORMATION_MESSAGE);
 									table.clearSelection();
 									btnModificar.setEnabled(false);

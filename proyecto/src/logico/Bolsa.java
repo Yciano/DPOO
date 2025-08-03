@@ -438,6 +438,8 @@ public class Bolsa implements Serializable{
             Bolsa loadedBolsa = (Bolsa) ois.readObject();
             bolsa = loadedBolsa;
             contadorSolicitudes = loadedBolsa.getMisSolicitudes().size();
+            contadorVacantes = loadedBolsa.getMisVacantes().size();
+            contadorContrato = loadedBolsa.getMisContratos().size();
             return loadedBolsa;
         }
     }

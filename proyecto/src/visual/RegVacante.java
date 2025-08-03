@@ -458,6 +458,7 @@ public class RegVacante extends JDialog {
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+			
 			}
 		});
 		btnCancelar.setActionCommand("Cancel");

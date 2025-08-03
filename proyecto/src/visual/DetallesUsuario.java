@@ -83,19 +83,24 @@ public class DetallesUsuario extends JDialog {
         } else if (usuario instanceof TecnicoSuperior) {
             datos.add(new JLabel("Área técnica: " + ((TecnicoSuperior) usuario).getTecnico()));
             datos.add(new JLabel("Años de experiencia: " + ((TecnicoSuperior) usuario).getAniosExperiencia()));
-        } else if (usuario instanceof Obrero) {
+        }else if (usuario instanceof Obrero) {
             datos.add(new JLabel("Años de experiencia: " + ((Obrero) usuario).getAniosExperiencia()));
-            datos.add(new JLabel("Habilidades:"));
 
             ArrayList<String> habilidades = ((Obrero) usuario).getMisHabilidades();
+            StringBuilder sb = new StringBuilder("<html>Habilidades:<br>");
             if (habilidades != null && !habilidades.isEmpty()) {
                 for (String hab : habilidades) {
-                    datos.add(new JLabel("   • " + hab));
+                    sb.append("• ").append(hab).append("<br>");
                 }
             } else {
-                datos.add(new JLabel("   • No especificadas"));
+                sb.append("No especificadas<br>");
             }
+            sb.append("</html>");
+
+            JLabel lblHabilidades = new JLabel(sb.toString());
+            datos.add(lblHabilidades);
         }
+
 
 
 
