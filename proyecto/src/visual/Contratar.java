@@ -80,6 +80,10 @@ public class Contratar extends JDialog {
     private JButton btnContratar1;
     private JButton btnContratar2;
     private JButton btnContratar3;
+    private JLabel lblfoto1;
+    private JLabel lblfoto2;
+    private JLabel lblfoto3;
+
 	
 	public static void main(String[] args) {
 		try {
@@ -121,7 +125,7 @@ public class Contratar extends JDialog {
 			lblNewLabel_1.setBounds(12, 246, 56, 16);
 			panelCand1.add(lblNewLabel_1);
 			
-			JLabel lblfoto1 = new JLabel("");
+			lblfoto1 = new JLabel("");
 			lblfoto1.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			lblfoto1.setBackground(Color.WHITE);
 			lblfoto1.setBounds(133, 76, 106, 103);
@@ -253,6 +257,11 @@ public class Contratar extends JDialog {
 		                    	boolean retorno = Bolsa.getInstance().registrarContrato(users.get(0), vac, new Date());
 		    					if(retorno) {
 		    	                	JOptionPane.showMessageDialog(null, "Usuario contratado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		    	                	try {
+										Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+									} catch (IOException e1) {
+										e1.printStackTrace();
+									}
 		    	                	dispose();
 		    	                	Match aux = new Match();
 		    	                	aux.setModal(true);
@@ -283,11 +292,11 @@ public class Contratar extends JDialog {
 			lblCandidato.setBounds(144, 13, 106, 29);
 			panelCand2.add(lblCandidato);
 			
-			JLabel label = new JLabel("");
-			label.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			label.setBackground(Color.WHITE);
-			label.setBounds(150, 83, 106, 103);
-			panelCand2.add(label);
+			lblfoto2 = new JLabel("");
+			lblfoto2.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			lblfoto2.setBackground(Color.WHITE);
+			lblfoto2.setBounds(150, 83, 106, 103);
+			panelCand2.add(lblfoto2);
 			
 			
 			JLabel NombreYApellido2 = new JLabel("No existe candidato");
@@ -418,6 +427,11 @@ public class Contratar extends JDialog {
 	                    	boolean retorno = Bolsa.getInstance().registrarContrato(users.get(1), vac, new Date());
 	    					if(retorno) {
 	    	                	JOptionPane.showMessageDialog(null, "Usuario contratado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	    	                	try {
+									Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
 	    	                	dispose();
 	    	                	Match aux = new Match();
 	    	                	aux.setModal(true);
@@ -447,11 +461,11 @@ public class Contratar extends JDialog {
 			lblCandidato_1.setBounds(147, 13, 106, 29);
 			panelCand3.add(lblCandidato_1);
 			
-			JLabel label_12 = new JLabel("");
-			label_12.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			label_12.setBackground(Color.WHITE);
-			label_12.setBounds(148, 85, 106, 103);
-			panelCand3.add(label_12);
+			lblfoto3 = new JLabel("");
+			lblfoto3.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			lblfoto3.setBackground(Color.WHITE);
+			lblfoto3.setBounds(148, 85, 106, 103);
+			panelCand3.add(lblfoto3);
 			
 			
 				JLabel NombreYApellido3 = new JLabel("No existe candidato");
@@ -582,6 +596,11 @@ public class Contratar extends JDialog {
 	                    	boolean retorno = Bolsa.getInstance().registrarContrato(users.get(3), vac, new Date());
 	    					if(retorno) {
 	    	                	JOptionPane.showMessageDialog(null, "Usuario contratado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	    	                	try {
+									Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
 	    	                	dispose();
 	    	                	Match aux = new Match();
 	    	                	aux.setModal(true);
@@ -639,6 +658,8 @@ public class Contratar extends JDialog {
 	private void loadUser(ArrayList<Usuario> user) {
 		if(user != null && user.size() > 0) {
 			txtCedula1.setText(user.get(0).getCedula());
+			ImageIcon foto1 = cargarImagenUsuario(user.get(0).getCedula());
+			lblfoto1.setIcon(foto1 != null ? foto1 : new ImageIcon("Defaultt.png"));
 			txtContacto1.setText(user.get(0).getContacto());
 			txtEdad1.setText(String.valueOf(user.get(0).getEdad()));
 			txtTipoTrabajo1.setText(user.get(0).getTipoTrabajo());
@@ -675,6 +696,8 @@ public class Contratar extends JDialog {
 		
 		if(user != null && user.size() > 1) {
 			txtCedula2.setText(user.get(1).getCedula());
+			ImageIcon foto2 = cargarImagenUsuario(user.get(1).getCedula());
+			lblfoto2.setIcon(foto2 != null ? foto2 : new ImageIcon("Defaultt.png"));
 			txtContacto2.setText(user.get(1).getContacto());
 			txtEdad2.setText(String.valueOf(user.get(1).getEdad()));
 			txtTipoTrabajo2.setText(user.get(1).getTipoTrabajo());
@@ -711,8 +734,10 @@ public class Contratar extends JDialog {
 		
 		if(user != null && user.size() > 2) {
 			txtCedula3.setText(user.get(2).getCedula());
+			ImageIcon foto3 = cargarImagenUsuario(user.get(2).getCedula());
+			lblfoto3.setIcon(foto3 != null ? foto3 : new ImageIcon("Defaultt.png"));
 			txtContacto3.setText(user.get(2).getContacto());
-			txtEdad2.setText(String.valueOf(user.get(2).getEdad()));
+			txtEdad3.setText(String.valueOf(user.get(2).getEdad()));
 			txtTipoTrabajo3.setText(user.get(2).getTipoTrabajo());
 			txtProvincia3.setText(user.get(2).getProvincia());
 			txtSexo3.setText(user.get(2).getSexo());
@@ -762,6 +787,25 @@ public class Contratar extends JDialog {
 		return user;
 		
 	}
+	
+	private ImageIcon cargarImagenUsuario(String cedula) {
+	    String[] extensiones = {".png", ".jpg", ".jpeg", ".gif"};
+	    for (String ext : extensiones) {
+	        String ruta = "imagenesusuarios/" + cedula + ext;
+	        File archivo = new File(ruta);
+	        if (archivo.exists()) {
+	            ImageIcon icon = new ImageIcon(ruta);
+	            Image img = icon.getImage().getScaledInstance(106, 103, Image.SCALE_SMOOTH);
+	            return new ImageIcon(img);
+	        }
+	    }
+
+	    ImageIcon icon = new ImageIcon("Defaultt.png");
+	    Image img = icon.getImage().getScaledInstance(106, 103, Image.SCALE_SMOOTH);
+	    return new ImageIcon(img);
+	}
+
+
 	
 	
 }

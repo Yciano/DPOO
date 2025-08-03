@@ -14,6 +14,7 @@ public class Main implements Serializable {
 	        System.out.println("Servidor conectado con éxito.");
 	    } catch (Exception e) {
 	        System.out.println("No se pudo conectar al servidor. Se iniciará vacío.");
+	        e.printStackTrace(); 
 	    }
 
 	    Principal principal = new Principal();
