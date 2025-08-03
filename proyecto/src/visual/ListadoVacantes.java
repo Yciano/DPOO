@@ -176,6 +176,7 @@ public class ListadoVacantes extends JDialog {
 							}
 							}
 							else {
+					
 								dispose();
 								
 							}
@@ -198,7 +199,7 @@ public class ListadoVacantes extends JDialog {
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
-			loadVacante(0);
+			loadVacante(modo);
 
 		}
 	}
@@ -206,17 +207,34 @@ public class ListadoVacantes extends JDialog {
 	public static void loadVacante(int selection) {
 		modelo.setRowCount(0);
 		row = new Object[table.getColumnCount()];
-		for (Vacante aux : Bolsa.getInstance().getMisVacantes()) {
-			row[0] = aux.getIdentificador();
-			row[1] = aux.getRequisito().getTipoTrabajo();
-			row[2] = aux.getRequisito().getTipoEmpleado();
-			if(aux.isEstado()) {
-				row[3] = "Activa";
-			}else
-			{
-				row[3] = "Pendiente";
-			}
-			modelo.addRow(row);
+		if(selection == 0) {
+			for (Vacante aux : Bolsa.getInstance().getMisVacantes()) {
+				row[0] = aux.getIdentificador();
+				row[1] = aux.getRequisito().getTipoTrabajo();
+				row[2] = aux.getRequisito().getTipoEmpleado();
+				if(aux.isEstado()) {
+					row[3] = "Activa";
+				}else
+				{
+					row[3] = "Pendiente";
+				}
+				modelo.addRow(row);
+		}
+		
+		}else {
+			for (Vacante aux : Bolsa.getInstance().getMisVacantes()) {
+				if(aux.isEstado()) {
+					row[0] = aux.getIdentificador();
+					row[1] = aux.getRequisito().getTipoTrabajo();
+					row[2] = aux.getRequisito().getTipoEmpleado();
+					row[3] = "Activa";
+				
+					modelo.addRow(row);
+				}
+				
+			
+			
+		}
 		}
 
 		table.setModel(modelo);
@@ -231,5 +249,5 @@ public class ListadoVacantes extends JDialog {
 
 	}
 	
-	
 }
+

@@ -14,16 +14,18 @@ public class Vacante implements Serializable{
 	private Requisito requisito;
 	private boolean estado;
 	private ArrayList<Solicitud> misSolicitudes;
+	private String prioridad;
 	 
-	public Vacante(String identificador, String IDcompania, Requisito requisito, String posicion, String descripcion) {
+	public Vacante(String identificador, String IDcompania, Requisito requisito, String posicion, String descripcion, String prioridad) {
 		this.identificador = identificador;
 		this.IDcompania = IDcompania;
 		this.fecha = new Date();
 		this.requisito = requisito;
-		this.estado = estado;
+		this.estado = true;
 		this.posicion = posicion;
 		this.descripcion = descripcion;
 		this.misSolicitudes = new ArrayList<Solicitud>();
+		this.prioridad = prioridad;
 	}
 
 	public String getIdentificador() {
@@ -102,5 +104,16 @@ public class Vacante implements Serializable{
 
 		
 	}
+
+	public String getPrioridad() {
+		return prioridad;
+	}
+
+	public void setPrioridad(String prioridad) {
+		this.prioridad = prioridad;
+	}
+	
+	
+	
 	
 }

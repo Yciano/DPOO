@@ -82,12 +82,12 @@ public class Bolsa implements Serializable{
 
 
 
-	public boolean registrarVacante(String identificador, String IDcompania, Requisito requisito, String posicion, String descripcion)
+	public boolean registrarVacante(String identificador, String IDcompania, Requisito requisito, String posicion, String descripcion, String prioridad)
 	{
 		boolean realizado = false;
 		Empresa aux = buscarEmpresaByCode(IDcompania);
 		if(aux != null){
-			Vacante vac = new Vacante(identificador, IDcompania,requisito,posicion,descripcion);
+			Vacante vac = new Vacante(identificador, IDcompania,requisito,posicion,descripcion, prioridad);
 			misVacantes.add(vac);       
 			aux.getVacantes().add(vac);
 			realizado = true;
@@ -107,47 +107,65 @@ public class Bolsa implements Serializable{
 						int cheq = 0;
 						if(vacante.getRequisito().getTipoTrabajo().equalsIgnoreCase(user.getTipoTrabajo())){
 							cheq++;
+							cheq += obtenerPrioridad(vacante, 1);
 						}
 						if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Tecnico superior") && user instanceof TecnicoSuperior){
 							cheq++;
 							
 							if(vacante.getRequisito().getTecnico().equalsIgnoreCase(((TecnicoSuperior) user).getTecnico())) {
 								cheq++;
+								cheq += obtenerPrioridad(vacante, 2);
+
 							}
 							
 						}
 						else if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Obrero") && user instanceof Obrero){
 							cheq++;
+							
 						}
 						else if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Universitario") && user instanceof Universitario){
 							cheq++;
 							
 							if(vacante.getRequisito().getCarrera().equalsIgnoreCase(((Universitario) user).getCarrera())) {
 								cheq++;
+								cheq += obtenerPrioridad(vacante, 1);
+
 							}
 							
 						}
 						if(vacante.getRequisito().getSexo().equalsIgnoreCase(user.getSexo())){
 							cheq++;
+							cheq += obtenerPrioridad(vacante, 3);
+
 						}
 						if(vacante.getRequisito().isVeh() && user.isTieneVeh()){
 							cheq++;
+							cheq += obtenerPrioridad(vacante, 4);
+
 						}
 						if(vacante.getRequisito().isFueraCity() && user.isDispuestoMud()){
 							cheq++;
+							cheq += obtenerPrioridad(vacante, 5);
 						}
 						if( user instanceof Obrero && ((Obrero)user).getAniosExperiencia() >= vacante.getRequisito().getAniosExperiencia()){
 							cheq++;
+							cheq += obtenerPrioridad(vacante, 6);
+
 						}
 						else if( user instanceof TecnicoSuperior && ((TecnicoSuperior)user).getAniosExperiencia() > vacante.getRequisito().getAniosExperiencia()){
 							cheq++;
+							cheq += obtenerPrioridad(vacante, 6);
+
 						}
 						
 						if(vacante.getRequisito().getEdad() >= user.getEdad()) {
 							cheq++;
-						}
+							cheq += obtenerPrioridad(vacante, 7);
 
-						if (cheq > 0){
+						}
+						
+						
+						if (cheq > 3){
 							user.setMatch(cheq);
 							usuarios.add(user);
 						}
@@ -177,6 +195,34 @@ public class Bolsa implements Serializable{
 		}
 
 	}
+
+	private int obtenerPrioridad(Vacante aux, int cumple) {
+		int cantidad = 0;
+		
+		 if(aux.getPrioridad().equalsIgnoreCase("Tipo de trabajo")&& cumple == 1) {
+			cantidad = 2;
+		}
+		 else if(aux.getPrioridad().equalsIgnoreCase("Tipo de empleado") && cumple == 2) {
+			cantidad = 2;
+		}
+		
+		else if(aux.getPrioridad().equalsIgnoreCase("Sexo")&& cumple == 3) {
+			cantidad = 2;
+		}else if(aux.getPrioridad().equalsIgnoreCase("Vehiculo")&& cumple == 4) {
+			cantidad = 2;
+		}else if(aux.getPrioridad().equalsIgnoreCase("Mudarse")&& cumple == 5) {
+			cantidad = 2;
+		}else if(aux.getPrioridad().equalsIgnoreCase("Edad")&& cumple == 6) {
+			cantidad = 2;
+		}else if(aux.getPrioridad().equalsIgnoreCase("Experiencia")&& cumple == 7) {
+			cantidad = 2;
+		}
+		
+		
+		return cantidad;
+	}
+
+
 
 	public void OrdenarMatchBsort(ArrayList<Usuario> users) {
 		for (int i = 0; i < users.size() - 1; i++) {

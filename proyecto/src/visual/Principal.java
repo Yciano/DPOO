@@ -97,6 +97,17 @@ public class Principal extends JFrame {
         		aux.setVisible(true);
         	}
         });
+        
+        JMenuItem mntmNewMenuItem_8 = new JMenuItem("Listado de vacantes");
+        mntmNewMenuItem_8.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ListadoVacantes aux = new ListadoVacantes(0);
+        		aux.setModal(true);
+        		aux.setVisible(true);
+        	}
+        	
+        });
+        mnNewMenu_1.add(mntmNewMenuItem_8);
         mnNewMenu_1.add(mntmNewMenuItem_7);
 
         JMenu mnSolicitudes = new JMenu("Solicitudes");

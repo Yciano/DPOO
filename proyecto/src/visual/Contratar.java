@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -129,7 +130,7 @@ public class Contratar extends JDialog {
 			
 			JLabel NombreYApellido1 = new JLabel("No existe candidato");
 			users = listaDeUsers(aux);
-			if(users.size() > 1) {
+			if(users.size() >= 1) {
 				NombreYApellido1.setText(users.get(0).getNombre() + " " + users.get(0).getApellido());
 			}
 			NombreYApellido1.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -245,18 +246,27 @@ public class Contratar extends JDialog {
 			btnContratar1.setEnabled(false);
 			btnContratar1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					boolean retorno = Bolsa.getInstance().registrarContrato(users.get(0), vac, new Date());
-					if(retorno) {
-	                	JOptionPane.showMessageDialog(null, "Cliente contratado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-	                	dispose();
-	                	Match aux = new Match();
-	                	aux.setModal(true);
-	                	aux.setVisible(true);
-					}
-					else {
-			            JOptionPane.showMessageDialog(null, "Error en la operación.", "Error", JOptionPane.ERROR_MESSAGE);
+					 int option = JOptionPane.showConfirmDialog(null,
+		                        "¿Está seguro que desea contratar al usuario con cédula: " + users.get(0).getCedula()+ "?",
+		                        "Contrato", JOptionPane.WARNING_MESSAGE);
+		                    if (option == JOptionPane.OK_OPTION) {
+		                    	boolean retorno = Bolsa.getInstance().registrarContrato(users.get(0), vac, new Date());
+		    					if(retorno) {
+		    	                	JOptionPane.showMessageDialog(null, "Usuario contratado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		    	                	dispose();
+		    	                	Match aux = new Match();
+		    	                	aux.setModal(true);
+		    	                	aux.setVisible(true);
+		    	                	
+		    					}
+		    					else {
+		    			            JOptionPane.showMessageDialog(null, "Error en la operación.", "Error", JOptionPane.ERROR_MESSAGE);
 
-					}
+		    					}
+		                    }else {
+		                    	dispose();
+		                    }
+					
 				}
 			});
 			btnContratar1.setBounds(288, 644, 97, 25);
@@ -281,7 +291,7 @@ public class Contratar extends JDialog {
 			
 			
 			JLabel NombreYApellido2 = new JLabel("No existe candidato");
-			if(users.size() > 2) {
+			if(users.size() >= 2) {
 				NombreYApellido2.setText(users.get(1).getNombre() + " " + users.get(1).getApellido());
 				}
 			NombreYApellido2.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -401,18 +411,25 @@ public class Contratar extends JDialog {
 			btnContratar2 = new JButton("Contratar");
 			btnContratar2.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					boolean retorno = Bolsa.getInstance().registrarContrato(users.get(1), vac, new Date());
-					if(retorno) {
-	                	JOptionPane.showMessageDialog(null, "Cliente contratado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-	                	dispose();
-	                	Match aux = new Match();
-	                	aux.setModal(true);
-	                	aux.setVisible(true);
-					}
-					else {
-			            JOptionPane.showMessageDialog(null, "Error en la operación.", "Error", JOptionPane.ERROR_MESSAGE);
+					int option = JOptionPane.showConfirmDialog(null,
+	                        "¿Está seguro que desea contratar al usuario con cédula: " + users.get(1).getCedula()+ "?",
+	                        "Contrato", JOptionPane.WARNING_MESSAGE);
+	                    if (option == JOptionPane.OK_OPTION) {
+	                    	boolean retorno = Bolsa.getInstance().registrarContrato(users.get(1), vac, new Date());
+	    					if(retorno) {
+	    	                	JOptionPane.showMessageDialog(null, "Usuario contratado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	    	                	dispose();
+	    	                	Match aux = new Match();
+	    	                	aux.setModal(true);
+	    	                	aux.setVisible(true);
+	    					}
+	    					else {
+	    			            JOptionPane.showMessageDialog(null, "Error en la operación.", "Error", JOptionPane.ERROR_MESSAGE);
 
-					}
+	    					}
+	                    }else {
+	                    	dispose();
+	                    }
 				}
 			});
 			btnContratar2.setEnabled(false);
@@ -438,7 +455,7 @@ public class Contratar extends JDialog {
 			
 			
 				JLabel NombreYApellido3 = new JLabel("No existe candidato");
-				if(users.size() > 3) {
+				if(users.size() >= 3) {
 					 NombreYApellido3.setText(users.get(2).getNombre() + " " + users.get(2).getApellido());
 					}
 			NombreYApellido3.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -558,18 +575,25 @@ public class Contratar extends JDialog {
 			btnContratar3 = new JButton("Contratar");
 			btnContratar3.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					boolean retorno = Bolsa.getInstance().registrarContrato(users.get(2), vac, new Date());
-					if(retorno) {
-	                	JOptionPane.showMessageDialog(null, "Cliente contratado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-	                	dispose();
-	                	Match aux = new Match();
-	                	aux.setModal(true);
-	                	aux.setVisible(true);
-					}
-					else {
-			            JOptionPane.showMessageDialog(null, "Error en la operación.", "Error", JOptionPane.ERROR_MESSAGE);
+					int option = JOptionPane.showConfirmDialog(null,
+	                        "¿Está seguro que desea contratar al usuario con cédula: " + users.get(3).getCedula()+ "?",
+	                        "Contrato", JOptionPane.WARNING_MESSAGE);
+	                    if (option == JOptionPane.OK_OPTION) {
+	                    	boolean retorno = Bolsa.getInstance().registrarContrato(users.get(3), vac, new Date());
+	    					if(retorno) {
+	    	                	JOptionPane.showMessageDialog(null, "Usuario contratado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	    	                	dispose();
+	    	                	Match aux = new Match();
+	    	                	aux.setModal(true);
+	    	                	aux.setVisible(true);
+	    					}
+	    					else {
+	    			            JOptionPane.showMessageDialog(null, "Error en la operación.", "Error", JOptionPane.ERROR_MESSAGE);
 
-					}
+	    					}
+	                    }else {
+	                    	dispose();
+	                    }
 				}
 			});
 			btnContratar3.setEnabled(false);
@@ -619,6 +643,7 @@ public class Contratar extends JDialog {
 			txtEdad1.setText(String.valueOf(user.get(0).getEdad()));
 			txtTipoTrabajo1.setText(user.get(0).getTipoTrabajo());
 			txtProvincia1.setText(user.get(0).getProvincia());
+			txtSexo1.setText(user.get(0).getSexo());
 			btnContratar1.setEnabled(true);
 			if(user.get(0).isLicencia()) {
 				txtLicencia1.setText("Si");
@@ -645,6 +670,7 @@ public class Contratar extends JDialog {
 			}
 			
 			
+			
 			}
 		
 		if(user != null && user.size() > 1) {
@@ -653,7 +679,9 @@ public class Contratar extends JDialog {
 			txtEdad2.setText(String.valueOf(user.get(1).getEdad()));
 			txtTipoTrabajo2.setText(user.get(1).getTipoTrabajo());
 			txtProvincia2.setText(user.get(1).getProvincia());
+			txtSexo2.setText(user.get(1).getSexo());
 			btnContratar2.setEnabled(true);
+			
 			if(user.get(1).isLicencia()) {
 				txtLicencia2.setText("Si");
 			}else
@@ -687,6 +715,7 @@ public class Contratar extends JDialog {
 			txtEdad2.setText(String.valueOf(user.get(2).getEdad()));
 			txtTipoTrabajo3.setText(user.get(2).getTipoTrabajo());
 			txtProvincia3.setText(user.get(2).getProvincia());
+			txtSexo3.setText(user.get(2).getSexo());
 			btnContratar3.setEnabled(true);
 			if(user.get(2).isLicencia()) {
 				txtLicencia3.setText("Si");

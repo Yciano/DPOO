@@ -261,11 +261,14 @@ public class ListaContratos extends JDialog {
 		
 		if(RNC == null) {
 			for (Contrato aux : Bolsa.getInstance().getMisContratos()) {
-				row[0] = aux.getId();
-				row[1] = aux.getUser().getNombre();
-				row[2] = aux.getVacante().getPosicion();
-				row[3] = aux.getFecha();
-				modelo.addRow(row);
+				if(aux.isEstado()) {
+					row[0] = aux.getId();
+					row[1] = aux.getUser().getNombre();
+					row[2] = aux.getVacante().getPosicion();
+					row[3] = aux.getFecha();
+					modelo.addRow(row);
+				}
+				
 			}
 			
 		}else {

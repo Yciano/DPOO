@@ -383,11 +383,10 @@ public class RegVacante extends JDialog {
 		lblPrioridad.setBounds(206, 745, 100, 16);
 		panel.add(lblPrioridad);
 		cbxPrioridad = new JComboBox(new String[] { "<Seleccione>", "Alta", "Media", "Baja" });
-		cbxPrioridad.setModel(new DefaultComboBoxModel(
-				new String[] { "<Seleccione>", "Tipo de empleado", "Sexo", "Edad", "Vehiculo", "Mudarse" }));
+		cbxPrioridad.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Tipo de empleado", "Carrera/t\u00E9cnico/habilidades", "Sexo", "Edad", "Vehiculo", "Mudarse", "Experiencia"}));
 		cbxPrioridad.setBackground(Color.WHITE);
 		cbxPrioridad.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		cbxPrioridad.setBounds(291, 742, 203, 22);
+		cbxPrioridad.setBounds(291, 742, 273, 22);
 		panel.add(cbxPrioridad);
 
 		JLabel lblNewLabel = new JLabel("Nombre de la posici\u00F3n");
@@ -432,7 +431,8 @@ public class RegVacante extends JDialog {
 				Requisito requisito = new Requisito(tipoTrabajo, tipoEmpleado, carrera, tecnico, habilidades, sexo,
 						experiencia, edad, veh, mudarse, prioridad);
 
-				boolean exito = Bolsa.getInstance().registrarVacante(txtIdentificador.getText(), idCompania, requisito,txtPosicion.getText(),txtDescripcion.getText());
+				boolean exito = Bolsa.getInstance().registrarVacante(txtIdentificador.getText(), idCompania, requisito,txtPosicion.getText(),txtDescripcion.getText(), cbxPrioridad.getSelectedItem().toString()
+						);
 
 				if (exito) {
 					try {

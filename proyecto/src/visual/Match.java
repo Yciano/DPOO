@@ -244,7 +244,8 @@ public class Match extends JDialog {
 			row2 = new Object[tableMatch.getColumnCount()];
 			row2[0] = vac.getIdentificador();
 			if(vac.getMisSolicitudes().size() >  0 && vac.getMisSolicitudes().get(0) != null) {
-				row2[1] = vac.getMisSolicitudes().get(0).getUser().getNombre() + "- " + vac.getMisSolicitudes().get(0).getMatch()+"%";
+				String cod = vac.getMisSolicitudes().get(0).getMatch() *10+ "%";
+				row2[1] = vac.getMisSolicitudes().get(0).getUser().getNombre() + "- " + cod;
 
 
 			}else {
@@ -255,7 +256,8 @@ public class Match extends JDialog {
 			}
 			
 			if(vac.getMisSolicitudes().size() >  1 && vac.getMisSolicitudes().get(1) != null) {
-				row2[2] = vac.getMisSolicitudes().get(1).getUser().getNombre() + "- " + vac.getMisSolicitudes().get(1).getMatch()+"%";
+				String cod = vac.getMisSolicitudes().get(1).getMatch() *10+ "%";
+				row2[2] = vac.getMisSolicitudes().get(1).getUser().getNombre() + "- " + cod;
 
 
 			}else {
@@ -265,7 +267,8 @@ public class Match extends JDialog {
 			}
 			
 			if(vac.getMisSolicitudes().size() >  2 && vac.getMisSolicitudes().get(2) != null) {
-				row2[3] = vac.getMisSolicitudes().get(2).getUser().getNombre() + "- " + vac.getMisSolicitudes().get(2).getMatch()+"%";
+				String cod = vac.getMisSolicitudes().get(2).getMatch() *10+ "%";
+				row2[3] = vac.getMisSolicitudes().get(2).getUser().getNombre() + "- " + cod;
 
 
 			}else
@@ -279,34 +282,40 @@ public class Match extends JDialog {
 		for (Vacante aux : Bolsa.getInstance().getMisVacantes()) {
 			row2 = new Object[tableMatch.getColumnCount()];
 			row2[0] = aux.getIdentificador();
-			if(aux.getMisSolicitudes().size() >  0 && aux.getMisSolicitudes().get(0) != null) {
-				row2[1] = aux.getMisSolicitudes().get(0).getUser().getNombre() + "- " + aux.getMisSolicitudes().get(0).getMatch()+"%";
+			if(aux.isEstado()) {
+				if(aux.getMisSolicitudes().size() >  0 && aux.getMisSolicitudes().get(0) != null && aux.getMisSolicitudes().get(0).getUser().isEstado()) {
+					String cod = aux.getMisSolicitudes().get(0).getMatch() *10+ "%";
+					row2[1] = aux.getMisSolicitudes().get(0).getUser().getNombre() + "- " + cod;
+
+					
+				}else {
+					row2[1] = "Sin candidatos";
+					row2[2] = "Sin candidatos";
+					row2[3] = "Sin candidatos";
+
+				}
+				
+				if(aux.getMisSolicitudes().size() >  1 && aux.getMisSolicitudes().get(1) != null&& aux.getMisSolicitudes().get(1).getUser().isEstado()) {
+					String cod = aux.getMisSolicitudes().get(1).getMatch() *10+ "%";
+					row2[2] = aux.getMisSolicitudes().get(1).getUser().getNombre() + "- " + cod;
+
+
+				}else {
+					row2[2] = "Sin candidatos";
+					row2[3] = "Sin candidatos";
+				}
+				
+				if(aux.getMisSolicitudes().size() >  2 && aux.getMisSolicitudes().get(2) != null&& aux.getMisSolicitudes().get(2).getUser().isEstado()) {
+					String cod = aux.getMisSolicitudes().get(2).getMatch() *10+ "%";
+					row2[3] = aux.getMisSolicitudes().get(2).getUser().getNombre() + "- " + cod;
+
+				}else
+					row2[3] = "Sin candidatos";
 
 				
-			}else {
-				row2[1] = "Sin candidatos";
-				row2[2] = "Sin candidatos";
-				row2[3] = "Sin candidatos";
-
+				modelo2.addRow(row2);
 			}
 			
-			if(aux.getMisSolicitudes().size() >  1 && aux.getMisSolicitudes().get(1) != null) {
-				row2[2] = aux.getMisSolicitudes().get(1).getUser().getNombre() + "- " + aux.getMisSolicitudes().get(1).getMatch()+"%";
-
-
-			}else {
-				row2[2] = "Sin candidatos";
-				row2[3] = "Sin candidatos";
-			}
-			
-			if(aux.getMisSolicitudes().size() >  2 && aux.getMisSolicitudes().get(2) != null) {
-				row2[3] = aux.getMisSolicitudes().get(2).getUser().getNombre() + "- " + aux.getMisSolicitudes().get(2).getMatch()+"%";
-
-			}else
-				row2[3] = "Sin candidatos";
-
-			
-			modelo2.addRow(row2);
 		}
 		
 		}
