@@ -66,6 +66,7 @@ public class Principal extends JFrame {
         setJMenuBar(menuBar);
 
         JMenu mnNewMenu = new JMenu("Registro");
+        mnNewMenu.setIcon(new ImageIcon(Principal.class.getResource("/images/reportes.png")));
         menuBar.add(mnNewMenu);
 
         JMenuItem mntmNewMenuItem = new JMenuItem("Registrar Empresa");
@@ -86,9 +87,11 @@ public class Principal extends JFrame {
         mnNewMenu.add(mntmNewMenuItem_1);
 
         JMenu mnNewMenu_1 = new JMenu("Listados");
+        mnNewMenu_1.setIcon(new ImageIcon(Principal.class.getResource("/images/nuevo-producto.png")));
         menuBar.add(mnNewMenu_1);
 
         JMenuItem mntmNewMenuItem_2 = new JMenuItem("Listado de Empresas");
+        mntmNewMenuItem_2.setIcon(new ImageIcon(Principal.class.getResource("/images/historial1.png")));
         mntmNewMenuItem_2.addActionListener(e -> {
             ListadoEmpresas list = new ListadoEmpresas();
             list.setModal(true);
@@ -97,7 +100,7 @@ public class Principal extends JFrame {
         mnNewMenu_1.add(mntmNewMenuItem_2);
 
         JMenuItem mntmNewMenuItem_3 = new JMenuItem("Listado de Usuarios");
-        mntmNewMenuItem_3.setIcon(new ImageIcon(Principal.class.getResource("/images/historial1.png")));
+        mntmNewMenuItem_3.setIcon(new ImageIcon(Principal.class.getResource("/images/nuevo-cliente.png")));
         mntmNewMenuItem_3.addActionListener(e -> {
             ListadoUsuario lsUsuario = new ListadoUsuario();
             lsUsuario.setModal(true);
@@ -106,6 +109,7 @@ public class Principal extends JFrame {
         mnNewMenu_1.add(mntmNewMenuItem_3);
 
         JMenuItem mntmListadoSolicitudes = new JMenuItem("Listado de Solicitudes");
+        mntmListadoSolicitudes.setIcon(new ImageIcon(Principal.class.getResource("/images/anadir.png")));
         mntmListadoSolicitudes.addActionListener(e -> {
             ListadoSolicitudes listSol = new ListadoSolicitudes();
             listSol.setModal(true);
@@ -114,6 +118,7 @@ public class Principal extends JFrame {
         mnNewMenu_1.add(mntmListadoSolicitudes);
 
         JMenuItem mntmNewMenuItem_7 = new JMenuItem("Listado de Contratos");
+        mntmNewMenuItem_7.setIcon(new ImageIcon(Principal.class.getResource("/images/AFGAWAG (1).png")));
         mntmNewMenuItem_7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ListaContratos aux = new ListaContratos();
@@ -123,7 +128,8 @@ public class Principal extends JFrame {
         });
         mnNewMenu_1.add(mntmNewMenuItem_7);
 
-        JMenuItem mntmNewMenuItem_8 = new JMenuItem("Listado de vacantes");
+        JMenuItem mntmNewMenuItem_8 = new JMenuItem("Listado de Vacantes");
+        mntmNewMenuItem_8.setIcon(new ImageIcon(Principal.class.getResource("/images/vacantef (1).png")));
         mntmNewMenuItem_8.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ListadoVacantes aux = new ListadoVacantes(0);
@@ -134,6 +140,7 @@ public class Principal extends JFrame {
         mnNewMenu_1.add(mntmNewMenuItem_8);
 
         JMenu mnSolicitudes = new JMenu("Solicitudes");
+        mnSolicitudes.setIcon(new ImageIcon(Principal.class.getResource("/images/reportes.png")));
         menuBar.add(mnSolicitudes);
 
         JMenuItem mntmRegsolempleo = new JMenuItem("Solicitud De Empleo");
@@ -148,6 +155,7 @@ public class Principal extends JFrame {
         mnSolicitudes.add(mntmRegsolempleo);
 
         JMenuItem mntmNewMenuItem_5 = new JMenuItem("Registrar vacante");
+        mntmNewMenuItem_5.setIcon(new ImageIcon(Principal.class.getResource("/images/categorias.png")));
         mntmNewMenuItem_5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RegVacante aux = new RegVacante();
@@ -158,10 +166,11 @@ public class Principal extends JFrame {
         mnSolicitudes.add(mntmNewMenuItem_5);
 
         JMenu mnNewMenu_2 = new JMenu("Buscar");
+        mnNewMenu_2.setIcon(new ImageIcon(Principal.class.getResource("/images/lupaf (1).png")));
         menuBar.add(mnNewMenu_2);
 
         JMenuItem mntmNewMenuItem_4 = new JMenuItem("Contratar");
-        mntmNewMenuItem_4.setIcon(new ImageIcon(Principal.class.getResource("/images/anadir.png")));
+        mntmNewMenuItem_4.setIcon(new ImageIcon(Principal.class.getResource("/images/contrATF (1).png")));
         mntmNewMenuItem_4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Match aux = new Match();
@@ -172,10 +181,11 @@ public class Principal extends JFrame {
         mnNewMenu_2.add(mntmNewMenuItem_4);
 
         JMenu mnNewMenu_3 = new JMenu("Respaldo");
+        mnNewMenu_3.setIcon(new ImageIcon(Principal.class.getResource("/images/configuraciones.png")));
         menuBar.add(mnNewMenu_3);
 
         JMenuItem mntmNewMenuItem_6 = new JMenuItem("Realizar respaldo");
-        mntmNewMenuItem_6.setIcon(new ImageIcon(Principal.class.getResource("/images/producto.png")));
+        mntmNewMenuItem_6.setIcon(new ImageIcon(Principal.class.getResource("/images/BACKUP (1).png")));
         mntmNewMenuItem_6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Respaldo dialogo = new Respaldo();
