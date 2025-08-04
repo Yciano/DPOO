@@ -203,7 +203,6 @@ public class RegEmpleado extends JDialog {
 				JLabel lblNewLabel_4 = new JLabel("C\u00E9dula");
 				lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 16));
 				lblNewLabel_4.setBounds(194, 223, 71, 16);
-				
 				panel.add(lblNewLabel_4);
 			}
 			{
@@ -543,12 +542,15 @@ public class RegEmpleado extends JDialog {
 
 					}
 					else if(cbxTipoTrabajador.getSelectedIndex() == 2) {
-						panelEstudiante.setVisible(false);
-						panelObrero.setVisible(true);
-						panelTecnico.setVisible(false);
-						panelBlanco.setVisible(false);
-
+					    panelEstudiante.setVisible(false);
+					    panelObrero.setVisible(true);
+					    panelTecnico.setVisible(false);
+					    panelBlanco.setVisible(false);
+					    modelo.setRowCount(0);
+	
+					 
 					}
+
 					else if(cbxTipoTrabajador.getSelectedIndex() == 3) {
 						panelEstudiante.setVisible(false);
 						panelObrero.setVisible(false);
@@ -710,6 +712,8 @@ public class RegEmpleado extends JDialog {
 					    public void actionPerformed(ActionEvent e) {
 					        String habilidad = (String) comboBox.getSelectedItem();
 					        int anios = (Integer) spnExpObre.getValue();
+					        
+					        int edad = (Integer) spnEdad.getValue();
 
 					        if (habilidad == null || habilidad.equals("<Seleccione>")) {
 					            JOptionPane.showMessageDialog(panelObrero, "Por favor seleccione una habilidad válida.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -717,7 +721,21 @@ public class RegEmpleado extends JDialog {
 					        }
 
 					        if (anios <= 0) {
-					            JOptionPane.showMessageDialog(panelObrero, "Ingrese un número válido de años de experiencia.", "Error", JOptionPane.ERROR_MESSAGE);
+					            JOptionPane.showMessageDialog(panelObrero, "Número inválido, ingrese otro.", "Error", JOptionPane.ERROR_MESSAGE);
+					            return;
+					        }
+
+					        if (edad < 10) {
+					            JOptionPane.showMessageDialog(panelObrero, "Edad ingresada no permite tener experiencia laboral.", "Error", JOptionPane.ERROR_MESSAGE);
+					            return;
+					        }
+
+					        int edadMinTrabajo = edad - 10;
+					        if (anios > edadMinTrabajo) {
+					            JOptionPane.showMessageDialog(panelObrero,
+					                "La experiencia excede lo posible para su edad.\n" +
+					                "Si usted tiene " + edad + ", no puede tener " + anios + " de experiencia.",
+					                "Error", JOptionPane.ERROR_MESSAGE);
 					            return;
 					        }
 
@@ -870,10 +888,6 @@ public class RegEmpleado extends JDialog {
 					btnRegistrar.setText("Modificar");
 				}
 				
-				if(update != null) {
-					txtCedula.setEnabled(false);
-				}
-				
 				btnRegistrar.addActionListener(new ActionListener() {
 				    public void actionPerformed(ActionEvent e) {
 				        if (validarCampos()) {
@@ -969,7 +983,7 @@ public class RegEmpleado extends JDialog {
 				                            JOptionPane.ERROR_MESSAGE);
 				                }
 				            } else {
-				            	if(update != null) {
+
 				                update.setNombre(txtNombre.getText());
 				                update.setApellido(txtApellidos.getText());
 				                update.setContacto(txtCorreo.getText());
@@ -1049,7 +1063,6 @@ public class RegEmpleado extends JDialog {
 				                dispose();
 
 				            }
-				        }
 
 				        }
 

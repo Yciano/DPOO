@@ -3,6 +3,8 @@ package logico;
 import java.io.Serializable;
 import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatLightLaf;
+
+import visual.Login;
 import visual.Principal;
 
 public class Main implements Serializable {
@@ -19,7 +21,7 @@ public class Main implements Serializable {
             e.printStackTrace();
         }
 
-        Principal principal = new Principal();
-        principal.setVisible(true);
+        Login login = new Login();
+        login.setVisible(true);
     }
 }

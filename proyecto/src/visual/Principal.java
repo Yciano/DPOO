@@ -43,8 +43,8 @@ public class Principal extends JFrame {
         miBolsa = Bolsa.getInstance();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1194, 761);
-        setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setResizable(false);   
 
         contentPane = new JPanel() {
             private Image imagen = new ImageIcon(getClass().getResource("/fondo5.png")).getImage();
@@ -85,6 +85,32 @@ public class Principal extends JFrame {
             rg.setVisible(true);
         });
         mnNewMenu.add(mntmNewMenuItem_1);
+        
+                JMenu mnSolicitudes = new JMenu("Solicitudes");
+                mnSolicitudes.setIcon(new ImageIcon(Principal.class.getResource("/images/SOLIS_1.png")));
+                menuBar.add(mnSolicitudes);
+                
+                        JMenuItem mntmRegsolempleo = new JMenuItem("Solicitud De Empleo");
+                        mntmRegsolempleo.setIcon(new ImageIcon(Principal.class.getResource("/images/reporte1.png")));
+                        mntmRegsolempleo.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                RegSolEmpleo RgSolEmp = new RegSolEmpleo();
+                                RgSolEmp.setModal(true);
+                                RgSolEmp.setVisible(true);
+                            }
+                        });
+                        mnSolicitudes.add(mntmRegsolempleo);
+                        
+                                JMenuItem mntmNewMenuItem_5 = new JMenuItem("Registrar vacante");
+                                mntmNewMenuItem_5.setIcon(new ImageIcon(Principal.class.getResource("/images/categorias.png")));
+                                mntmNewMenuItem_5.addActionListener(new ActionListener() {
+                                    public void actionPerformed(ActionEvent e) {
+                                        RegVacante aux = new RegVacante();
+                                        aux.setModal(true);
+                                        aux.setVisible(true);
+                                    }
+                                });
+                                mnSolicitudes.add(mntmNewMenuItem_5);
 
         JMenu mnNewMenu_1 = new JMenu("Listados");
         mnNewMenu_1.setIcon(new ImageIcon(Principal.class.getResource("/images/nuevo-producto.png")));
@@ -138,32 +164,6 @@ public class Principal extends JFrame {
             }
         });
         mnNewMenu_1.add(mntmNewMenuItem_8);
-
-        JMenu mnSolicitudes = new JMenu("Solicitudes");
-        mnSolicitudes.setIcon(new ImageIcon(Principal.class.getResource("/images/reportes.png")));
-        menuBar.add(mnSolicitudes);
-
-        JMenuItem mntmRegsolempleo = new JMenuItem("Solicitud De Empleo");
-        mntmRegsolempleo.setIcon(new ImageIcon(Principal.class.getResource("/images/reporte1.png")));
-        mntmRegsolempleo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                RegSolEmpleo RgSolEmp = new RegSolEmpleo();
-                RgSolEmp.setModal(true);
-                RgSolEmp.setVisible(true);
-            }
-        });
-        mnSolicitudes.add(mntmRegsolempleo);
-
-        JMenuItem mntmNewMenuItem_5 = new JMenuItem("Registrar vacante");
-        mntmNewMenuItem_5.setIcon(new ImageIcon(Principal.class.getResource("/images/categorias.png")));
-        mntmNewMenuItem_5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                RegVacante aux = new RegVacante();
-                aux.setModal(true);
-                aux.setVisible(true);
-            }
-        });
-        mnSolicitudes.add(mntmNewMenuItem_5);
 
         JMenu mnNewMenu_2 = new JMenu("Buscar");
         mnNewMenu_2.setIcon(new ImageIcon(Principal.class.getResource("/images/lupaf (1).png")));
