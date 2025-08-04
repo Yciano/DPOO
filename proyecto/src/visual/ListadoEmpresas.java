@@ -16,167 +16,118 @@ import java.util.ArrayList;
 
 public class ListadoEmpresas extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
-	private static JTable table;
-	private static Object[] row;
-	private static DefaultTableModel modelo;
-	private Empresa selected = null;
-	private JButton btnModificar;
-	private JButton btnEliminar;
-	private JButton cancelButton;
-	private JButton btnDetalles;
+    private JTable table;
+    private DefaultTableModel modelo;
+    private JComboBox<String> cbxProvincia;
+    private Empresa selected = null;
 
-	public ListadoEmpresas() {
-		setTitle("Listado de Empresas");
-		setResizable(false);
-		setBounds(100, 100, 900, 600);
-		setLocationRelativeTo(null);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 0));
+    private JButton btnModificar;
+    private JButton btnEliminar;
+    private JButton btnDetalles;
+    private JButton cancelButton;
 
-		JPanel panel = new JPanel();
-		contentPanel.add(panel, BorderLayout.CENTER);
-		panel.setLayout(null);
+    public ListadoEmpresas() {
+        setTitle("Listado de Empresas");
+        setResizable(false);
+        setBounds(100, 100, 933, 600);
+        setLocationRelativeTo(null);
+        getContentPane().setLayout(new BorderLayout());
 
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(12, 207, 860, 300);
-		panel.add(panel_1);
-		panel_1.setLayout(new BorderLayout(0, 0));
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
+ 
+        JPanel filtroPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel lblFiltro = new JLabel("Filtrar por Provincia:");
+        lblFiltro.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        filtroPanel.add(lblFiltro);
 
-		JScrollPane scrollPane = new JScrollPane();
-		panel_1.add(scrollPane, BorderLayout.CENTER);
+        cbxProvincia = new JComboBox<>();
+        cbxProvincia.setModel(new DefaultComboBoxModel<>(new String[] {
+            "<Seleccione>", "Azua", "Bahoruco", "Barahona", "Dajabón", "Distrito Nacional",
+            "Duarte", "Elías Piña", "El Seibo", "Espaillat", "Hato Mayor", "Hermanas Mirabal",
+            "Independencia", "La Altagracia", "La Romana", "La Vega", "María Trinidad Sánchez",
+            "Monseñor Nouel", "Monte Cristi", "Monte Plata", "Pedernales", "Peravia",
+            "Puerto Plata", "Samaná", "San Cristóbal", "San José de Ocoa", "San Juan",
+            "San Pedro de Macorís", "Sánchez Ramírez", "Santiago", "Santiago Rodríguez", "Valverde"
+        }));
+        cbxProvincia.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        filtroPanel.add(cbxProvincia);
 
-		table = new JTable();
-		table.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				int index = table.getSelectedRow();
-				if (index >= 0) {
-					selected = Bolsa.getInstance().buscarEmpresaByCode(table.getValueAt(index, 1).toString());
-					if (!Session.tipoUsuario.equals(Session.USER)) {
-						btnEliminar.setEnabled(false);
-						btnModificar.setEnabled(true);
-					}
-					btnDetalles.setEnabled(true);
-				}
-			}
-		});
-		modelo = new DefaultTableModel() {
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
+        mainPanel.add(filtroPanel, BorderLayout.NORTH);
+ 
+        modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        modelo.setColumnIdentifiers(new String[] { "Nombre", "RNC", "Área", "Contacto", "Provincia" });
+        modelo.setColumnCount(5);  
 
-		String[] header = { "Nombre", "RNC", "Área", "Contacto", "Provincia" };
-		modelo.setColumnIdentifiers(header);
-		table.setModel(modelo);
-		scrollPane.setViewportView(table);
+        table = new JTable(modelo);
+        table.setFillsViewportHeight(true);
+        table.getTableHeader().setReorderingAllowed(false);
 
-		JPanel buttonPane = new JPanel();
-		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        JScrollPane scrollPane = new JScrollPane(table);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+ 
+        JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+ 
+        btnModificar = new JButton("Modificar");
+        btnModificar.setEnabled(false);
+        buttonPane.add(btnModificar);
 
-		btnModificar = new JButton("Modificar");
-		btnModificar.setEnabled(false);
-		btnModificar.addActionListener(e -> {
-			if (selected != null) {
-				RegEmpresa reg = new RegEmpresa(selected);
-				reg.setModal(true);
-				reg.setVisible(true);
+        btnEliminar = new JButton("Eliminar");
+        btnEliminar.setEnabled(false);
+        buttonPane.add(btnEliminar);
 
-				try {
-					Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
+        btnDetalles = new JButton("Detalles");
+        btnDetalles.setEnabled(false);
+        buttonPane.add(btnDetalles);
 
-				loadEmpresas();
-				table.clearSelection();
-				selected = null;
-				btnModificar.setEnabled(false);
-				btnEliminar.setEnabled(false);
-				btnDetalles.setEnabled(false);
-			}
-		});
-		buttonPane.add(btnModificar);
+        cancelButton = new JButton("Cancelar");
+        cancelButton.addActionListener(e -> dispose());
+        buttonPane.add(cancelButton);
+ 
+        cbxProvincia.addActionListener(e -> aplicarFiltro());
+ 
+        loadEmpresas(null);
+ 
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(150);
+        columnModel.getColumn(1).setPreferredWidth(150);
+        columnModel.getColumn(2).setPreferredWidth(150);
+        columnModel.getColumn(3).setPreferredWidth(200);
+        columnModel.getColumn(4).setPreferredWidth(150);
+    }
 
-		btnEliminar = new JButton("Eliminar");
-		btnEliminar.setEnabled(false);
-		btnEliminar.addActionListener(e -> {
-			if (selected != null) {
-				String[] options = { "Eliminar", "Cancelar" };
-				int confirm = JOptionPane.showOptionDialog(this,
-						"¿Está seguro que desea eliminar la empresa: " + selected.getNombre() + "?",
-						"Eliminar Empresa",
-						JOptionPane.DEFAULT_OPTION,
-						JOptionPane.WARNING_MESSAGE,
-						null,
-						options,
-						options[1]);
+    private void aplicarFiltro() {
+        String provincia = (String) cbxProvincia.getSelectedItem();
+        if (provincia == null || provincia.equals("<Seleccione>")) {
+            loadEmpresas(null);
+        } else {
+            loadEmpresas(provincia);
+        }
+    }
 
-				if (confirm == 0) {
-					Bolsa.getInstance().removeEmpresa(selected.getRNC());
+    private void loadEmpresas(String provinciaFiltro) {
+        modelo.setRowCount(0);
+        ArrayList<Empresa> lista = Bolsa.getInstance().getMisEmpresas();
 
-					try {
-						Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
+        for (Empresa emp : lista) {
+            boolean coincideProvincia = (provinciaFiltro == null) || emp.getProvincia().equalsIgnoreCase(provinciaFiltro);
 
-					JOptionPane.showMessageDialog(this, "Empresa eliminada exitosamente.");
-					loadEmpresas();
-					table.clearSelection();
-					btnModificar.setEnabled(false);
-					btnEliminar.setEnabled(false);
-					btnDetalles.setEnabled(false);
-					selected = null;
-				}
-			}
-		});
-		buttonPane.add(btnEliminar);
-
-		btnDetalles = new JButton("Detalles");
-		btnDetalles.setEnabled(false);
-		btnDetalles.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (selected != null) {
-					DetallesEmpresa detalle = new DetallesEmpresa(selected);
-					detalle.setModal(true);
-					detalle.setVisible(true);
-				}
-			}
-		});
-		buttonPane.add(btnDetalles);
-
-		cancelButton = new JButton("Cancelar");
-		cancelButton.addActionListener(e -> dispose());
-		buttonPane.add(cancelButton);
-
-		loadEmpresas();
-	}
-
-	public static void loadEmpresas() {
-		modelo.setRowCount(0);
-		row = new Object[5];
-		ArrayList<Empresa> lista = Bolsa.getInstance().getMisEmpresas();
-		for (Empresa emp : lista) {
-			row[0] = emp.getNombre();
-			row[1] = emp.getRNC();
-			row[2] = emp.getArea();
-			row[3] = emp.getContacto();
-			row[4] = emp.getProvincia();
-			modelo.addRow(row);
-		}
-
-		table.setModel(modelo);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		table.getTableHeader().setReorderingAllowed(false);
-		TableColumnModel columnModel = table.getColumnModel();
-		columnModel.getColumn(0).setPreferredWidth(150);
-		columnModel.getColumn(1).setPreferredWidth(150);
-		columnModel.getColumn(2).setPreferredWidth(150);
-		columnModel.getColumn(3).setPreferredWidth(200);
-		columnModel.getColumn(4).setPreferredWidth(150);
-	}
+            if (coincideProvincia) {
+                modelo.addRow(new Object[] {
+                    emp.getNombre(),
+                    emp.getRNC(),
+                    emp.getArea(),
+                    emp.getContacto(),
+                    emp.getProvincia()
+                });
+            }
+        }
+    }
 }

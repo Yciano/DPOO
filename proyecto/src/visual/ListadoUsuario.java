@@ -12,13 +12,12 @@ import logico.Usuario;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class ListadoUsuario extends JDialog {
 
     private static JTable table;
     private static DefaultTableModel modelo;
-    private JComboBox cbxFiltro;  
+    private JComboBox cbxFiltro;
     private Usuario selected = null;
 
     private JButton btnModificar;
@@ -49,9 +48,16 @@ public class ListadoUsuario extends JDialog {
 
         mainPanel.add(filtroPanel, BorderLayout.NORTH);
 
-        modelo = new DefaultTableModel();
-        modelo.setColumnIdentifiers(new String[] { "Cédula", "Nombre", "Apellidos", "Contacto", "Sexo", "Tipo de trabajo" });
-        modelo.setColumnCount(6);
+        modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Hace que las celdas no sean editables
+            }
+        };
+
+        modelo.setColumnIdentifiers(new String[] {
+            "Cédula", "Nombre", "Apellidos", "Contacto", "Sexo", "Tipo de trabajo"
+        });
 
         table = new JTable(modelo);
         table.setFillsViewportHeight(true);
@@ -69,6 +75,10 @@ public class ListadoUsuario extends JDialog {
 
         btnEliminar = new JButton("Eliminar");
         btnEliminar.setEnabled(false);
+        // Deshabilitar para usuario tipo USER desde inicio
+        if (Session.USER.equalsIgnoreCase(Session.tipoUsuario)) {
+            btnEliminar.setEnabled(false);
+        }
         buttonPane.add(btnEliminar);
 
         btnDetalles = new JButton("Detalles");
@@ -78,21 +88,23 @@ public class ListadoUsuario extends JDialog {
         cancelButton = new JButton("Cancelar");
         cancelButton.addActionListener(e -> dispose());
         buttonPane.add(cancelButton);
- 
+
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int index = table.getSelectedRow();
                 if (index >= 0) {
-                    selected = Bolsa.getInstance().buscarEmpleadoByCedula(table.getValueAt(index, 0).toString());
+                    selected = Bolsa.getInstance().buscarEmpleadoByCedula(
+                            table.getValueAt(index, 0).toString());
 
-                    if (Session.USER.equalsIgnoreCase(Session.tipoUsuario)) {
-                        btnEliminar.setEnabled(false);
-                    } else {
-                        btnEliminar.setEnabled(true);
-                    }
                     btnModificar.setEnabled(true);
                     btnDetalles.setEnabled(true);
+
+                    if (!Session.USER.equalsIgnoreCase(Session.tipoUsuario)) {
+                        btnEliminar.setEnabled(true);
+                    } else {
+                        btnEliminar.setEnabled(false);
+                    }
                 }
             }
         });
@@ -149,9 +161,9 @@ public class ListadoUsuario extends JDialog {
         });
 
         cbxFiltro.addActionListener(e -> loadUsuario(cbxFiltro.getSelectedIndex()));
- 
+
         loadUsuario(0);
- 
+
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(100);
         columnModel.getColumn(1).setPreferredWidth(150);
@@ -174,7 +186,7 @@ public class ListadoUsuario extends JDialog {
         Object[] row = new Object[table.getColumnCount()];
 
         switch (seleccion) {
-            case 0: 
+            case 0:
                 for (Usuario aux : Bolsa.getInstance().getMisUsers()) {
                     row[0] = aux.getCedula();
                     row[1] = aux.getNombre();
@@ -185,7 +197,7 @@ public class ListadoUsuario extends JDialog {
                     modelo.addRow(row);
                 }
                 break;
-            case 1: 
+            case 1:
                 for (Usuario aux : Bolsa.getInstance().getMisUsers()) {
                     if (aux.isEstado()) {
                         row[0] = aux.getCedula();
@@ -198,7 +210,7 @@ public class ListadoUsuario extends JDialog {
                     }
                 }
                 break;
-            case 2: 
+            case 2:
                 for (Usuario aux : Bolsa.getInstance().getMisUsers()) {
                     if (!aux.isEstado()) {
                         row[0] = aux.getCedula();
@@ -225,8 +237,3 @@ public class ListadoUsuario extends JDialog {
         columnModel.getColumn(5).setPreferredWidth(150);
     }
 }
-
-
-
-
-

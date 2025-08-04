@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import logico.Bolsa;
+import logico.Session;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -31,6 +32,7 @@ public class Principal extends JFrame {
             try {
                 UIManager.setLookAndFeel(new FlatLightLaf());
 
+             
                 Principal frame = new Principal();
                 frame.setVisible(true);
             } catch (Exception e) {
@@ -44,8 +46,8 @@ public class Principal extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setResizable(false);   
-
+        setResizable(false);
+        setTitle("Bolsa Laboral JOBMATCH - Sesi\u00F3n: " + logico.Session.tipoUsuario);
         contentPane = new JPanel() {
             private Image imagen = new ImageIcon(getClass().getResource("/fondo5.png")).getImage();
 
@@ -85,32 +87,28 @@ public class Principal extends JFrame {
             rg.setVisible(true);
         });
         mnNewMenu.add(mntmNewMenuItem_1);
-        
-                JMenu mnSolicitudes = new JMenu("Solicitudes");
-                mnSolicitudes.setIcon(new ImageIcon(Principal.class.getResource("/images/SOLIS_1.png")));
-                menuBar.add(mnSolicitudes);
-                
-                        JMenuItem mntmRegsolempleo = new JMenuItem("Solicitud De Empleo");
-                        mntmRegsolempleo.setIcon(new ImageIcon(Principal.class.getResource("/images/reporte1.png")));
-                        mntmRegsolempleo.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                                RegSolEmpleo RgSolEmp = new RegSolEmpleo();
-                                RgSolEmp.setModal(true);
-                                RgSolEmp.setVisible(true);
-                            }
-                        });
-                        mnSolicitudes.add(mntmRegsolempleo);
-                        
-                                JMenuItem mntmNewMenuItem_5 = new JMenuItem("Registrar vacante");
-                                mntmNewMenuItem_5.setIcon(new ImageIcon(Principal.class.getResource("/images/categorias.png")));
-                                mntmNewMenuItem_5.addActionListener(new ActionListener() {
-                                    public void actionPerformed(ActionEvent e) {
-                                        RegVacante aux = new RegVacante();
-                                        aux.setModal(true);
-                                        aux.setVisible(true);
-                                    }
-                                });
-                                mnSolicitudes.add(mntmNewMenuItem_5);
+
+        JMenu mnSolicitudes = new JMenu("Solicitudes");
+        mnSolicitudes.setIcon(new ImageIcon(Principal.class.getResource("/images/SOLIS_1.png")));
+        menuBar.add(mnSolicitudes);
+
+        JMenuItem mntmRegsolempleo = new JMenuItem("Solicitud De Empleo");
+        mntmRegsolempleo.setIcon(new ImageIcon(Principal.class.getResource("/images/reporte1.png")));
+        mntmRegsolempleo.addActionListener(e -> {
+            RegSolEmpleo RgSolEmp = new RegSolEmpleo();
+            RgSolEmp.setModal(true);
+            RgSolEmp.setVisible(true);
+        });
+        mnSolicitudes.add(mntmRegsolempleo);
+
+        JMenuItem mntmNewMenuItem_5 = new JMenuItem("Registrar vacante");
+        mntmNewMenuItem_5.setIcon(new ImageIcon(Principal.class.getResource("/images/categorias.png")));
+        mntmNewMenuItem_5.addActionListener(e -> {
+            RegVacante aux = new RegVacante();
+            aux.setModal(true);
+            aux.setVisible(true);
+        });
+        mnSolicitudes.add(mntmNewMenuItem_5);
 
         JMenu mnNewMenu_1 = new JMenu("Listados");
         mnNewMenu_1.setIcon(new ImageIcon(Principal.class.getResource("/images/nuevo-producto.png")));
@@ -145,26 +143,22 @@ public class Principal extends JFrame {
 
         JMenuItem mntmNewMenuItem_7 = new JMenuItem("Listado de Contratos");
         mntmNewMenuItem_7.setIcon(new ImageIcon(Principal.class.getResource("/images/AFGAWAG (1).png")));
-        mntmNewMenuItem_7.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ListaContratos aux = new ListaContratos();
-                aux.setModal(true);
-                aux.setVisible(true);
-            }
+        mntmNewMenuItem_7.addActionListener(e -> {
+            ListaContratos aux = new ListaContratos();
+            aux.setModal(true);
+            aux.setVisible(true);
         });
         mnNewMenu_1.add(mntmNewMenuItem_7);
 
         JMenuItem mntmNewMenuItem_8 = new JMenuItem("Listado de Vacantes");
         mntmNewMenuItem_8.setIcon(new ImageIcon(Principal.class.getResource("/images/vacantef (1).png")));
-        mntmNewMenuItem_8.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ListadoVacantes aux = new ListadoVacantes(0);
-                aux.setModal(true);
-                aux.setVisible(true);
-            }
+        mntmNewMenuItem_8.addActionListener(e -> {
+            ListadoVacantes aux = new ListadoVacantes(0);
+            aux.setModal(true);
+            aux.setVisible(true);
         });
         mnNewMenu_1.add(mntmNewMenuItem_8);
-
+ 
         JMenu mnNewMenu_2 = new JMenu("Buscar");
         mnNewMenu_2.setIcon(new ImageIcon(Principal.class.getResource("/images/lupaf (1).png")));
         menuBar.add(mnNewMenu_2);
@@ -190,10 +184,15 @@ public class Principal extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Respaldo dialogo = new Respaldo();
                 dialogo.setVisible(true);
-
             }
         });
         mnNewMenu_3.add(mntmNewMenuItem_6);
+ 
+        if (Session.tipoUsuario.equals(Session.USER)) {
+            mnNewMenu_2.setEnabled(false);
+            mnNewMenu_3.setEnabled(false);
+        }
+
 
         JPanel panel = new JPanel();
         panel.setOpaque(false);  

@@ -15,7 +15,7 @@ public class Main implements Serializable {
             UIManager.setLookAndFeel(new FlatLightLaf());
 
             Bolsa.cargarDatosDesdeArchivo("respaldo.dat");
-            System.out.println("Servidor conectado con éxito.");
+            //System.out.println("Servidor conectado con éxito.");
         } catch (Exception e) {
             System.out.println("No se pudo conectar al servidor. Se iniciará vacío.");
             e.printStackTrace();
