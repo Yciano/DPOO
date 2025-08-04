@@ -235,6 +235,7 @@ public class ListadoUsuario extends JDialog {
 		
 		switch (seleccion) {
 		case 0:
+			
 			for (Usuario aux : Bolsa.getInstance().getMisUsers()) {
 				row[0] = aux.getCedula();
 				row[1] = aux.getNombre();

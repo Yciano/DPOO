@@ -173,7 +173,7 @@ public class Principal extends JFrame {
         mntmNewMenuItem_4.setIcon(new ImageIcon(Principal.class.getResource("/images/contrATF (1).png")));
         mntmNewMenuItem_4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Match aux = new Match();
+                Match aux = new Match(0);
                 aux.setModal(true);
                 aux.setVisible(true);
             }

@@ -137,6 +137,7 @@ public class ListadoVacantes extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			
 			btnModificar = new JButton("Modificar");
+			btnModificar.setEnabled(false);
 			if(modo == 1) {
 				btnModificar.setVisible(false);
 			}
@@ -164,6 +165,7 @@ public class ListadoVacantes extends JDialog {
 			buttonPane.add(btnModificar);
 			{
 				btnEliminar = new JButton("Eliminar");
+				btnEliminar.setEnabled(false);
 				if(modo == 1) {
 					btnEliminar.setText("Seleccionar");
 				}

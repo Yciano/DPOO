@@ -51,7 +51,7 @@ public class Match extends JDialog {
 	
 	public static void main(String[] args) {
 		try {
-			Match dialog = new Match();
+			Match dialog = new Match(0);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -60,7 +60,8 @@ public class Match extends JDialog {
 	}
 
 	
-	public Match() {
+	public Match(int num) {
+		
 		setBounds(100, 100, 1248, 1000);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -147,7 +148,7 @@ public class Match extends JDialog {
 				int index = tableMatch.getSelectedRow();
 				if (index >= 0) {
 					selected2 = Bolsa.getInstance()
-					.buscarVacanteByID(tableVac.getValueAt(index, 0).toString());
+					.buscarVacanteByID(tableMatch.getValueAt(index, 0).toString());
 					btnSeleccionar
 					.setEnabled(true);
 					
@@ -201,6 +202,11 @@ public class Match extends JDialog {
 				});
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
+			}
+			
+			if(num == 1) {
+				Bolsa.getInstance().match();
+				loadTableMatch(null);
 			}
 			
 			loadTableVacante();

@@ -203,6 +203,7 @@ public class RegEmpleado extends JDialog {
 				JLabel lblNewLabel_4 = new JLabel("C\u00E9dula");
 				lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 16));
 				lblNewLabel_4.setBounds(194, 223, 71, 16);
+				
 				panel.add(lblNewLabel_4);
 			}
 			{
@@ -869,6 +870,10 @@ public class RegEmpleado extends JDialog {
 					btnRegistrar.setText("Modificar");
 				}
 				
+				if(update != null) {
+					txtCedula.setEnabled(false);
+				}
+				
 				btnRegistrar.addActionListener(new ActionListener() {
 				    public void actionPerformed(ActionEvent e) {
 				        if (validarCampos()) {
@@ -964,7 +969,7 @@ public class RegEmpleado extends JDialog {
 				                            JOptionPane.ERROR_MESSAGE);
 				                }
 				            } else {
-
+				            	if(update != null) {
 				                update.setNombre(txtNombre.getText());
 				                update.setApellido(txtApellidos.getText());
 				                update.setContacto(txtCorreo.getText());
@@ -1044,6 +1049,7 @@ public class RegEmpleado extends JDialog {
 				                dispose();
 
 				            }
+				        }
 
 				        }
 

@@ -143,18 +143,18 @@ public class Contratar extends JDialog {
 			
 			txtCedula1 = new JTextField();
 			txtCedula1.setEditable(false);
-			txtCedula1.setBounds(12, 275, 88, 22);
+			txtCedula1.setBounds(12, 275, 109, 22);
 			panelCand1.add(txtCedula1);
 			txtCedula1.setColumns(10);
 			
 			JLabel lblNewLabel_3 = new JLabel("Edad:");
 			lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			lblNewLabel_3.setBounds(133, 246, 56, 16);
+			lblNewLabel_3.setBounds(150, 246, 56, 16);
 			panelCand1.add(lblNewLabel_3);
 			
 			txtEdad1 = new JTextField();
 			txtEdad1.setEditable(false);
-			txtEdad1.setBounds(133, 275, 73, 22);
+			txtEdad1.setBounds(150, 275, 73, 22);
 			panelCand1.add(txtEdad1);
 			txtEdad1.setColumns(10);
 			
@@ -263,7 +263,7 @@ public class Contratar extends JDialog {
 										e1.printStackTrace();
 									}
 		    	                	dispose();
-		    	                	Match aux = new Match();
+		    	                	Match aux = new Match(1);
 		    	                	aux.setModal(true);
 		    	                	aux.setVisible(true);
 		    	                	
@@ -315,18 +315,18 @@ public class Contratar extends JDialog {
 			txtCedula2 = new JTextField();
 			txtCedula2.setEditable(false);
 			txtCedula2.setColumns(10);
-			txtCedula2.setBounds(29, 282, 88, 22);
+			txtCedula2.setBounds(29, 282, 106, 22);
 			panelCand2.add(txtCedula2);
 			
 			JLabel label_3 = new JLabel("Edad:");
 			label_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			label_3.setBounds(150, 253, 56, 16);
+			label_3.setBounds(161, 253, 56, 16);
 			panelCand2.add(label_3);
 			
 			txtEdad2 = new JTextField();
 			txtEdad2.setEditable(false);
 			txtEdad2.setColumns(10);
-			txtEdad2.setBounds(150, 282, 73, 22);
+			txtEdad2.setBounds(160, 282, 73, 22);
 			panelCand2.add(txtEdad2);
 			
 			JLabel label_4 = new JLabel("Sexo:");
@@ -433,7 +433,7 @@ public class Contratar extends JDialog {
 									e1.printStackTrace();
 								}
 	    	                	dispose();
-	    	                	Match aux = new Match();
+	    	                	Match aux = new Match(1);
 	    	                	aux.setModal(true);
 	    	                	aux.setVisible(true);
 	    					}
@@ -478,24 +478,24 @@ public class Contratar extends JDialog {
 			
 			JLabel label_14 = new JLabel("Ced\u00FAla:");
 			label_14.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			label_14.setBounds(27, 255, 56, 16);
+			label_14.setBounds(27, 255, 56, 22);
 			panelCand3.add(label_14);
 			
 			txtCedula3 = new JTextField();
 			txtCedula3.setEditable(false);
 			txtCedula3.setColumns(10);
-			txtCedula3.setBounds(27, 284, 88, 22);
+			txtCedula3.setBounds(27, 284, 106, 22);
 			panelCand3.add(txtCedula3);
 			
 			JLabel label_15 = new JLabel("Edad:");
 			label_15.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			label_15.setBounds(148, 255, 56, 16);
+			label_15.setBounds(157, 255, 56, 16);
 			panelCand3.add(label_15);
 			
 			txtEdad3 = new JTextField();
 			txtEdad3.setEditable(false);
 			txtEdad3.setColumns(10);
-			txtEdad3.setBounds(148, 284, 73, 22);
+			txtEdad3.setBounds(158, 284, 73, 22);
 			panelCand3.add(txtEdad3);
 			
 			JLabel label_16 = new JLabel("Sexo:");
@@ -602,7 +602,7 @@ public class Contratar extends JDialog {
 									e1.printStackTrace();
 								}
 	    	                	dispose();
-	    	                	Match aux = new Match();
+	    	                	Match aux = new Match(1);
 	    	                	aux.setModal(true);
 	    	                	aux.setVisible(true);
 	    					}
@@ -631,7 +631,8 @@ public class Contratar extends JDialog {
 			btnAtras.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();
-					Match aux = new Match();
+					Bolsa.getInstance().match();
+					Match aux = new Match(1);
 					aux.setModal(true);
 					aux.setVisible(true);
 					

@@ -113,6 +113,7 @@ public class Bolsa implements Serializable{
 						if(vacante.getRequisito().getTipoTrabajo().equalsIgnoreCase(user.getTipoTrabajo())){
 							cheq++;
 							cheq += obtenerPrioridad(vacante, 1);
+
 						}
 						if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Tecnico superior") && user instanceof TecnicoSuperior){
 							cheq++;
@@ -148,7 +149,7 @@ public class Bolsa implements Serializable{
 							totalCrit++; 
 							if(vacante.getRequisito().getCarrera().equalsIgnoreCase(((Universitario) user).getCarrera())) {
 								cheq++;
-								cheq += obtenerPrioridad(vacante, 1);
+								cheq += obtenerPrioridad(vacante, 2);
 								totalCrit++; 
 							}
 							
@@ -205,7 +206,7 @@ public class Bolsa implements Serializable{
 						if (totalCrit > 0){
 							int auxMatch = (cheq * 100) / totalCrit;
 							int match = ((auxMatch + 5) / 10) * 10;
-							if(match >= 0) {
+							if(match >= 60) {
 								user.setMatch(match);
 								usuarios.add(user);
 							}
@@ -242,22 +243,22 @@ public class Bolsa implements Serializable{
 		int cantidad = 0;
 		
 		 if(aux.getPrioridad().equalsIgnoreCase("Tipo de trabajo")&& cumple == 1) {
-			cantidad = 2;
+			cantidad = 1;
 		}
-		 else if(aux.getPrioridad().equalsIgnoreCase("Tipo de empleado") && cumple == 2) {
-			cantidad = 2;
+		 else if(aux.getPrioridad().equalsIgnoreCase("Carrera/técnico/habilidades") && cumple == 2) {
+			cantidad = 1;
 		}
 		
 		else if(aux.getPrioridad().equalsIgnoreCase("Sexo")&& cumple == 3) {
-			cantidad = 2;
+			cantidad = 1;
 		}else if(aux.getPrioridad().equalsIgnoreCase("Vehiculo")&& cumple == 4) {
-			cantidad = 2;
+			cantidad = 1;
 		}else if(aux.getPrioridad().equalsIgnoreCase("Mudarse")&& cumple == 5) {
-			cantidad = 2;
+			cantidad = 1;
 		}else if(aux.getPrioridad().equalsIgnoreCase("Edad")&& cumple == 6) {
-			cantidad = 2;
+			cantidad = 1;
 		}else if(aux.getPrioridad().equalsIgnoreCase("Experiencia")&& cumple == 7) {
-			cantidad = 2;
+			cantidad = 1;
 		}
 		
 		
@@ -348,10 +349,17 @@ public class Bolsa implements Serializable{
 
 	public void removeVacante(String identificador) {
 		Vacante aux = buscarVacanteByID(identificador);
+		if(aux != null) {
+		Empresa emp = buscarEmpresaByCode(aux.getIDCompania());
+		if(emp != null) {
+			emp.removeVacantes(aux);
+		}
 		for(int i = aux.getMisSolicitudes().size() - 1; i >= 0 ; i--) {
 			aux.removeSolicitud(aux.getMisSolicitudes().get(i));
+			
 		}
 		misVacantes.remove(aux);
+		}
 	}
 
 	public boolean removeEmpresa(String RNC) {
@@ -410,6 +418,9 @@ public class Bolsa implements Serializable{
 		boolean aux = false;
 		Usuario usuario = buscarEmpleadoByCedula(cedulaUsuario);
 		Vacante vacante = buscarVacanteByID(idVacante);
+		if(vacante == null) {
+			System.out.println("No hay vacante");
+		}
 
 		if (usuario != null && vacante != null) {
 			String idSolicitud = generarCodigoSolicitudActual();

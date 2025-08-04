@@ -110,10 +110,7 @@ public class RegEmpresa extends JDialog {
 
         cbxArea = new JComboBox<>();
         cbxArea.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        cbxArea.setModel(new DefaultComboBoxModel<>(new String[] {
-            "<Seleccione>", "Salud", "Tecnología", "Finanzas y Economía", "Idiomas",
-            "Gastronomía", "Servicios", "Educación", "Construcción"
-        }));
+        cbxArea.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Ciencias Agropecuarias", "Finanzas", "Salud", "Tecnolog\u00EDa", "Otros"}));
         cbxArea.setBackground(Color.WHITE);
         cbxArea.setBounds(194, 252, 203, 22);
         panel.add(cbxArea);

@@ -356,7 +356,7 @@ public class RegVacante extends JDialog {
 
         JLabel lblSexo = new JLabel("Sexo");
         lblSexo.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        lblSexo.setBounds(231, 478, 50, 16);
+        lblSexo.setBounds(194, 478, 50, 16);
         panel.add(lblSexo);
         cbxSexo = new JComboBox<>();
         cbxSexo.addItem("<Seleccione>");
@@ -365,7 +365,7 @@ public class RegVacante extends JDialog {
 
         cbxSexo.setBackground(Color.WHITE);
         cbxSexo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        cbxSexo.setBounds(194, 507, 116, 22);
+        cbxSexo.setBounds(194, 507, 131, 22);
         panel.add(cbxSexo);
 
         JLabel lblEdad = new JLabel("Edad mínima");
