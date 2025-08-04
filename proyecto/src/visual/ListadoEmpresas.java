@@ -24,6 +24,7 @@ public class ListadoEmpresas extends JDialog {
 	private JButton btnModificar;
 	private JButton btnEliminar;
 	private JButton cancelButton;
+	private JButton btnDetalles;
 
 	public ListadoEmpresas() {
 		setTitle("Listado de Empresas");
@@ -54,9 +55,10 @@ public class ListadoEmpresas extends JDialog {
 				if (index >= 0) {
 					selected = Bolsa.getInstance().buscarEmpresaByCode(table.getValueAt(index, 1).toString());
 					if (!Session.tipoUsuario.equals(Session.USER)) {
-		                btnEliminar.setEnabled(true);
-		                btnModificar.setEnabled(true);
-		            }
+						btnEliminar.setEnabled(true);
+						btnModificar.setEnabled(true);
+					}
+					btnDetalles.setEnabled(true);
 				}
 			}
 		});
@@ -94,7 +96,7 @@ public class ListadoEmpresas extends JDialog {
 				selected = null;
 				btnModificar.setEnabled(false);
 				btnEliminar.setEnabled(false);
-
+				btnDetalles.setEnabled(false);
 			}
 		});
 		buttonPane.add(btnModificar);
@@ -127,12 +129,26 @@ public class ListadoEmpresas extends JDialog {
 					table.clearSelection();
 					btnModificar.setEnabled(false);
 					btnEliminar.setEnabled(false);
+					btnDetalles.setEnabled(false);
 					selected = null;
 				}
-
 			}
 		});
 		buttonPane.add(btnEliminar);
+
+		btnDetalles = new JButton("Detalles");
+		btnDetalles.setEnabled(false);
+		btnDetalles.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (selected != null) {
+					DetallesEmpresa detalle = new DetallesEmpresa(selected);
+					detalle.setModal(true);
+					detalle.setVisible(true);
+				}
+			}
+		});
+		buttonPane.add(btnDetalles);
+
 		cancelButton = new JButton("Cancelar");
 		cancelButton.addActionListener(e -> dispose());
 		buttonPane.add(cancelButton);

@@ -42,15 +42,9 @@ public class ListadoVacantes extends JDialog {
 	private JComboBox cbxArea;
 	private JButton btnModificar;
 	private JButton btnEliminar;
+	private JButton btnDetalles;
 	private JButton btnCancelar;
 	private int modo = 0;
-
-	//AUN NO ESTA TERMINADO
-	
-	
-	
-	
-	
 	
 	
 	public static void main(String[] args) {
@@ -96,6 +90,7 @@ public class ListadoVacantes extends JDialog {
 								if (!Session.tipoUsuario.equals(Session.USER)) {
 					                btnEliminar.setEnabled(true);
 					                btnModificar.setEnabled(true);
+					                btnDetalles.setEnabled(true);
 					            }
 							}
 						}
@@ -175,8 +170,8 @@ public class ListadoVacantes extends JDialog {
 											+ selected.getIdentificador() + "?",
 									"Eliminar", JOptionPane.WARNING_MESSAGE);
 							if (option == JOptionPane.OK_OPTION) {
-								Bolsa.getInstance().removeUser(selected.getIdentificador());
-								loadVacante(0);
+								Bolsa.getInstance().removeVacante(selected.getIdentificador());
+								loadVacante(modo);
 								JOptionPane.showMessageDialog(null, "Vacante eliminada exitosamente.",
 										"Información", JOptionPane.INFORMATION_MESSAGE);
 								table.clearSelection();
@@ -200,6 +195,17 @@ public class ListadoVacantes extends JDialog {
 				buttonPane.add(btnEliminar);
 				getRootPane().setDefaultButton(btnEliminar);
 			}
+			btnDetalles = new JButton("Detalles");
+			btnDetalles.setEnabled(false);
+			btnDetalles.addActionListener(e -> {
+			    if (selected != null) {
+			        DetallesVacante detalle = new DetallesVacante(selected);
+			        detalle.setModal(true);
+			        detalle.setVisible(true);
+			    }
+			});
+			buttonPane.add(btnDetalles);
+
 			{
 				btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
