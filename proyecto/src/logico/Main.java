@@ -1,27 +1,25 @@
 package logico;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-
+import javax.swing.UIManager;
+import com.formdev.flatlaf.FlatLightLaf;
 import visual.Principal;
 
 public class Main implements Serializable {
 
-	public static void main(String[] args) {
-		
-		try {
-	        Bolsa.cargarDatosDesdeArchivo("respaldo.dat");
-	        System.out.println("Servidor conectado con éxito.");
-	    } catch (Exception e) {
-	        System.out.println("No se pudo conectar al servidor. Se iniciará vacío.");
-	        e.printStackTrace(); 
-	    }
+    public static void main(String[] args) {
+        try {
+            
+            UIManager.setLookAndFeel(new FlatLightLaf());
 
-	    Principal principal = new Principal();
-	    principal.setVisible(true);
-		
-       
+            Bolsa.cargarDatosDesdeArchivo("respaldo.dat");
+            System.out.println("Servidor conectado con éxito.");
+        } catch (Exception e) {
+            System.out.println("No se pudo conectar al servidor. Se iniciará vacío.");
+            e.printStackTrace();
+        }
 
-  
-	}
+        Principal principal = new Principal();
+        principal.setVisible(true);
+    }
 }
