@@ -88,6 +88,9 @@ public class Bolsa implements Serializable{
 		Empresa aux = buscarEmpresaByCode(IDcompania);
 		if(aux != null){
 			Vacante vac = new Vacante(identificador, IDcompania,requisito,posicion,descripcion, prioridad);
+			genCodVacante();
+			contadorVacantes++;
+
 			misVacantes.add(vac);       
 			aux.getVacantes().add(vac);
 			realizado = true;
@@ -96,78 +99,117 @@ public class Bolsa implements Serializable{
 	}
 
 	public void match(){
-		ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 		
 		for(Vacante vacante: misVacantes) {
+			ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 			int contSoli = 0;
 			if(vacante.getMisSolicitudes() != null) {
 				for(int i = 0; i < vacante.getMisSolicitudes().size();i++){
 					
 					Usuario user = vacante.getMisSolicitudes().get(contSoli).getUser();
 						int cheq = 0;
+						int totalCrit = 0;
+						totalCrit++; 
 						if(vacante.getRequisito().getTipoTrabajo().equalsIgnoreCase(user.getTipoTrabajo())){
 							cheq++;
 							cheq += obtenerPrioridad(vacante, 1);
 						}
 						if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Tecnico superior") && user instanceof TecnicoSuperior){
 							cheq++;
-							
+							totalCrit++;
+							totalCrit++; 
 							if(vacante.getRequisito().getTecnico().equalsIgnoreCase(((TecnicoSuperior) user).getTecnico())) {
 								cheq++;
 								cheq += obtenerPrioridad(vacante, 2);
-
+							
 							}
 							
 						}
 						else if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Obrero") && user instanceof Obrero){
 							cheq++;
+							int tamanio = vacante.getRequisito().getMisHabilidades().size();
+							totalCrit++; 
+							if(tamanio > 0) {
+								totalCrit++; 
+
+								for(int j = 0; j < ((Obrero)user).getMisHabilidades().size(); j++) {
+									if(vacante.getRequisito().getMisHabilidades().get(0).equalsIgnoreCase(((Obrero)user).getMisHabilidades().get(j))) {
+										cheq++;
+										cheq += obtenerPrioridad(vacante, 2);
+
+									}
+								}
+							}
 							
 						}
 						else if(vacante.getRequisito().getTipoEmpleado().equalsIgnoreCase("Universitario") && user instanceof Universitario){
 							cheq++;
-							
+							totalCrit++; 
+							totalCrit++; 
 							if(vacante.getRequisito().getCarrera().equalsIgnoreCase(((Universitario) user).getCarrera())) {
 								cheq++;
 								cheq += obtenerPrioridad(vacante, 1);
-
+								totalCrit++; 
 							}
 							
 						}
+
 						if(vacante.getRequisito().getSexo().equalsIgnoreCase(user.getSexo())){
 							cheq++;
 							cheq += obtenerPrioridad(vacante, 3);
-
 						}
-						if(vacante.getRequisito().isVeh() && user.isTieneVeh()){
+						totalCrit++; 
+
+						if(vacante.getRequisito().isVeh()) {
+							totalCrit++;
+							if( user.isTieneVeh()){
 							cheq++;
 							cheq += obtenerPrioridad(vacante, 4);
-
+							}
 						}
-						if(vacante.getRequisito().isFueraCity() && user.isDispuestoMud()){
+
+						if(vacante.getRequisito().isFueraCity()) {
+							totalCrit++;
+							if(user.isDispuestoMud()){
 							cheq++;
 							cheq += obtenerPrioridad(vacante, 5);
+							}
+			
 						}
-						if( user instanceof Obrero && ((Obrero)user).getAniosExperiencia() >= vacante.getRequisito().getAniosExperiencia()){
-							cheq++;
-							cheq += obtenerPrioridad(vacante, 6);
+						if( user instanceof Obrero) {
+							totalCrit++; 
+							if(((Obrero)user).getAniosExperiencia() >= vacante.getRequisito().getAniosExperiencia()){
+								cheq++;
+								cheq += obtenerPrioridad(vacante, 6);
+							}
+						}
+				
+						else if( user instanceof TecnicoSuperior) {
+							totalCrit++; 
+							if(((TecnicoSuperior)user).getAniosExperiencia() > vacante.getRequisito().getAniosExperiencia()){
+								cheq++;
+								cheq += obtenerPrioridad(vacante, 6);
+							}
+						}
+							
+					
 
-						}
-						else if( user instanceof TecnicoSuperior && ((TecnicoSuperior)user).getAniosExperiencia() > vacante.getRequisito().getAniosExperiencia()){
-							cheq++;
-							cheq += obtenerPrioridad(vacante, 6);
-
-						}
-						
-						if(vacante.getRequisito().getEdad() >= user.getEdad()) {
+						if(user.getEdad() >= vacante.getRequisito().getEdad() ) {
 							cheq++;
 							cheq += obtenerPrioridad(vacante, 7);
 
 						}
+						totalCrit++; 
 						
 						
-						if (cheq > 3){
-							user.setMatch(cheq);
-							usuarios.add(user);
+						if (totalCrit > 0){
+							int auxMatch = (cheq * 100) / totalCrit;
+							int match = ((auxMatch + 5) / 10) * 10;
+							if(match >= 0) {
+								user.setMatch(match);
+								usuarios.add(user);
+							}
+							
 						}
 					
 					
@@ -497,8 +539,7 @@ public class Bolsa implements Serializable{
 	}
 	
 	public static String genCodVacante() {
-		String cod = String.format("VAC-%02d", contadorVacantes + 1);
-		contadorVacantes++;
+		String cod = String.format("VAC-%02d", contadorVacantes+1);
 		return cod;
 	}
 	

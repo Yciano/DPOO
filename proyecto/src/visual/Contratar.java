@@ -138,7 +138,7 @@ public class Contratar extends JDialog {
 				NombreYApellido1.setText(users.get(0).getNombre() + " " + users.get(0).getApellido());
 			}
 			NombreYApellido1.setFont(new Font("Tahoma", Font.BOLD, 18));
-			NombreYApellido1.setBounds(83, 192, 243, 22);
+			NombreYApellido1.setBounds(94, 192, 187, 22);
 			panelCand1.add(NombreYApellido1);
 			
 			txtCedula1 = new JTextField();
@@ -304,7 +304,7 @@ public class Contratar extends JDialog {
 				NombreYApellido2.setText(users.get(1).getNombre() + " " + users.get(1).getApellido());
 				}
 			NombreYApellido2.setFont(new Font("Tahoma", Font.BOLD, 18));
-			NombreYApellido2.setBounds(100, 199, 243, 22);
+			NombreYApellido2.setBounds(121, 199, 191, 22);
 			panelCand2.add(NombreYApellido2);
 			
 			JLabel label_2 = new JLabel("Ced\u00FAla:");
@@ -473,7 +473,7 @@ public class Contratar extends JDialog {
 					 NombreYApellido3.setText(users.get(2).getNombre() + " " + users.get(2).getApellido());
 					}
 			NombreYApellido3.setFont(new Font("Tahoma", Font.BOLD, 18));
-			NombreYApellido3.setBounds(98, 201, 243, 22);
+			NombreYApellido3.setBounds(123, 201, 187, 22);
 			panelCand3.add(NombreYApellido3);
 			
 			JLabel label_14 = new JLabel("Ced\u00FAla:");
