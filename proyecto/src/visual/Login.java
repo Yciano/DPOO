@@ -37,6 +37,7 @@ public class Login extends JDialog {
         contentPanel.setLayout(null);
 
         JButton btnCerrar = new JButton("Cerrar");
+        btnCerrar.setIcon(new ImageIcon(Login.class.getResource("/images/cerrar-sesion.png")));
         btnCerrar.setPreferredSize(new Dimension(160, 40));
         btnCerrar.setFont(new Font("Tahoma", Font.BOLD, 18));
         btnCerrar.setBounds(502, 400, 160, 40);
@@ -66,6 +67,7 @@ public class Login extends JDialog {
         panelMain.add(lblTitulo);
 
         JLabel lblUsuario = new JLabel("Usuario");
+        lblUsuario.setIcon(new ImageIcon(Login.class.getResource("/images/user2.png")));
         lblUsuario.setFont(new Font("Tahoma", Font.PLAIN, 22));
         lblUsuario.setBounds(100, 140, 120, 30);
         panelMain.add(lblUsuario);
@@ -83,6 +85,7 @@ public class Login extends JDialog {
         panelMain.add(sepUsuario);
 
         JLabel lblClave = new JLabel("Contraseña");
+        lblClave.setIcon(new ImageIcon(Login.class.getResource("/images/password.png")));
         lblClave.setFont(new Font("Tahoma", Font.PLAIN, 22));
         lblClave.setBounds(100, 260, 150, 30);
         panelMain.add(lblClave);

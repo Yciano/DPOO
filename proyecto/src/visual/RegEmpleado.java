@@ -931,7 +931,8 @@ public class RegEmpleado extends JDialog {
 				                            carpetaDestino.mkdir();
 				                        }
 
-				                        String nombreArchivo = new File(rutaImagenSeleccionada).getName();
+				                        String extension = rutaImagenSeleccionada.substring(rutaImagenSeleccionada.lastIndexOf('.'));
+				                        String nombreArchivo = txtCedula.getText() + extension;
 				                        String rutaDestino = "imagenesUsuarios" + File.separator + nombreArchivo;
 
 				                        Files.copy(Paths.get(rutaImagenSeleccionada), Paths.get(rutaDestino),
@@ -1012,13 +1013,14 @@ public class RegEmpleado extends JDialog {
 				                            carpetaDestino.mkdir();
 				                        }
 
-				                        String nombreArchivo = new File(rutaImagenSeleccionada).getName();
+				                        String extension = rutaImagenSeleccionada.substring(rutaImagenSeleccionada.lastIndexOf('.'));
+				                        String nombreArchivo = txtCedula.getText() + extension;
 				                        String rutaDestino = "imagenesUsuarios" + File.separator + nombreArchivo;
 
 				                        Files.copy(Paths.get(rutaImagenSeleccionada), Paths.get(rutaDestino),
 				                                StandardCopyOption.REPLACE_EXISTING);
 
-				                        update.setRutaImagen(rutaDestino);
+				                        usr.setRutaImagen(rutaDestino);
 				                    } catch (IOException e1) {
 				                        e1.printStackTrace();
 				                        JOptionPane.showMessageDialog(null, "Error al guardar la nueva imagen.", "Error",
