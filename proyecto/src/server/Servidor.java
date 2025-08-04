@@ -1,55 +1,63 @@
 package server;
 
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Servidor {
 
-    private int puerto;
-    private static final String CARPETA_DESTINO = "respaldo_recibido.dat";
-
-    public Servidor(int puerto) {
-        this.puerto = puerto;
-    }
-
-    public void iniciar() {
-        try (ServerSocket servidor = new ServerSocket(puerto)) {
-            System.out.println("Servidor escuchando en el puerto " + puerto + "...");
-
-            while (true) {
-                Socket cliente = servidor.accept();
-                System.out.println("Cliente conectado desde: " + cliente.getInetAddress());
-
-                recibirArchivo(cliente);
-                cliente.close();
-                System.out.println("Archivo recibido y conexión cerrada.");
-            }
-        } catch (IOException e) {
-            System.err.println("Error en el servidor: " + e.getMessage());
-        }
-    }
-
-    private void recibirArchivo(Socket cliente) throws IOException {
-        try (
-            DataInputStream dis = new DataInputStream(cliente.getInputStream());
-            FileOutputStream fos = new FileOutputStream(CARPETA_DESTINO)
-        ) {
-            long tamanioArchivo = dis.readLong();  // Primero recibimos el tamaño del archivo
-
-            byte[] buffer = new byte[4096];
-            int leido;
-            long recibido = 0;
-
-            while (recibido < tamanioArchivo && (leido = dis.read(buffer)) != -1) {
-                fos.write(buffer, 0, leido);
-                recibido += leido;
-            }
-        }
-    }
-
     public static void main(String[] args) {
-        Servidor servidor = new Servidor(5000); // Puedes cambiar el puerto si deseas
-        servidor.iniciar();
+        ServerSocket sfd = null;
+
+        try {
+            sfd = new ServerSocket(7000);
+            System.out.println("Servidor escuchando en el puerto 7000...");
+        } catch (IOException ioe) {
+            System.out.println("Comunicación rechazada: " + ioe);
+            System.exit(1);
+        }
+
+        File carpetaRespaldos = new File("respaldos");
+        if (!carpetaRespaldos.exists()) {
+            if (carpetaRespaldos.mkdir()) {
+                System.out.println("Carpeta 'respaldos' creada.");
+            } else {
+                System.out.println("No se pudo crear la carpeta 'respaldos'.");
+                System.exit(1);
+            }
+        }
+
+        while (true) {
+            try {
+                Socket nsfd = sfd.accept();
+                System.out.println("Conexión aceptada de: " + nsfd.getInetAddress());
+
+                DataInputStream entrada = new DataInputStream(nsfd.getInputStream());
+
+                String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+                File respaldo = new File(carpetaRespaldos, "respaldo_" + timestamp + ".dat");
+
+                DataOutputStream escritor = new DataOutputStream(new FileOutputStream(respaldo));
+
+                int unByte;
+                try {
+                    while ((unByte = entrada.read()) != -1) {
+                        escritor.write(unByte);
+                    }
+                    System.out.println("Respaldo guardado en: " + respaldo.getPath());
+                } catch (IOException e) {
+                    System.out.println("Error durante la lectura/escritura: " + e.getMessage());
+                } finally {
+                    entrada.close();
+                    escritor.close();
+                    nsfd.close();
+                    System.out.println("Conexión cerrada.");
+                }
+
+            } catch (IOException ioe) {
+                System.out.println("Error: " + ioe.getMessage());
+            }
+        }
     }
 }

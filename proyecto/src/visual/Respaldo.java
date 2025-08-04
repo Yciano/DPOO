@@ -1,61 +1,64 @@
 package visual;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import java.io.*;
+import java.net.Socket;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import logico.Bolsa;
-import java.awt.Color;
 
 public class Respaldo extends JDialog {
 
-    private final JPanel contentPanel = new JPanel();
+    private final JPanel contentPanel;
 
     public Respaldo() {
+        setTitle("Gestión de Respaldo");
         setBounds(100, 100, 450, 300);
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
-        contentPanel.setBackground(new Color(0, 102, 153));
+
+        contentPanel = new JPanel() {
+            private Image imagen = new ImageIcon(getClass().getResource("/jobmatchh.jpg")).getImage();
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         contentPanel.setLayout(new FlowLayout());
-        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        getContentPane().add(contentPanel, BorderLayout.WEST);
+        contentPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        getContentPane().add(contentPanel, BorderLayout.CENTER);
 
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
         JButton crearButton = new JButton("Crear Respaldo");
-        crearButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                realizarRespaldo();
-                dispose();
-            }
+        crearButton.addActionListener((ActionEvent e) -> {
+            realizarRespaldo();
+            dispose();
         });
         buttonPane.add(crearButton);
 
         JButton restaurarButton = new JButton("Restaurar Respaldo");
-        restaurarButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                restaurarRespaldo();
-                dispose();
-            }
+        restaurarButton.addActionListener((ActionEvent e) -> {
+            restaurarRespaldo();
+            dispose();
         });
         buttonPane.add(restaurarButton);
 
-        JButton cancelButton = new JButton("Cancelar");
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
+        JButton enviarServidorButton = new JButton("Enviar al Servidor");
+        enviarServidorButton.addActionListener((ActionEvent e) -> {
+            enviarRespaldoAlServidor();
+            dispose();
         });
+        buttonPane.add(enviarServidorButton);
+
+        JButton cancelButton = new JButton("Cancelar");
+        cancelButton.addActionListener((ActionEvent e) -> dispose());
         buttonPane.add(cancelButton);
     }
 
@@ -72,9 +75,9 @@ public class Respaldo extends JDialog {
             try {
                 Bolsa bolsa = Bolsa.getInstance();
                 bolsa.guardarDatosEnArchivo(archivoDestino);
-                JOptionPane.showMessageDialog(this, "Respaldo guardado exitosamente en: " + archivoDestino, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Respaldo guardado exitosamente en:\n" + archivoDestino, "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al guardar el respaldo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al guardar el respaldo:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -88,10 +91,35 @@ public class Respaldo extends JDialog {
             String archivoOrigen = fileChooser.getSelectedFile().getAbsolutePath();
             try {
                 Bolsa.cargarDatosDesdeArchivo(archivoOrigen);
-                JOptionPane.showMessageDialog(this, "Respaldo restaurado exitosamente desde: " + archivoOrigen, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Respaldo restaurado exitosamente desde:\n" + archivoOrigen, "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException | ClassNotFoundException e) {
-                JOptionPane.showMessageDialog(this, "Error al restaurar el respaldo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al restaurar el respaldo:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+
+    private void enviarRespaldoAlServidor() {
+        File archivo = new File("bolsa_laboral.dat");
+        if (!archivo.exists()) {
+            JOptionPane.showMessageDialog(this, "El archivo 'bolsa_laboral.dat' no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try (
+            Socket socket = new Socket("127.0.0.1", 7000);
+            DataInputStream entradaArchivo = new DataInputStream(new FileInputStream(archivo));
+            DataOutputStream salidaSocket = new DataOutputStream(socket.getOutputStream());
+        ) {
+            int unByte;
+            while ((unByte = entradaArchivo.read()) != -1) {
+                salidaSocket.write(unByte);
+            }
+            JOptionPane.showMessageDialog(this, "Respaldo enviado exitosamente al servidor.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("Archivo enviado al servidor correctamente.");
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al enviar al servidor:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 

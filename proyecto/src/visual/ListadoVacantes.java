@@ -146,8 +146,19 @@ public class ListadoVacantes extends JDialog {
 			}
 			btnModificar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if (selected != null) {
+						RegVacante ventanaModificar = new RegVacante(selected);
+						ventanaModificar.setModal(true);
+						ventanaModificar.setVisible(true);
+
+						loadVacante(modo);
+						table.clearSelection();
+						btnModificar.setEnabled(false);
+						btnEliminar.setEnabled(false);
+					}
 				}
 			});
+
 			buttonPane.add(btnModificar);
 			{
 				btnEliminar = new JButton("Eliminar");

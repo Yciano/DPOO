@@ -8,6 +8,7 @@ public class Requisito implements Serializable {
     private String tipoTrabajo;
     private String tipoEmpleado;
     private String Carrera;
+    private String AreaUni;
     private String Tecnico;
     private ArrayList<String> misHabilidades;
     private String sexo;
@@ -17,21 +18,22 @@ public class Requisito implements Serializable {
     private boolean fueraCity;
     private String prioridad;
 
-      public Requisito(String tipoTrabajo, String tipoEmpleado, String carrera, String tecnico,
-                     ArrayList<String> misHabilidades, String sexo, int aniosExperiencia, int edad,
-                     boolean veh, boolean fueraCity, String prioridad) {
-        this.tipoTrabajo = tipoTrabajo;
-        this.tipoEmpleado = tipoEmpleado;
-        this.Carrera = carrera;
-        this.Tecnico = tecnico;
-        this.misHabilidades = misHabilidades;
-        this.sexo = sexo;
-        this.aniosExperiencia = aniosExperiencia;
-        this.edad = edad;
-        this.Veh = veh;
-        this.fueraCity = fueraCity;
-        this.prioridad = prioridad;
-    }
+    public Requisito(String tipoTrabajo, String tipoEmpleado, String carrera, String areaUni, String tecnico,
+            ArrayList<String> misHabilidades, String sexo, int aniosExperiencia, int edad,
+            boolean veh, boolean fueraCity, String prioridad) {
+	this.tipoTrabajo = tipoTrabajo;
+	this.tipoEmpleado = tipoEmpleado;
+	this.Carrera = carrera;
+	this.AreaUni = areaUni;       
+	this.Tecnico = tecnico;
+	this.misHabilidades = misHabilidades;
+	this.sexo = sexo;
+	this.aniosExperiencia = aniosExperiencia;
+	this.edad = edad;
+	this.Veh = veh;
+	this.fueraCity = fueraCity;
+	this.prioridad = prioridad;
+}
 
 	public String getTipoTrabajo() {
 		return tipoTrabajo;
@@ -119,6 +121,14 @@ public class Requisito implements Serializable {
 
 	public void setPrioridad(String prioridad) {
 		this.prioridad = prioridad;
+	}
+
+	public String getAreaUni() {
+		return AreaUni;
+	}
+
+	public void setAreaUni(String areaUni) {
+		AreaUni = areaUni;
 	}
 
 
