@@ -188,10 +188,14 @@ public class ListaContratos extends JDialog {
 			{
 				btnDetalles = new JButton("Detalles");
 				btnDetalles.setEnabled(false);
-				btnDetalles.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-					}
+				btnDetalles.addActionListener(e -> {
+				    if (selected != null) {
+				        DetallesContrato detalle = new DetallesContrato(selected);
+				        detalle.setModal(true);
+				        detalle.setVisible(true);
+				    }
 				});
+
 				{
 					btnFinalizar = new JButton("Finalizar contrato");
 					btnFinalizar.addActionListener(new ActionListener() {

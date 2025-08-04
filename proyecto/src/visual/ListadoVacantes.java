@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -146,6 +147,12 @@ public class ListadoVacantes extends JDialog {
 						ventanaModificar.setModal(true);
 						ventanaModificar.setVisible(true);
 
+						 try {
+					            Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+					        } catch (IOException ex) {
+					            ex.printStackTrace();
+					        }
+						
 						loadVacante(modo);
 						table.clearSelection();
 						btnModificar.setEnabled(false);
@@ -171,6 +178,13 @@ public class ListadoVacantes extends JDialog {
 									"Eliminar", JOptionPane.WARNING_MESSAGE);
 							if (option == JOptionPane.OK_OPTION) {
 								Bolsa.getInstance().removeVacante(selected.getIdentificador());
+								
+								  try {
+					                    Bolsa.getInstance().guardarDatosEnArchivo("respaldo.dat");
+					                } catch (IOException ex) {
+					                    ex.printStackTrace();
+					                }
+								  
 								loadVacante(modo);
 								JOptionPane.showMessageDialog(null, "Vacante eliminada exitosamente.",
 										"Información", JOptionPane.INFORMATION_MESSAGE);
