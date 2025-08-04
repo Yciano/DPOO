@@ -83,9 +83,15 @@ public class ListadoUsuario extends JDialog {
 				        if (index >= 0) {
 				            selected = Bolsa.getInstance().buscarEmpleadoByCedula(table.getValueAt(index, 0).toString());
 
-				            if (!Session.tipoUsuario.equals(Session.USER)) {
+				            if (Session.USER.equalsIgnoreCase(Session.tipoUsuario)) {
+				                btnEliminar.setEnabled(false);
+				                btnModificar.setEnabled(true);
+				                btnDetalles.setEnabled(true);
+				            }
+				            else {
 				                btnEliminar.setEnabled(true);
 				                btnModificar.setEnabled(true);
+				                btnDetalles.setEnabled(true);
 				            }
 
 				            btnDetalles.setEnabled(true);

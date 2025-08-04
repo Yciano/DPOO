@@ -55,7 +55,7 @@ public class ListadoEmpresas extends JDialog {
 				if (index >= 0) {
 					selected = Bolsa.getInstance().buscarEmpresaByCode(table.getValueAt(index, 1).toString());
 					if (!Session.tipoUsuario.equals(Session.USER)) {
-						btnEliminar.setEnabled(true);
+						btnEliminar.setEnabled(false);
 						btnModificar.setEnabled(true);
 					}
 					btnDetalles.setEnabled(true);

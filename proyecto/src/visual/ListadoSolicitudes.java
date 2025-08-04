@@ -97,7 +97,7 @@ public class ListadoSolicitudes extends JDialog {
                 String id = (String) modelo.getValueAt(index, 0);
                 selected = Bolsa.getInstance().buscarSolicitudByID(id);
                 if (!Session.tipoUsuario.equals(Session.USER)) {
-	                btnEliminar.setEnabled(true); 
+	                btnEliminar.setEnabled(false); 
 	            }              
             }
         });

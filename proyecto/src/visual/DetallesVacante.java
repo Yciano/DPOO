@@ -17,7 +17,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Dimension;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import logico.Vacante;
 import logico.Requisito;
 
@@ -75,9 +74,13 @@ public class DetallesVacante extends JDialog {
         } else if ("Tecnico".equals(req.getTipoEmpleado())) {
             addField(detailsPanel, gbc, row++, "Área técnica:", req.getTecnico());
             addField(detailsPanel, gbc, row++, "Experiencia (años):", String.valueOf(req.getAniosExperiencia()));
-        } else {
-            String habs = req.getMisHabilidades().isEmpty() ? "Ninguna" : String.join(", ", req.getMisHabilidades());
+        } else if ("Obrero".equals(req.getTipoEmpleado())) {
+            // Mostrar campo Habilidades, incluso si no hay ninguna
+            String habs = (req.getMisHabilidades() == null || req.getMisHabilidades().isEmpty())
+                         ? "Ninguna"
+                         : String.join(", ", req.getMisHabilidades());
             addField(detailsPanel, gbc, row++, "Habilidades:", habs);
+            // Experiencia en años
             addField(detailsPanel, gbc, row++, "Experiencia (años):", String.valueOf(req.getAniosExperiencia()));
         }
 
